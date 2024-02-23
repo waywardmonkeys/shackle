@@ -7,8 +7,8 @@ members = [
   "crates/shackle-fmt",
   "crates/shackle-ls",
 	"crates/xcsp3-serde",
-  "parsers/tree-sitter-datazinc",
-  "parsers/tree-sitter-eprime",
-  "parsers/tree-sitter-minizinc",
+	"parsers/tree-sitter-datazinc",
+	"parsers/tree-sitter-eprime",
+	"parsers/tree-sitter-minizinc",
 ]
 resolver = "2"

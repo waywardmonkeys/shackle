@@ -1,0 +1,6 @@
+<intension id="c1"> 
+  eq(card(s),2) 
+</intension> 
+<intension id="c2"> 
+  subset(union(t1,t2),t3) 
+</intension> 

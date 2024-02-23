@@ -1,0 +1,3 @@
+<agents varsModel="bijection" 
+            ctrsModel="TKC" 
+            commModel="scope" />

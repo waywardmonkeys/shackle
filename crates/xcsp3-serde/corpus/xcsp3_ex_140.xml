@@ -1,0 +1,5 @@
+<ifThenElse>
+  <intension> eq(x,10) </intension>
+  <allDifferent> y[] </allDifferent>
+  <allEqual> y[] </allEqual>
+</ifThenElse>

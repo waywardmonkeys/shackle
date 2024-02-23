@@ -1,0 +1,4 @@
+<var id="team" type="symbolic set"> 
+  <required> Bob Paul </required> 
+  <possible> Emily Luke Susan </possible>
+</var>

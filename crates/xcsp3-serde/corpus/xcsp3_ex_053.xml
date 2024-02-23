@@ -1,0 +1,5 @@
+<sum id="c2">
+  <list> y1 y2 y3 y4 </list>
+  <coeffs> 4 2 3 1 </coeffs>
+  <condition> (in,2..5) </condition>  
+</sum>

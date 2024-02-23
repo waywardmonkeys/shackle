@@ -1,0 +1,3 @@
+<var id="foo" type="point" /> 
+<var id="bar" type="interval" /> 
+<var id="qux" type="region" /> 
