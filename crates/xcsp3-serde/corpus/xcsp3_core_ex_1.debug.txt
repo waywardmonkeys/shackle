@@ -1,0 +1,88 @@
+Instance {
+    ty: Csp,
+    variables: [
+        Variable {
+            identifier: "x",
+            domain: RangeList::from_iter([0..=1]),
+        },
+        Variable {
+            identifier: "y",
+            domain: RangeList::from_iter([0..=1]),
+        },
+        Variable {
+            identifier: "z",
+            domain: RangeList::from_iter([0..=1]),
+        },
+    ],
+    constraints: [
+        Extension(
+            Extension {
+                list: [
+                    Ident(
+                        "x",
+                    ),
+                    Ident(
+                        "y",
+                    ),
+                ],
+                supports: [
+                    [
+                        0,
+                        0,
+                    ],
+                    [
+                        1,
+                        1,
+                    ],
+                ],
+                conflicts: [],
+            },
+        ),
+        Extension(
+            Extension {
+                list: [
+                    Ident(
+                        "x",
+                    ),
+                    Ident(
+                        "z",
+                    ),
+                ],
+                supports: [
+                    [
+                        0,
+                        0,
+                    ],
+                    [
+                        1,
+                        1,
+                    ],
+                ],
+                conflicts: [],
+            },
+        ),
+        Extension(
+            Extension {
+                list: [
+                    Ident(
+                        "y",
+                    ),
+                    Ident(
+                        "z",
+                    ),
+                ],
+                supports: [
+                    [
+                        0,
+                        1,
+                    ],
+                    [
+                        1,
+                        0,
+                    ],
+                ],
+                conflicts: [],
+            },
+        ),
+    ],
+}
