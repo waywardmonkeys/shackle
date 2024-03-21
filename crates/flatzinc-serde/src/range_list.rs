@@ -1,4 +1,8 @@
-use std::{fmt::Debug, iter::Map, ops::RangeInclusive};
+use std::{
+	fmt::{Debug, Display},
+	iter::Map,
+	ops::RangeInclusive,
+};
 
 use serde::{Deserialize, Serialize};
 
@@ -17,6 +21,23 @@ use serde::{Deserialize, Serialize};
 #[serde(transparent)]
 pub struct RangeList<E: PartialOrd> {
 	ranges: Vec<(E, E)>,
+}
+
+impl<E: PartialOrd + Debug> Display for RangeList<E> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		let mut first = true;
+		for r in &self.ranges {
+			if !first {
+				write!(f, " union ")?;
+			}
+			write!(f, "{:?}..{:?}", r.0, r.1)?;
+			first = false;
+		}
+		if first {
+			write!(f, "1..0")?;
+		}
+		Ok(())
+	}
 }
 
 impl<E: PartialOrd + Debug> Debug for RangeList<E> {
@@ -228,5 +249,20 @@ mod tests {
     RangeList::from_iter([0.1..=3.2, 8.1..=50.0])
 "#]]
 		.assert_debug_eq(&float_range);
+	}
+
+	#[test]
+	fn test_display_rangelist() {
+		let empty: RangeList<i64> = RangeList::default();
+		assert_eq!(empty.to_string(), "1..0");
+
+		let single_range = RangeList::from_iter([1..=4]);
+		assert_eq!(single_range.to_string(), "1..4");
+
+		let multi_range = RangeList::from_iter([1..=4, 6..=7, -5..=-3]);
+		assert_eq!(multi_range.to_string(), "-5..-3 union 1..4 union 6..7");
+
+		let float_range = RangeList::from_iter([0.1..=3.2, 8.1..=50.0]);
+		assert_eq!(float_range.to_string(), "0.1..3.2 union 8.1..50.0");
 	}
 }

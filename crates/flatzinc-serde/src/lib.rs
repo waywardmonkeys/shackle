@@ -80,7 +80,7 @@
 #![warn(unused_crate_dependencies, unused_extern_crates)]
 #![warn(variant_size_differences)]
 
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, fmt::Display};
 
 use serde::{Deserialize, Serialize};
 
@@ -116,6 +116,16 @@ pub enum Annotation<Identifier = String> {
 	Call(Call<Identifier>),
 }
 
+impl<Identifier: Display> Display for Annotation<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "::")?;
+		match self {
+			Annotation::Atom(a) => write!(f, "{a}"),
+			Annotation::Call(c) => write!(f, "{c}"),
+		}
+	}
+}
+
 /// A definition of a named array literal in FlatZinc
 ///
 /// FlatZinc Arrays are a simple (one-dimensional) sequence of [`Literal`]s.
@@ -143,6 +153,30 @@ pub struct Array<Identifier = String> {
 	pub introduced: bool,
 }
 
+impl<Identifier: Ord> Array<Identifier> {
+	fn determine_type(&self, fzn: &FlatZinc<Identifier>) -> (&str, bool) {
+		let ty = match self.contents.first().unwrap() {
+			Literal::Int(_) => "int",
+			Literal::Float(_) => "float",
+			Literal::Identifier(ident) => match fzn.variables[ident].ty {
+				Type::Bool => "bool",
+				Type::Int => "int",
+				Type::Float => "float",
+				Type::IntSet => "set of int",
+			},
+			Literal::Bool(_) => "bool",
+			Literal::IntSet(_) => "set of int",
+			Literal::FloatSet(_) => "set of float",
+			Literal::String(_) => "string",
+		};
+		let is_var = self.contents.iter().any(|lit| match lit {
+			Literal::Identifier(ident) => fzn.variables[ident].value.is_none(),
+			_ => false,
+		});
+		(ty, is_var)
+	}
+}
+
 /// The argument type associated with [`Call`]
 #[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
@@ -151,6 +185,26 @@ pub enum Argument<Identifier = String> {
 	Array(Vec<Literal<Identifier>>),
 	/// Literal
 	Literal(Literal<Identifier>),
+}
+
+impl<Identifier: Display> Display for Argument<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Argument::Array(arr) => {
+				write!(f, "[")?;
+				let mut first = true;
+				for v in arr {
+					if !first {
+						write!(f, ", ")?
+					}
+					write!(f, "{v}")?;
+					first = false;
+				}
+				write!(f, "]")
+			}
+			Argument::Literal(lit) => write!(f, "{lit}"),
+		}
+	}
 }
 
 /// An object depicting a call, used for constraints and annotations
@@ -166,6 +220,25 @@ pub struct Call<Identifier = String> {
 	pub ann: Vec<Annotation<Identifier>>,
 }
 
+impl<Identifier: Display> Display for Call<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "{}(", self.id)?;
+		let mut first = true;
+		for arg in &self.args {
+			if !first {
+				write!(f, ", ")?
+			}
+			write!(f, "{arg}")?;
+			first = false;
+		}
+		write!(f, ")")?;
+		for a in &self.ann {
+			write!(f, " {a}")?
+		}
+		Ok(())
+	}
+}
+
 /// The possible values that a (decision) [`Variable`] can take
 ///
 /// In the case of a integer or floating point variable, a solution for the FlatZinc instance must
@@ -176,6 +249,15 @@ pub enum Domain {
 	Int(RangeList<i64>),
 	/// Floating point decision variable domain
 	Float(RangeList<f64>),
+}
+
+impl Display for Domain {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Domain::Int(is) => write!(f, "{is}"),
+			Domain::Float(fs) => write!(f, "{fs}"),
+		}
+	}
 }
 
 /// A name used to refer to an [`Array`], function, or [`Variable`]
@@ -214,6 +296,20 @@ pub enum Literal<Identifier = String> {
 	String(String),
 }
 
+impl<Identifier: Display> Display for Literal<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Literal::Int(i) => write!(f, "{i}"),
+			Literal::Float(x) => write!(f, "{x:?}"),
+			Literal::Identifier(ident) => write!(f, "{ident}"),
+			Literal::Bool(b) => write!(f, "{b}"),
+			Literal::IntSet(is) => write!(f, "{is}"),
+			Literal::FloatSet(fs) => write!(f, "{fs}"),
+			Literal::String(s) => write!(f, "{s:?}"),
+		}
+	}
+}
+
 /// Goal of solving a FlatZinc instance
 #[derive(Default, Clone, PartialEq, Debug, Deserialize, Serialize)]
 #[serde(rename = "method")]
@@ -228,6 +324,16 @@ pub enum Method {
 	/// Find the solution with the highest objective value
 	#[serde(rename = "maximize")]
 	Maximize,
+}
+
+impl Display for Method {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Method::Satisfy => write!(f, "satisfy"),
+			Method::Minimize => write!(f, "minimize"),
+			Method::Maximize => write!(f, "maximize"),
+		}
+	}
 }
 
 /// Used to signal the type of (decision) [`Variable`]
@@ -246,6 +352,17 @@ pub enum Type {
 	/// Integer set decision variable
 	#[serde(rename = "set of int")]
 	IntSet,
+}
+
+impl Display for Type {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Type::Bool => write!(f, "bool"),
+			Type::Int => write!(f, "int"),
+			Type::Float => write!(f, "float"),
+			Type::IntSet => write!(f, "set of int"),
+		}
+	}
 }
 
 /// The definition of a decision variable
@@ -306,6 +423,20 @@ impl<Identifier> Default for SolveObjective<Identifier> {
 	}
 }
 
+impl<Identifier: Display> Display for SolveObjective<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "solve ")?;
+		for a in &self.ann {
+			write!(f, "{a} ")?;
+		}
+		write!(f, "{}", self.method)?;
+		if let Some(obj) = &self.objective {
+			write!(f, " {obj}")?
+		}
+		Ok(())
+	}
+}
+
 /// The structure depicting a FlatZinc instance
 ///
 /// FlatZinc is (generally) a format produced by the MiniZinc compiler as a
@@ -346,9 +477,78 @@ impl<Identifier: Ord> Default for FlatZinc<Identifier> {
 	}
 }
 
+impl<Identifier: Ord + Display> Display for FlatZinc<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		let output_map: BTreeMap<&Identifier, ()> =
+			self.output.iter().map(|ident| (ident, ())).collect();
+
+		for (ident, var) in &self.variables {
+			write!(f, "var ")?;
+			if let Some(dom) = &var.domain {
+				write!(f, "{dom}")?
+			} else {
+				write!(f, "{}", var.ty)?
+			}
+			write!(f, ": {ident}")?;
+			if output_map.contains_key(&ident) {
+				write!(f, " ::output_var")?;
+			}
+			if var.defined {
+				write!(f, " ::is_defined_var")?;
+			}
+			if var.introduced {
+				write!(f, " ::var_is_introduced")?;
+			}
+			for ann in &var.ann {
+				write!(f, " {ann}")?
+			}
+			if let Some(val) = &var.value {
+				write!(f, " = {val}")?
+			}
+			writeln!(f, ";")?
+		}
+		for (ident, arr) in &self.arrays {
+			let (ty, is_var) = arr.determine_type(self);
+			write!(
+				f,
+				"array[1..{}] of {}{ty}: {ident}",
+				arr.contents.len(),
+				if is_var { "var " } else { "" }
+			)?;
+			if output_map.contains_key(&ident) {
+				write!(f, " ::output_array([1..{}])", arr.contents.len())?;
+			}
+			if arr.defined {
+				write!(f, " ::is_defined_var")?;
+			}
+			if arr.introduced {
+				write!(f, " ::var_is_introduced")?;
+			}
+			for ann in &arr.ann {
+				write!(f, " {ann}")?
+			}
+			write!(f, " = [")?;
+			let mut first = true;
+			for v in &arr.contents {
+				if !first {
+					write!(f, ", ")?;
+				}
+				write!(f, "{v}")?;
+				first = false;
+			}
+			writeln!(f, "];")?
+		}
+		for c in &self.constraints {
+			writeln!(f, "constraint {c};")?;
+		}
+		writeln!(f, "{};", self.solve)
+	}
+}
+
 #[cfg(test)]
 mod tests {
 	use std::{
+		collections::BTreeMap,
 		fs::File,
 		io::{BufReader, Read},
 		path::Path,
@@ -357,7 +557,10 @@ mod tests {
 	use expect_test::ExpectFile;
 	use ustr::Ustr;
 
-	use crate::FlatZinc;
+	use crate::{
+		Annotation, Argument, Array, Call, Domain, FlatZinc, Literal, Method, RangeList,
+		SolveObjective, Type, Variable,
+	};
 
 	test_file!(documentation_example);
 	test_file!(encapsulated_string);
@@ -408,5 +611,94 @@ mod tests {
 		let fzn: FlatZinc<Ustr> = serde_json::from_reader(rdr).unwrap();
 		expect_test::expect_file!["../corpus/documentation_example.debug_ustr.txt"]
 			.assert_debug_eq(&fzn)
+	}
+
+	#[test]
+	fn test_print_flatzinc() {
+		let mut rdr = BufReader::new(
+			File::open(Path::new("./corpus/documentation_example.fzn.json")).unwrap(),
+		);
+		let mut content = String::new();
+		rdr.read_to_string(&mut content).unwrap();
+
+		let fzn: FlatZinc<&str> = serde_json::from_str(&content).unwrap();
+		expect_test::expect_file!["../corpus/documentation_example.fzn"]
+			.assert_eq(&fzn.to_string());
+
+		let ann: Annotation<&str> = Annotation::Call(Call {
+			id: "bool_search".into(),
+			args: vec![
+				Argument::Literal(Literal::Identifier("input_order".into())),
+				Argument::Literal(Literal::Identifier("indomain_min".into())),
+			],
+			ann: Vec::new(),
+		});
+		assert_eq!(ann.to_string(), "::bool_search(input_order, indomain_min)");
+
+		let dom = Domain::Float(RangeList::from(1.0..=4.0));
+		assert_eq!(dom.to_string(), "1.0..4.0");
+
+		let ty = Type::Bool;
+		assert_eq!(ty.to_string(), "bool");
+		let ty = Type::Int;
+		assert_eq!(ty.to_string(), "int");
+		let ty = Type::Float;
+		assert_eq!(ty.to_string(), "float");
+		let ty = Type::IntSet;
+		assert_eq!(ty.to_string(), "set of int");
+
+		let lit = Literal::<&str>::Int(1);
+		assert_eq!(lit.to_string(), "1");
+		let lit = Literal::<&str>::Float(1.0);
+		assert_eq!(lit.to_string(), "1.0");
+		let lit = Literal::<&str>::Identifier("x");
+		assert_eq!(lit.to_string(), "x");
+		let lit = Literal::<&str>::Bool(true);
+		assert_eq!(lit.to_string(), "true");
+		let lit = Literal::<&str>::IntSet(RangeList::from(2..=3));
+		assert_eq!(lit.to_string(), "2..3");
+		let lit = Literal::<&str>::FloatSet(RangeList::from(2.0..=3.0));
+		assert_eq!(lit.to_string(), "2.0..3.0");
+		let lit = Literal::<&str>::String(String::from("hello"));
+		assert_eq!(lit.to_string(), "\"hello\"");
+
+		let fzn = FlatZinc {
+			variables: BTreeMap::from([(
+				"x",
+				Variable {
+					ty: Type::IntSet,
+					domain: None,
+					ann: vec![Annotation::Atom("special")],
+					defined: false,
+					introduced: true,
+					value: Some(Literal::IntSet(RangeList::from(1..=4))),
+				},
+			)]),
+			arrays: BTreeMap::from([(
+				"y",
+				Array {
+					ann: vec![Annotation::Atom("special")],
+					contents: vec![Literal::Int(1), Literal::Int(2), Literal::Int(3)],
+					introduced: true,
+					defined: true,
+				},
+			)]),
+			output: vec!["y"],
+			..Default::default()
+		};
+		assert_eq!(
+			fzn.to_string(),
+			"var set of int: x ::var_is_introduced ::special = 1..4;\narray[1..3] of int: y ::output_array([1..3]) ::is_defined_var ::var_is_introduced ::special = [1, 2, 3];\nsolve satisfy;\n"
+		);
+
+		let sat = SolveObjective {
+			method: Method::Minimize,
+			ann: vec![ann],
+			objective: Some(Literal::Identifier("x")),
+		};
+		assert_eq!(
+			sat.to_string(),
+			"solve ::bool_search(input_order, indomain_min) minimize x"
+		);
 	}
 }
