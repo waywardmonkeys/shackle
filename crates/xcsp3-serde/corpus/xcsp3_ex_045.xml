@@ -1,3 +1,7 @@
-<allDifferent> 
-  add(x1,1) add(x2,2) add(x3,3) 
-</allDifferent> 
+<instance format="XCSP3" type="CSP">
+  <constraints>
+    <allDifferent>
+      add(x1,1) add(x2,2) add(x3,3)
+    </allDifferent>
+  </constraints>
+</instance>

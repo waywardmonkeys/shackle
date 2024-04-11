@@ -1,0 +1,53 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        AllDifferent(
+            AllDifferent {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    Add(
+                        [
+                            Var(
+                                Ident(
+                                    "x1",
+                                ),
+                            ),
+                            Const(
+                                1,
+                            ),
+                        ],
+                    ),
+                    Add(
+                        [
+                            Var(
+                                Ident(
+                                    "x2",
+                                ),
+                            ),
+                            Const(
+                                2,
+                            ),
+                        ],
+                    ),
+                    Add(
+                        [
+                            Var(
+                                Ident(
+                                    "x3",
+                                ),
+                            ),
+                            Const(
+                                3,
+                            ),
+                        ],
+                    ),
+                ],
+                except: [],
+            },
+        ),
+    ],
+}

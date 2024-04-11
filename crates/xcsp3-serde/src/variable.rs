@@ -88,14 +88,24 @@ impl<Identifier: Serialize> Serialize for Variable<Identifier> {
 #[derive(Clone, Debug, PartialEq, Hash, Eq)]
 pub enum VarRef<Identifier> {
 	Ident(Identifier),
-	ArrayAccess(Identifier, IntVal),
+	ArrayAccess(Identifier, Vec<Option<IntVal>>),
 }
 
 impl<Identifier: Display> Display for VarRef<Identifier> {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		match self {
 			VarRef::Ident(ident) => ident.fmt(f),
-			VarRef::ArrayAccess(ident, i) => write!(f, "{}[{}]", ident, i),
+			VarRef::ArrayAccess(ident, v) => {
+				write!(
+					f,
+					"{}{}",
+					ident,
+					v.iter().format_with("", |el, f| f(&format_args!(
+						"[{}]",
+						el.map_or_else(String::new, |i| i.to_string())
+					)))
+				)
+			}
 		}
 	}
 }

@@ -13,7 +13,6 @@ use nom::{
 use super::{
 	identifier::variable,
 	integer::{int_exp, IntExp},
-	ws,
 };
 use crate::variable::VarRef;
 
@@ -78,9 +77,9 @@ pub fn set_exp<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identif
 		map(variable, SetExp::Var),
 		map(
 			delimited(
-				pair(tag("set"), ws(char('('))),
-				separated_list0(ws(char(',')), int_exp),
-				ws(char(')')),
+				pair(tag("set"), char('(')),
+				separated_list0(char(','), int_exp),
+				char(')'),
 			),
 			SetExp::Set,
 		),
@@ -89,9 +88,9 @@ pub fn set_exp<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identif
 
 fn one_arg<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identifier>> {
 	let (input, tag) = tag("hull")(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e) = set_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -103,11 +102,11 @@ fn one_arg<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identifier>
 
 fn two_arg<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identifier>> {
 	let (input, tag) = tag("diff")(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e1) = set_exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e2) = set_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -119,9 +118,9 @@ fn two_arg<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identifier>
 
 fn var_arg<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identifier>> {
 	let (input, tag) = alt((tag("union"), tag("inter"), tag("sdiff")))(input)?;
-	let (input, _) = ws(char('('))(input)?;
-	let (input, es) = separated_list1(ws(char(',')), set_exp)(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char('(')(input)?;
+	let (input, es) = separated_list1(char(','), set_exp)(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {

@@ -14,7 +14,7 @@ use super::{
 	identifier::variable,
 	integer::{int_exp, IntExp},
 	set::{set_exp, SetExp},
-	ws, Exp,
+	Exp,
 };
 use crate::variable::VarRef;
 
@@ -125,9 +125,9 @@ pub fn bool_exp<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Ident
 
 fn one_arg<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	let (input, tag) = tag("not")(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e) = bool_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -139,9 +139,9 @@ fn one_arg<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier
 
 fn one_arg_set<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	let (input, tag) = tag("convex")(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e) = set_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -153,11 +153,11 @@ fn one_arg_set<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identi
 
 fn two_arg<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	let (input, tag) = tag("imp")(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e1) = bool_exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e2) = bool_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -169,11 +169,11 @@ fn two_arg<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier
 
 fn two_arg_int<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	let (input, tag) = alt((tag("lt"), tag("le"), tag("gt"), tag("ge")))(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e1) = int_exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e2) = int_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -188,11 +188,11 @@ fn two_arg_int<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identi
 
 fn two_arg_int_set<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	let (input, tag) = tag("in")(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e1) = int_exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e2) = set_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -210,11 +210,11 @@ fn two_arg_set<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identi
 		tag("supseq"),
 		tag("supset"),
 	))(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e1) = set_exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e2) = set_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -230,11 +230,11 @@ fn two_arg_set<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identi
 
 fn two_arg_exp<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	let (input, tag) = tag("ne")(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e1) = exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e2) = exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -246,9 +246,9 @@ fn two_arg_exp<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identi
 
 fn var_arg<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	let (input, tag) = alt((tag("and"), tag("or"), tag("xor"), tag("iff")))(input)?;
-	let (input, _) = ws(char('('))(input)?;
-	let (input, es) = separated_list0(ws(char(',')), bool_exp)(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char('(')(input)?;
+	let (input, es) = separated_list0(char(','), bool_exp)(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -263,9 +263,9 @@ fn var_arg<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier
 
 fn var_arg_exp<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	let (input, tag) = tag("eq")(input)?;
-	let (input, _) = ws(char('('))(input)?;
-	let (input, es) = separated_list1(ws(char(',')), exp)(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char('(')(input)?;
+	let (input, es) = separated_list1(char(','), exp)(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {

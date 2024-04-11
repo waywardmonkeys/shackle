@@ -1,9 +1,10 @@
 use std::str::FromStr;
 
 use nom::{
-	character::complete::{alpha1, alphanumeric0, char, multispace0},
-	combinator::{recognize, verify},
-	sequence::{delimited, preceded, tuple},
+	character::complete::{alpha1, alphanumeric0, char},
+	combinator::{opt, recognize, verify},
+	multi::many0,
+	sequence::{delimited, tuple},
 	IResult,
 };
 
@@ -31,9 +32,13 @@ pub fn identifier<Identifier: FromStr>(input: &str) -> IResult<&str, Identifier>
 
 pub fn variable<Identifier: FromStr>(input: &str) -> IResult<&str, VarRef<Identifier>> {
 	let (input, ident) = identifier(input)?;
-	if let Ok((input2, i)) = preceded(multispace0, delimited(char('['), int, char(']')))(input) {
-		Ok((input2, VarRef::ArrayAccess(ident, i)))
-	} else {
-		Ok((input, VarRef::Ident(ident)))
-	}
+	let (input, v) = many0(delimited(char('['), opt(int), char(']')))(input)?;
+	Ok((
+		input,
+		if v.is_empty() {
+			VarRef::Ident(ident)
+		} else {
+			VarRef::ArrayAccess(ident, v)
+		},
+	))
 }

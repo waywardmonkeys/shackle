@@ -1,22 +1,23 @@
-use std::{fmt::Display, ops::RangeInclusive, str::FromStr};
+use std::{fmt::Display, marker::PhantomData, ops::RangeInclusive, str::FromStr};
 
 use nom::{
 	branch::alt,
 	bytes::complete::tag,
 	character::complete::{char, digit1},
-	combinator::{map, map_res, opt, recognize},
+	combinator::{all_consuming, map, map_res, opt, recognize},
 	multi::separated_list1,
 	IResult,
 };
+use serde::{de::Visitor, Deserializer};
 
 use super::{
 	boolean::{bool_exp, BoolExp},
 	exp,
 	identifier::variable,
 	set::{set_exp, SetExp},
-	ws, Exp,
+	Exp,
 };
-use crate::{variable::VarRef, IntVal};
+use crate::{parser::whitespace_seperated, variable::VarRef, IntVal};
 
 pub fn range(input: &str) -> IResult<&str, RangeInclusive<IntVal>> {
 	let (input, lb) = int(input)?;
@@ -127,9 +128,9 @@ pub fn int_exp<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identif
 
 fn one_arg<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>> {
 	let (input, tag) = alt((tag("neg"), tag("abs"), tag("sqrt"), tag("sqr")))(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e) = int_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -143,9 +144,9 @@ fn one_arg<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>
 
 fn one_arg_set<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>> {
 	let (input, tag) = tag("card")(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e) = set_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -157,11 +158,11 @@ fn one_arg_set<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identif
 
 fn two_arg<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>> {
 	let (input, tag) = alt((tag("sub"), tag("div"), tag("mod"), tag("pow"), tag("dist")))(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e1) = int_exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e2) = int_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -177,13 +178,13 @@ fn two_arg<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>
 
 fn three_arg<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>> {
 	let (input, tag) = alt((tag("if"),))(input)?;
-	let (input, _) = ws(char('('))(input)?;
+	let (input, _) = char('(')(input)?;
 	let (input, e1) = bool_exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e2) = int_exp(input)?;
-	let (input, _) = ws(char(','))(input)?;
+	let (input, _) = char(',')(input)?;
 	let (input, e3) = int_exp(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -195,9 +196,9 @@ fn three_arg<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifie
 
 fn var_arg<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>> {
 	let (input, tag) = alt((tag("add"), tag("mul")))(input)?;
-	let (input, _) = ws(char('('))(input)?;
-	let (input, es) = separated_list1(ws(char(',')), int_exp)(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char('(')(input)?;
+	let (input, es) = separated_list1(char(','), int_exp)(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -210,9 +211,9 @@ fn var_arg<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>
 
 fn var_arg_exp<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identifier>> {
 	let (input, tag) = alt((tag("min"), tag("max")))(input)?;
-	let (input, _) = ws(char('('))(input)?;
-	let (input, es) = separated_list1(ws(char(',')), exp)(input)?;
-	let (input, _) = ws(char(')'))(input)?;
+	let (input, _) = char('(')(input)?;
+	let (input, es) = separated_list1(char(','), exp)(input)?;
+	let (input, _) = char(')')(input)?;
 	Ok((
 		input,
 		match tag {
@@ -221,4 +222,36 @@ fn var_arg_exp<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identif
 			_ => unreachable!(),
 		}(es),
 	))
+}
+
+pub fn deserialize_int_exps<'de, D: Deserializer<'de>, Identifier: FromStr>(
+	deserializer: D,
+) -> Result<Vec<IntExp<Identifier>>, D::Error> {
+	struct V<X>(PhantomData<X>);
+	impl<'de, X: FromStr> Visitor<'de> for V<X> {
+		type Value = Vec<IntExp<X>>;
+		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+			formatter.write_str("an identfier")
+		}
+		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+			let (_, v) = all_consuming(whitespace_seperated(int_exp))(v)
+				.map_err(|e| E::custom(format!("invalid integer expression {e:?}")))?;
+			Ok(v)
+		}
+	}
+	let visitor = V::<Identifier>(PhantomData);
+	deserializer.deserialize_str(visitor)
+}
+
+pub fn serialize_int_exps<S: serde::Serializer, Identifier: Display>(
+	exps: &[IntExp<Identifier>],
+	serializer: S,
+) -> Result<S::Ok, S::Error> {
+	serializer.serialize_str(
+		&exps
+			.iter()
+			.map(|e| format!("{}", e))
+			.collect::<Vec<_>>()
+			.join(" "),
+	)
 }

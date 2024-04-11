@@ -14,14 +14,14 @@ pub struct Intension<Identifier> {
 impl<'de, Identifier: FromStr> Deserialize<'de> for Intension<Identifier> {
 	fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
 		#[derive(Deserialize)]
-		pub struct Tmp<'a> {
+		pub struct Intension<'a> {
 			#[serde(rename = "@id")]
 			identifier: Option<Cow<'a, str>>,
 			#[serde(alias = "$value")]
 			function: Cow<'a, str>,
 		}
 
-		let tmp = Tmp::deserialize(deserializer)?;
+		let tmp = Intension::deserialize(deserializer)?;
 		let (_, function) =
 			all_consuming(bool_exp)(tmp.function.as_ref()).map_err(serde::de::Error::custom)?;
 		let mut id = None;
@@ -37,12 +37,12 @@ impl<'de, Identifier: FromStr> Deserialize<'de> for Intension<Identifier> {
 impl<Identifier: Display> Serialize for Intension<Identifier> {
 	fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
 		#[derive(Serialize)]
-		struct Tmp<'a> {
+		struct Intension<'a> {
 			#[serde(rename = "@id", skip_serializing_if = "Option::is_none")]
 			identifier: Option<String>,
 			function: &'a str,
 		}
-		let tmp = Tmp {
+		let tmp = Intension {
 			identifier: self.id.as_ref().map(|id| id.to_string()),
 			function: &self.function.to_string(),
 		};
