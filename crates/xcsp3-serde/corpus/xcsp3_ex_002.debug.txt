@@ -1,0 +1,173 @@
+Instance {
+    ty: Cop,
+    variables: [
+        Variable {
+            identifier: "b",
+            domain: RangeList::from_iter([0..=100]),
+        },
+        Variable {
+            identifier: "c",
+            domain: RangeList::from_iter([0..=100]),
+        },
+    ],
+    constraints: [
+        Intension(
+            Intension {
+                id: None,
+                function: LessThanEq(
+                    Add(
+                        [
+                            Mul(
+                                [
+                                    Const(
+                                        250,
+                                    ),
+                                    Var(
+                                        Ident(
+                                            "b",
+                                        ),
+                                    ),
+                                ],
+                            ),
+                            Mul(
+                                [
+                                    Const(
+                                        200,
+                                    ),
+                                    Var(
+                                        Ident(
+                                            "c",
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ],
+                    ),
+                    Const(
+                        4000,
+                    ),
+                ),
+            },
+        ),
+        Intension(
+            Intension {
+                id: None,
+                function: LessThanEq(
+                    Mul(
+                        [
+                            Const(
+                                2,
+                            ),
+                            Var(
+                                Ident(
+                                    "b",
+                                ),
+                            ),
+                        ],
+                    ),
+                    Const(
+                        6,
+                    ),
+                ),
+            },
+        ),
+        Intension(
+            Intension {
+                id: None,
+                function: LessThanEq(
+                    Add(
+                        [
+                            Mul(
+                                [
+                                    Const(
+                                        75,
+                                    ),
+                                    Var(
+                                        Ident(
+                                            "b",
+                                        ),
+                                    ),
+                                ],
+                            ),
+                            Mul(
+                                [
+                                    Const(
+                                        150,
+                                    ),
+                                    Var(
+                                        Ident(
+                                            "c",
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ],
+                    ),
+                    Const(
+                        2000,
+                    ),
+                ),
+            },
+        ),
+        Intension(
+            Intension {
+                id: None,
+                function: LessThanEq(
+                    Add(
+                        [
+                            Mul(
+                                [
+                                    Const(
+                                        100,
+                                    ),
+                                    Var(
+                                        Ident(
+                                            "b",
+                                        ),
+                                    ),
+                                ],
+                            ),
+                            Mul(
+                                [
+                                    Const(
+                                        150,
+                                    ),
+                                    Var(
+                                        Ident(
+                                            "c",
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ],
+                    ),
+                    Const(
+                        500,
+                    ),
+                ),
+            },
+        ),
+        Intension(
+            Intension {
+                id: None,
+                function: LessThanEq(
+                    Mul(
+                        [
+                            Const(
+                                75,
+                            ),
+                            Var(
+                                Ident(
+                                    "c",
+                                ),
+                            ),
+                        ],
+                    ),
+                    Const(
+                        500,
+                    ),
+                ),
+            },
+        ),
+    ],
+}

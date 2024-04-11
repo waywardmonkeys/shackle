@@ -1,0 +1,45 @@
+Instance {
+    ty: Csp,
+    variables: [
+        Variable {
+            identifier: "x",
+            domain: RangeList::from_iter([1..=10]),
+        },
+        Variable {
+            identifier: "y",
+            domain: RangeList::from_iter([1..=100]),
+        },
+    ],
+    constraints: [
+        Intension(
+            Intension {
+                id: None,
+                function: Equal(
+                    [
+                        Var(
+                            Ident(
+                                "y",
+                            ),
+                        ),
+                        Int(
+                            Mul(
+                                [
+                                    Var(
+                                        Ident(
+                                            "x",
+                                        ),
+                                    ),
+                                    Var(
+                                        Ident(
+                                            "x",
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                    ],
+                ),
+            },
+        ),
+    ],
+}

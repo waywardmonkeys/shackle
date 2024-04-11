@@ -1,0 +1,59 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Intension(
+            Intension {
+                id: Some(
+                    "c1",
+                ),
+                function: Equal(
+                    [
+                        Int(
+                            Card(
+                                Var(
+                                    Ident(
+                                        "s",
+                                    ),
+                                ),
+                            ),
+                        ),
+                        Int(
+                            Const(
+                                2,
+                            ),
+                        ),
+                    ],
+                ),
+            },
+        ),
+        Intension(
+            Intension {
+                id: Some(
+                    "c2",
+                ),
+                function: SubSet(
+                    Union(
+                        [
+                            Var(
+                                Ident(
+                                    "t1",
+                                ),
+                            ),
+                            Var(
+                                Ident(
+                                    "t2",
+                                ),
+                            ),
+                        ],
+                    ),
+                    Var(
+                        Ident(
+                            "t3",
+                        ),
+                    ),
+                ),
+            },
+        ),
+    ],
+}

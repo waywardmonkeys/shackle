@@ -1,6 +1,10 @@
-<intension id="c1"> 
-  <function> eq(add(x,y),z) </function>
-</intension> 
-<intension id="c2"> 
-  <function> ge(w,z) </function>
-</intension>
+<instance format="XCSP3" type="CSP">
+  <constraints>
+    <intension id="c1">
+      <function> eq(add(x,y),z) </function>
+    </intension>
+    <intension id="c2">
+      <function> ge(w,z) </function>
+    </intension>
+  </constraints>
+</instance>

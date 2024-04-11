@@ -1,0 +1,44 @@
+Instance {
+    ty: Csp,
+    variables: [
+        Variable {
+            identifier: "x",
+            domain: RangeList::from_iter([1..=3]),
+        },
+    ],
+    constraints: [
+        Intension(
+            Intension {
+                id: None,
+                function: Equal(
+                    [
+                        Int(
+                            Add(
+                                [
+                                    Var(
+                                        ArrayAccess(
+                                            "x",
+                                            0,
+                                        ),
+                                    ),
+                                    Var(
+                                        ArrayAccess(
+                                            "x",
+                                            1,
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        Var(
+                            ArrayAccess(
+                                "x",
+                                2,
+                            ),
+                        ),
+                    ],
+                ),
+            },
+        ),
+    ],
+}

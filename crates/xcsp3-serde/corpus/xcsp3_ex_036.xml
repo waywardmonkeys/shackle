@@ -1,2 +1,6 @@
-<intension id="c1"> eq(add(x,y),z) </intension> 
-<intension id="c2"> ge(w,z) </intension>
+<instance format="XCSP3" type="CSP">
+  <constraints>
+    <intension id="c1"> eq(add(x,y),z) </intension>
+    <intension id="c2"> ge(w,z) </intension>
+  </constraints>
+</instance>

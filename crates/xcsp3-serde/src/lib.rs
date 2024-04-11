@@ -33,24 +33,29 @@ impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Instance<
 		pub struct X<Identifier: FromStr = String> {
 			#[serde(rename = "@type")]
 			ty: FrameworkType,
-			variables: Variables<Identifier>,
-			constraints: Constraints<Identifier>,
+			variables: Option<Variables<Identifier>>,
+			constraints: Option<Constraints<Identifier>>,
 		}
 		let inst: X<Identifier> = Deserialize::deserialize(deserializer)?;
 		Ok(Self {
 			ty: inst.ty,
-			variables: inst.variables.content,
-			constraints: inst.constraints.content,
+			variables: inst.variables.map_or_else(Vec::new, |v| v.content),
+			constraints: inst.constraints.map_or_else(Vec::new, |c| c.content),
 		})
 	}
 }
 
-impl<'de, Identifier: Serialize + Display> Serialize for Instance<Identifier> {
+impl<Identifier: Serialize + Display> Serialize for Instance<Identifier> {
 	fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
 		#[derive(Serialize)]
 		struct Variables<'a, Identifier = String> {
 			#[serde(rename = "$value")]
 			content: Vec<V<'a, Identifier>>,
+		}
+		impl<'a, Identifier> Variables<'a, Identifier> {
+			fn is_empty(&self) -> bool {
+				self.content.is_empty()
+			}
 		}
 		// Unit struct wrapper
 		#[derive(Serialize)]
@@ -60,17 +65,24 @@ impl<'de, Identifier: Serialize + Display> Serialize for Instance<Identifier> {
 		}
 		#[derive(Serialize)]
 		struct Constraints<'a, Identifier: Display = String> {
-			#[serde(rename = "$value", default)]
+			#[serde(rename = "$value")]
 			content: &'a Vec<Constraint<Identifier>>,
 		}
+		impl<'a, Identifier: Display> Constraints<'a, Identifier> {
+			fn is_empty(&self) -> bool {
+				self.content.is_empty()
+			}
+		}
 		#[derive(Serialize)]
-		pub struct X<'a, Identifier: Display = String> {
+		pub struct Instance<'a, Identifier: Display = String> {
 			#[serde(rename = "@type")]
 			ty: FrameworkType,
+			#[serde(skip_serializing_if = "Variables::is_empty")]
 			variables: Variables<'a, Identifier>,
+			#[serde(skip_serializing_if = "Constraints::is_empty")]
 			constraints: Constraints<'a, Identifier>,
 		}
-		let x = X {
+		let x = Instance {
 			ty: self.ty,
 			variables: Variables {
 				content: self.variables.iter().map(V::Var).collect(),
@@ -138,10 +150,10 @@ mod tests {
 	pub(crate) use test_file;
 
 	test_file!(xcsp3_ex_001);
-	// test_file!(xcsp3_ex_002);
+	test_file!(xcsp3_ex_002);
 	// test_file!(xcsp3_ex_003);
 	// test_file!(xcsp3_ex_004);
-	// test_file!(xcsp3_ex_005);
+	test_file!(xcsp3_ex_005);
 	// test_file!(xcsp3_ex_006);
 	// test_file!(xcsp3_ex_007);
 	// test_file!(xcsp3_ex_008);
@@ -160,7 +172,7 @@ mod tests {
 	// test_file!(xcsp3_ex_021);
 	// test_file!(xcsp3_ex_022);
 	// test_file!(xcsp3_ex_023);
-	// test_file!(xcsp3_ex_024);
+	test_file!(xcsp3_ex_024);
 	// test_file!(xcsp3_ex_025);
 	// test_file!(xcsp3_ex_026);
 	// test_file!(xcsp3_ex_027);
@@ -171,8 +183,8 @@ mod tests {
 	// test_file!(xcsp3_ex_032);
 	// test_file!(xcsp3_ex_033);
 	// test_file!(xcsp3_ex_034);
-	// test_file!(xcsp3_ex_035);
-	// test_file!(xcsp3_ex_036);
+	test_file!(xcsp3_ex_035);
+	test_file!(xcsp3_ex_036);
 	// test_file!(xcsp3_ex_037);
 	// test_file!(xcsp3_ex_038);
 	// test_file!(xcsp3_ex_039);
@@ -225,7 +237,7 @@ mod tests {
 	// test_file!(xcsp3_ex_086);
 	// test_file!(xcsp3_ex_087);
 	// test_file!(xcsp3_ex_088);
-	// test_file!(xcsp3_ex_089);
+	test_file!(xcsp3_ex_089);
 	// test_file!(xcsp3_ex_090);
 	// test_file!(xcsp3_ex_091);
 	// test_file!(xcsp3_ex_092);

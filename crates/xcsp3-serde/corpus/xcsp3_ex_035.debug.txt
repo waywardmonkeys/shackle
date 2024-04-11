@@ -1,0 +1,57 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Intension(
+            Intension {
+                id: Some(
+                    "c1",
+                ),
+                function: Equal(
+                    [
+                        Int(
+                            Add(
+                                [
+                                    Var(
+                                        Ident(
+                                            "x",
+                                        ),
+                                    ),
+                                    Var(
+                                        Ident(
+                                            "y",
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        Var(
+                            Ident(
+                                "z",
+                            ),
+                        ),
+                    ],
+                ),
+            },
+        ),
+        Intension(
+            Intension {
+                id: Some(
+                    "c2",
+                ),
+                function: GreaterThanEq(
+                    Var(
+                        Ident(
+                            "w",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z",
+                        ),
+                    ),
+                ),
+            },
+        ),
+    ],
+}
