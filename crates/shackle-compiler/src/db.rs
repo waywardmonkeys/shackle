@@ -58,13 +58,12 @@ fn share_directory(db: &dyn CompilerSettings) -> crate::Result<Arc<PathBuf>> {
 	if let Some(p) = db.stdlib_directory() {
 		// If set with MZN_STDLIB_DIR then just use it
 		return Ok(p);
-	} else if let Ok(mut p) = std::env::current_exe() {
+	} else if let Ok(p) = std::env::current_exe() {
 		// Otherwise find /share/minizinc/std from this executable
-		while let Some(path) = p.parent() {
+		for path in p.ancestors() {
 			if path.join("share/minizinc/std/stdlib.mzn").exists() {
 				return Ok(Arc::new(path.join("share/minizinc")));
 			}
-			p = path.to_owned();
 		}
 	}
 	Err(crate::Error::StandardLibraryNotFound)
