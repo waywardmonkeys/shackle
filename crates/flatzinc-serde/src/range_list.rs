@@ -23,6 +23,19 @@ pub struct RangeList<E: PartialOrd> {
 	ranges: Vec<(E, E)>,
 }
 
+impl<E: PartialOrd + Copy> RangeList<E> {
+	/// Returns an Copying iterator for the ranges in the set.
+	#[allow(clippy::type_complexity)]
+	pub fn iter<'a>(
+		&'a self,
+	) -> Map<
+		<&RangeList<E> as IntoIterator>::IntoIter,
+		fn(RangeInclusive<&'a E>) -> RangeInclusive<E>,
+	> {
+		self.into_iter().map(|r| **r.start()..=**r.end())
+	}
+}
+
 impl<E: PartialOrd + Debug> Display for RangeList<E> {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		let mut first = true;
