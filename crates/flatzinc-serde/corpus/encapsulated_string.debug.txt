@@ -12,7 +12,7 @@ FlatZinc {
                     id: "myAnn",
                     args: [
                         Literal(
-                            Literal(
+                            BaseLiteral(
                                 String(
                                     "my string",
                                 ),

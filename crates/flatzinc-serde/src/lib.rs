@@ -186,7 +186,7 @@ impl<Identifier: Display> Display for AnnotationCall<Identifier> {
 #[serde(untagged)]
 pub enum AnnotationLiteral<Identifier = String> {
 	/// Basic FlatZinc literal
-	Literal(Literal<Identifier>),
+	BaseLiteral(Literal<Identifier>),
 	/// An annotation object
 	Annotation(Annotation),
 }
@@ -194,7 +194,7 @@ pub enum AnnotationLiteral<Identifier = String> {
 impl<Idenfier: Display> Display for AnnotationLiteral<Idenfier> {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
-			AnnotationLiteral::Literal(lit) => write!(f, "{lit}"),
+			AnnotationLiteral::BaseLiteral(lit) => write!(f, "{lit}"),
 			AnnotationLiteral::Annotation(ann) => write!(f, "{ann}"),
 		}
 	}
@@ -645,6 +645,7 @@ mod tests {
 	test_file!(encapsulated_string);
 	test_file!(float_sets);
 	test_file!(set_literals);
+	test_file!(unit_test_example);
 
 	fn test_successful_serialization(file: &Path, exp: ExpectFile) {
 		let rdr = BufReader::new(File::open(file).unwrap());
@@ -707,10 +708,10 @@ mod tests {
 		let ann: Annotation<&str> = Annotation::Call(AnnotationCall {
 			id: "bool_search".into(),
 			args: vec![
-				AnnotationArgument::Literal(AnnotationLiteral::Literal(Literal::Identifier(
+				AnnotationArgument::Literal(AnnotationLiteral::BaseLiteral(Literal::Identifier(
 					"input_order".into(),
 				))),
-				AnnotationArgument::Literal(AnnotationLiteral::Literal(Literal::Identifier(
+				AnnotationArgument::Literal(AnnotationLiteral::BaseLiteral(Literal::Identifier(
 					"indomain_min".into(),
 				))),
 			],
