@@ -35,7 +35,7 @@ FlatZinc {
     },
     arrays: {},
     constraints: [
-        Call {
+        Constraint {
             id: "my_float_in",
             args: [
                 Literal(
@@ -49,9 +49,10 @@ FlatZinc {
                     ),
                 ),
             ],
+            defines: None,
             ann: [],
         },
-        Call {
+        Constraint {
             id: "set_in_reif",
             args: [
                 Literal(
@@ -70,6 +71,9 @@ FlatZinc {
                     ),
                 ),
             ],
+            defines: Some(
+                "c",
+            ),
             ann: [],
         },
     ],

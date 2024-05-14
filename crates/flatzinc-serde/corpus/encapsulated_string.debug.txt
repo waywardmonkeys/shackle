@@ -8,16 +8,17 @@ FlatZinc {
         objective: None,
         ann: [
             Call(
-                Call {
+                AnnotationCall {
                     id: "myAnn",
                     args: [
                         Literal(
-                            String(
-                                "my string",
+                            Literal(
+                                String(
+                                    "my string",
+                                ),
                             ),
                         ),
                     ],
-                    ann: [],
                 },
             ),
         ],

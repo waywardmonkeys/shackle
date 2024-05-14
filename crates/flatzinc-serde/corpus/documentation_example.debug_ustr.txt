@@ -79,7 +79,7 @@ FlatZinc {
         },
     },
     constraints: [
-        Call {
+        Constraint {
             id: u!("int_lin_le"),
             args: [
                 Literal(
@@ -103,9 +103,10 @@ FlatZinc {
                     ),
                 ),
             ],
+            defines: None,
             ann: [],
         },
-        Call {
+        Constraint {
             id: u!("int_lin_le"),
             args: [
                 Literal(
@@ -129,9 +130,10 @@ FlatZinc {
                     ),
                 ),
             ],
+            defines: None,
             ann: [],
         },
-        Call {
+        Constraint {
             id: u!("int_lin_le"),
             args: [
                 Literal(
@@ -155,9 +157,10 @@ FlatZinc {
                     ),
                 ),
             ],
+            defines: None,
             ann: [],
         },
-        Call {
+        Constraint {
             id: u!("int_lin_eq"),
             args: [
                 Array(
@@ -192,6 +195,9 @@ FlatZinc {
                     ),
                 ),
             ],
+            defines: Some(
+                u!("X_INTRODUCED_0_"),
+            ),
             ann: [
                 Atom(
                     u!("ctx_pos"),

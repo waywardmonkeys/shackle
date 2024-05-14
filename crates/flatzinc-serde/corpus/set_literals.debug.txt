@@ -44,7 +44,7 @@ FlatZinc {
         },
     },
     constraints: [
-        Call {
+        Constraint {
             id: "array_set_element",
             args: [
                 Literal(
@@ -63,9 +63,12 @@ FlatZinc {
                     ),
                 ),
             ],
+            defines: Some(
+                "X_INTRODUCED_0_",
+            ),
             ann: [],
         },
-        Call {
+        Constraint {
             id: "set_in",
             args: [
                 Literal(
@@ -79,6 +82,7 @@ FlatZinc {
                     ),
                 ),
             ],
+            defines: None,
             ann: [],
         },
     ],

@@ -113,7 +113,7 @@ pub enum Annotation<Identifier = String> {
 	/// Atom annotation (i.e., a single [`Identifier`])
 	Atom(Identifier),
 	/// Call annotation
-	Call(Call<Identifier>),
+	Call(AnnotationCall<Identifier>),
 }
 
 impl<Identifier: Display> Display for Annotation<Identifier> {
@@ -122,6 +122,110 @@ impl<Identifier: Display> Display for Annotation<Identifier> {
 		match self {
 			Annotation::Atom(a) => write!(f, "{a}"),
 			Annotation::Call(c) => write!(f, "{c}"),
+		}
+	}
+}
+
+/// The argument type associated with [`Constraint`]
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum AnnotationArgument<Identifier = String> {
+	/// Sequence of [`Literal`]s
+	Array(Vec<AnnotationLiteral<Identifier>>),
+	/// Singular argument
+	Literal(AnnotationLiteral<Identifier>),
+}
+
+impl<Idenfier: Display> Display for AnnotationArgument<Idenfier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			AnnotationArgument::Array(arr) => {
+				write!(f, "[")?;
+				let mut first = true;
+				for v in arr {
+					if !first {
+						write!(f, ", ")?
+					}
+					write!(f, "{v}")?;
+					first = false;
+				}
+				write!(f, "]")
+			}
+			AnnotationArgument::Literal(lit) => write!(f, "{lit}"),
+		}
+	}
+}
+
+/// An object depicting an annotation in the form of a call
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[serde(rename = "annotation_call")]
+pub struct AnnotationCall<Identifier = String> {
+	/// Identifier of the constraint predicate
+	pub id: Identifier,
+	/// Arguments of the constraint
+	pub args: Vec<AnnotationArgument<Identifier>>,
+}
+
+impl<Identifier: Display> Display for AnnotationCall<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "{}(", self.id)?;
+		let mut first = true;
+		for arg in &self.args {
+			if !first {
+				write!(f, ", ")?
+			}
+			write!(f, "{arg}")?;
+			first = false;
+		}
+		write!(f, ")")
+	}
+}
+
+///Literal values as arguments to [`AnnotationCall`]
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum AnnotationLiteral<Identifier = String> {
+	/// Basic FlatZinc literal
+	Literal(Literal<Identifier>),
+	/// An annotation object
+	Annotation(Annotation),
+}
+
+impl<Idenfier: Display> Display for AnnotationLiteral<Idenfier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			AnnotationLiteral::Literal(lit) => write!(f, "{lit}"),
+			AnnotationLiteral::Annotation(ann) => write!(f, "{ann}"),
+		}
+	}
+}
+
+/// The argument type associated with [`Constraint`]
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum Argument<Identifier = String> {
+	/// Sequence of [`Literal`]s
+	Array(Vec<Literal<Identifier>>),
+	/// Literal
+	Literal(Literal<Identifier>),
+}
+
+impl<Identifier: Display> Display for Argument<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Argument::Array(arr) => {
+				write!(f, "[")?;
+				let mut first = true;
+				for v in arr {
+					if !first {
+						write!(f, ", ")?
+					}
+					write!(f, "{v}")?;
+					first = false;
+				}
+				write!(f, "]")
+			}
+			Argument::Literal(lit) => write!(f, "{lit}"),
 		}
 	}
 }
@@ -177,50 +281,23 @@ impl<Identifier: Ord> Array<Identifier> {
 	}
 }
 
-/// The argument type associated with [`Call`]
+/// An object depicting a constraint
 #[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
-#[serde(untagged)]
-pub enum Argument<Identifier = String> {
-	/// Sequence of [`Literal`]s
-	Array(Vec<Literal<Identifier>>),
-	/// Literal
-	Literal(Literal<Identifier>),
-}
-
-impl<Identifier: Display> Display for Argument<Identifier> {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		match self {
-			Argument::Array(arr) => {
-				write!(f, "[")?;
-				let mut first = true;
-				for v in arr {
-					if !first {
-						write!(f, ", ")?
-					}
-					write!(f, "{v}")?;
-					first = false;
-				}
-				write!(f, "]")
-			}
-			Argument::Literal(lit) => write!(f, "{lit}"),
-		}
-	}
-}
-
-/// An object depicting a call, used for constraints and annotations
-#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
-#[serde(rename = "call")]
-pub struct Call<Identifier = String> {
-	/// Identifier of the function being called (e.g., a predicate or annotation)
+#[serde(rename = "constraint")]
+pub struct Constraint<Identifier = String> {
+	/// Identifier of the constraint predicate
 	pub id: Identifier,
-	/// Arguments of the call
+	/// Arguments of the constraint
 	pub args: Vec<Argument<Identifier>>,
+	/// Identifier of the variable that the constraint defines
+	#[serde(default, skip_serializing_if = "Option::is_none")]
+	pub defines: Option<Identifier>,
 	/// List of annotations
 	#[serde(default = "Vec::new", skip_serializing_if = "Vec::is_empty")]
 	pub ann: Vec<Annotation<Identifier>>,
 }
 
-impl<Identifier: Display> Display for Call<Identifier> {
+impl<Identifier: Display> Display for Constraint<Identifier> {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "{}(", self.id)?;
 		let mut first = true;
@@ -232,6 +309,9 @@ impl<Identifier: Display> Display for Call<Identifier> {
 			first = false;
 		}
 		write!(f, ")")?;
+		if let Some(defines) = &self.defines {
+			write!(f, " ::defines_var({defines})")?
+		}
 		for a in &self.ann {
 			write!(f, " {a}")?
 		}
@@ -260,183 +340,6 @@ impl Display for Domain {
 	}
 }
 
-/// A name used to refer to an [`Array`], function, or [`Variable`]
-// pub type Identifier = String;
-
-/// Literal values
-#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
-#[serde(untagged)]
-pub enum Literal<Identifier = String> {
-	/// Integer value
-	Int(i64),
-	/// Floating point value
-	Float(f64),
-	/// Identifier, i.e., reference to an [`Array`] or [`Variable`]
-	Identifier(Identifier),
-	/// Boolean value
-	Bool(bool),
-	#[serde(
-		serialize_with = "serialize_encapsulate_set",
-		deserialize_with = "deserialize_encapsulated_set"
-	)]
-	/// Set of integers, represented as a list of integer ranges
-	IntSet(RangeList<i64>),
-	#[serde(
-		serialize_with = "serialize_encapsulate_set",
-		deserialize_with = "deserialize_encapsulated_set"
-	)]
-	/// Set of floating point values, represented as a list of floating point
-	/// ranges
-	FloatSet(RangeList<f64>),
-	#[serde(
-		serialize_with = "serialize_encapsulate_string",
-		deserialize_with = "deserialize_encapsulated_string"
-	)]
-	/// String value
-	String(String),
-}
-
-impl<Identifier: Display> Display for Literal<Identifier> {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		match self {
-			Literal::Int(i) => write!(f, "{i}"),
-			Literal::Float(x) => write!(f, "{x:?}"),
-			Literal::Identifier(ident) => write!(f, "{ident}"),
-			Literal::Bool(b) => write!(f, "{b}"),
-			Literal::IntSet(is) => write!(f, "{is}"),
-			Literal::FloatSet(fs) => write!(f, "{fs}"),
-			Literal::String(s) => write!(f, "{s:?}"),
-		}
-	}
-}
-
-/// Goal of solving a FlatZinc instance
-#[derive(Default, Clone, PartialEq, Debug, Deserialize, Serialize)]
-#[serde(rename = "method")]
-pub enum Method {
-	/// Find any solution
-	#[serde(rename = "satisfy")]
-	#[default]
-	Satisfy,
-	/// Find the solution with the lowest objective value
-	#[serde(rename = "minimize")]
-	Minimize,
-	/// Find the solution with the highest objective value
-	#[serde(rename = "maximize")]
-	Maximize,
-}
-
-impl Display for Method {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		match self {
-			Method::Satisfy => write!(f, "satisfy"),
-			Method::Minimize => write!(f, "minimize"),
-			Method::Maximize => write!(f, "maximize"),
-		}
-	}
-}
-
-/// Used to signal the type of (decision) [`Variable`]
-#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
-#[serde(rename = "type")]
-pub enum Type {
-	/// Boolean decision variable
-	#[serde(rename = "bool")]
-	Bool,
-	/// Integer decision variable
-	#[serde(rename = "int")]
-	Int,
-	/// Floating point decision variable
-	#[serde(rename = "float")]
-	Float,
-	/// Integer set decision variable
-	#[serde(rename = "set of int")]
-	IntSet,
-}
-
-impl Display for Type {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		match self {
-			Type::Bool => write!(f, "bool"),
-			Type::Int => write!(f, "int"),
-			Type::Float => write!(f, "float"),
-			Type::IntSet => write!(f, "set of int"),
-		}
-	}
-}
-
-/// The definition of a decision variable
-#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
-#[serde(rename = "variable")]
-pub struct Variable<Identifier = String> {
-	/// The type of the decision variable
-	#[serde(rename = "type")]
-	pub ty: Type,
-	/// The set of potential values from which the decision variable must take its
-	/// value in a solution
-	///
-	/// If domain has the value `None`, then all values of the decision variable's
-	/// `Type` are allowed in a solution.
-	#[serde(skip_serializing_if = "Option::is_none")]
-	pub domain: Option<Domain>,
-	/// The “right hand side” of the variable, i.e., its value or alias to another
-	/// variable
-	#[serde(rename = "rhs", skip_serializing_if = "Option::is_none")]
-	pub value: Option<Literal<Identifier>>,
-	/// A list of annotations
-	#[serde(default, skip_serializing_if = "Vec::is_empty")]
-	pub ann: Vec<Annotation<Identifier>>,
-	/// This field is set to `true` when there is a constraint that has been marked as
-	/// defining this variable.
-	#[serde(default, skip_serializing_if = "is_false")]
-	pub defined: bool,
-	/// This field is set to `true` when the variable has been introduced by the
-	/// MiniZinc compiler, rather than being explicitly defined at the top-level
-	/// of the MiniZinc model.
-	#[serde(default, skip_serializing_if = "is_false")]
-	pub introduced: bool,
-}
-
-/// A specification of objective of a FlatZinc instance
-#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
-pub struct SolveObjective<Identifier = String> {
-	/// The type of goal
-	pub method: Method,
-	/// The variable to optimize, or `None` if [`SolveObjective::method`] is [`Method::Satisfy`]
-	#[serde(skip_serializing_if = "Option::is_none")]
-	pub objective: Option<Literal<Identifier>>,
-	/// A list of annotations from the solve statement in the MiniZinc model
-	///
-	/// Note that this includes the search annotations if they are present in the
-	/// model.
-	#[serde(default, skip_serializing_if = "Vec::is_empty")]
-	pub ann: Vec<Annotation<Identifier>>,
-}
-
-impl<Identifier> Default for SolveObjective<Identifier> {
-	fn default() -> Self {
-		Self {
-			method: Default::default(),
-			objective: None,
-			ann: Vec::new(),
-		}
-	}
-}
-
-impl<Identifier: Display> Display for SolveObjective<Identifier> {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "solve ")?;
-		for a in &self.ann {
-			write!(f, "{a} ")?;
-		}
-		write!(f, "{}", self.method)?;
-		if let Some(obj) = &self.objective {
-			write!(f, " {obj}")?
-		}
-		Ok(())
-	}
-}
-
 /// The structure depicting a FlatZinc instance
 ///
 /// FlatZinc is (generally) a format produced by the MiniZinc compiler as a
@@ -450,10 +353,9 @@ pub struct FlatZinc<Identifier: Ord = String> {
 	/// A mapping from array [`Identifier`] to their definitions
 	#[serde(default)]
 	pub arrays: BTreeMap<Identifier, Array<Identifier>>,
-	/// A list of (solver-specific) constraints, in the form of [`Call`] objects,
-	/// that must be satisfied in a solution.
+	/// A list of (solver-specific) constraints, that must be satisfied in a solution.
 	#[serde(default)]
-	pub constraints: Vec<Call<Identifier>>,
+	pub constraints: Vec<Constraint<Identifier>>,
 	/// A list of all identifiers for which the solver must produce output for each solution
 	#[serde(default)]
 	pub output: Vec<Identifier>,
@@ -545,6 +447,183 @@ impl<Identifier: Ord + Display> Display for FlatZinc<Identifier> {
 	}
 }
 
+/// A name used to refer to an [`Array`], function, or [`Variable`]
+// pub type Identifier = String;
+
+/// Literal values
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum Literal<Identifier = String> {
+	/// Integer value
+	Int(i64),
+	/// Floating point value
+	Float(f64),
+	/// Identifier, i.e., reference to an [`Array`] or [`Variable`]
+	Identifier(Identifier),
+	/// Boolean value
+	Bool(bool),
+	#[serde(
+		serialize_with = "serialize_encapsulate_set",
+		deserialize_with = "deserialize_encapsulated_set"
+	)]
+	/// Set of integers, represented as a list of integer ranges
+	IntSet(RangeList<i64>),
+	#[serde(
+		serialize_with = "serialize_encapsulate_set",
+		deserialize_with = "deserialize_encapsulated_set"
+	)]
+	/// Set of floating point values, represented as a list of floating point
+	/// ranges
+	FloatSet(RangeList<f64>),
+	#[serde(
+		serialize_with = "serialize_encapsulate_string",
+		deserialize_with = "deserialize_encapsulated_string"
+	)]
+	/// String value
+	String(String),
+}
+
+impl<Identifier: Display> Display for Literal<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Literal::Int(i) => write!(f, "{i}"),
+			Literal::Float(x) => write!(f, "{x:?}"),
+			Literal::Identifier(ident) => write!(f, "{ident}"),
+			Literal::Bool(b) => write!(f, "{b}"),
+			Literal::IntSet(is) => write!(f, "{is}"),
+			Literal::FloatSet(fs) => write!(f, "{fs}"),
+			Literal::String(s) => write!(f, "{s:?}"),
+		}
+	}
+}
+
+/// Goal of solving a FlatZinc instance
+#[derive(Default, Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[serde(rename = "method")]
+pub enum Method {
+	/// Find any solution
+	#[serde(rename = "satisfy")]
+	#[default]
+	Satisfy,
+	/// Find the solution with the lowest objective value
+	#[serde(rename = "minimize")]
+	Minimize,
+	/// Find the solution with the highest objective value
+	#[serde(rename = "maximize")]
+	Maximize,
+}
+
+impl Display for Method {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Method::Satisfy => write!(f, "satisfy"),
+			Method::Minimize => write!(f, "minimize"),
+			Method::Maximize => write!(f, "maximize"),
+		}
+	}
+}
+
+/// A specification of objective of a FlatZinc instance
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+pub struct SolveObjective<Identifier = String> {
+	/// The type of goal
+	pub method: Method,
+	/// The variable to optimize, or `None` if [`SolveObjective::method`] is [`Method::Satisfy`]
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub objective: Option<Literal<Identifier>>,
+	/// A list of annotations from the solve statement in the MiniZinc model
+	///
+	/// Note that this includes the search annotations if they are present in the
+	/// model.
+	#[serde(default, skip_serializing_if = "Vec::is_empty")]
+	pub ann: Vec<Annotation<Identifier>>,
+}
+
+impl<Identifier> Default for SolveObjective<Identifier> {
+	fn default() -> Self {
+		Self {
+			method: Default::default(),
+			objective: None,
+			ann: Vec::new(),
+		}
+	}
+}
+
+impl<Identifier: Display> Display for SolveObjective<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "solve ")?;
+		for a in &self.ann {
+			write!(f, "{a} ")?;
+		}
+		write!(f, "{}", self.method)?;
+		if let Some(obj) = &self.objective {
+			write!(f, " {obj}")?
+		}
+		Ok(())
+	}
+}
+
+/// Used to signal the type of (decision) [`Variable`]
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[serde(rename = "type")]
+pub enum Type {
+	/// Boolean decision variable
+	#[serde(rename = "bool")]
+	Bool,
+	/// Integer decision variable
+	#[serde(rename = "int")]
+	Int,
+	/// Floating point decision variable
+	#[serde(rename = "float")]
+	Float,
+	/// Integer set decision variable
+	#[serde(rename = "set of int")]
+	IntSet,
+}
+
+impl Display for Type {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		match self {
+			Type::Bool => write!(f, "bool"),
+			Type::Int => write!(f, "int"),
+			Type::Float => write!(f, "float"),
+			Type::IntSet => write!(f, "set of int"),
+		}
+	}
+}
+
+/// The definition of a decision variable
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[serde(rename = "variable")]
+pub struct Variable<Identifier = String> {
+	/// The type of the decision variable
+	#[serde(rename = "type")]
+	pub ty: Type,
+	/// The set of potential values from which the decision variable must take its
+	/// value in a solution
+	///
+	/// If domain has the value `None`, then all values of the decision variable's
+	/// `Type` are allowed in a solution.
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub domain: Option<Domain>,
+	/// The “right hand side” of the variable, i.e., its value or alias to another
+	/// variable
+	#[serde(rename = "rhs", skip_serializing_if = "Option::is_none")]
+	pub value: Option<Literal<Identifier>>,
+	/// A list of annotations
+	#[serde(default, skip_serializing_if = "Vec::is_empty")]
+	pub ann: Vec<Annotation<Identifier>>,
+	/// This field is set to `true` when there is a constraint that has been marked as
+	/// defining this variable.
+	#[serde(default, skip_serializing_if = "is_false")]
+	pub defined: bool,
+	/// This field is set to `true` when the variable has been introduced by the
+	/// MiniZinc compiler, rather than being explicitly defined at the top-level
+	/// of the MiniZinc model.
+	#[serde(default, skip_serializing_if = "is_false")]
+	pub introduced: bool,
+}
+
 #[cfg(test)]
 mod tests {
 	use std::{
@@ -558,8 +637,8 @@ mod tests {
 	use ustr::Ustr;
 
 	use crate::{
-		Annotation, Argument, Array, Call, Domain, FlatZinc, Literal, Method, RangeList,
-		SolveObjective, Type, Variable,
+		Annotation, AnnotationArgument, AnnotationCall, AnnotationLiteral, Array, Domain, FlatZinc,
+		Literal, Method, RangeList, SolveObjective, Type, Variable,
 	};
 
 	test_file!(documentation_example);
@@ -625,13 +704,16 @@ mod tests {
 		expect_test::expect_file!["../corpus/documentation_example.fzn"]
 			.assert_eq(&fzn.to_string());
 
-		let ann: Annotation<&str> = Annotation::Call(Call {
+		let ann: Annotation<&str> = Annotation::Call(AnnotationCall {
 			id: "bool_search".into(),
 			args: vec![
-				Argument::Literal(Literal::Identifier("input_order".into())),
-				Argument::Literal(Literal::Identifier("indomain_min".into())),
+				AnnotationArgument::Literal(AnnotationLiteral::Literal(Literal::Identifier(
+					"input_order".into(),
+				))),
+				AnnotationArgument::Literal(AnnotationLiteral::Literal(Literal::Identifier(
+					"indomain_min".into(),
+				))),
 			],
-			ann: Vec::new(),
 		});
 		assert_eq!(ann.to_string(), "::bool_search(input_order, indomain_min)");
 
