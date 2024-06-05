@@ -181,7 +181,7 @@ impl Array {
 			.iter()
 			.map(|ii| ii.iter())
 			.multi_cartesian_product()
-			.zip_eq(self.members.iter())
+			.zip(self.members.iter())
 	}
 }
 
@@ -211,7 +211,7 @@ impl std::ops::Index<&[Value]> for Array {
 						if e.ty == val.ty {
 							idx += val.pos
 						} else {
-							panic!("incorrect index type: using value of type {} for an index of type {}", 
+							panic!("incorrect index type: using value of type {} for an index of type {}",
 							e.ty.name,
 							val.ty.name)
 						}
@@ -957,10 +957,26 @@ impl Display for Record {
 mod tests {
 	use itertools::Itertools;
 
-	use crate::value::Array;
+	use crate::value::{Array, Index};
 
 	#[test]
 	fn test_array_iter() {
 		assert_eq!(Array::empty().iter().collect_vec(), Vec::new());
+		assert_eq!(
+			Array::new(
+				vec![Index::Integer(1..=5)],
+				vec![5.into(), 4.into(), 3.into(), 2.into(), 1.into()]
+			)
+			.iter()
+			.map(|(a, b)| (a, b.clone()))
+			.collect_vec(),
+			vec![
+				(vec![1.into()], 5.into()),
+				(vec![2.into()], 4.into()),
+				(vec![3.into()], 3.into()),
+				(vec![4.into()], 2.into()),
+				(vec![5.into()], 1.into())
+			]
+		)
 	}
 }
