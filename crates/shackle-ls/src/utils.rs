@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use lsp_types::Url;
+use lsp_types::Uri;
 use miette::{SourceCode, SpanContents};
 use shackle_compiler::hir::{db::Hir, ids::NodeRef};
 
@@ -32,9 +32,9 @@ pub fn node_ref_to_location<T: Into<NodeRef>>(
 ) -> Option<lsp_types::Location> {
 	let (src, span) = node.into().source_span(db);
 	let span_contents = src.read_span(&span, 0, 0).ok()?;
-	let uri = Url::from_file_path(src.path()?)
+	let uri = Uri::from_str(src.path()?.as_os_str().to_str().unwrap())
 		.ok()
-		.or_else(|| Url::from_str(&format!("file:///{}", src.path()?.to_string_lossy())).ok())?;
+		.or_else(|| Uri::from_str(&format!("file:///{}", src.path()?.to_string_lossy())).ok())?;
 	let range = span_contents_to_range(&*span_contents);
 	Some(lsp_types::Location { uri, range })
 }

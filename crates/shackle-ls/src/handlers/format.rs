@@ -57,7 +57,7 @@ mod test {
 	use std::str::FromStr;
 
 	use expect_test::expect;
-	use lsp_types::Url;
+	use lsp_types::Uri;
 
 	use super::FormatHandler;
 	use crate::handlers::test::test_handler;
@@ -74,7 +74,7 @@ int: x   = (1 + 2) + 3 % foo
 			false,
 			lsp_types::DocumentFormattingParams {
 				text_document: lsp_types::TextDocumentIdentifier {
-					uri: Url::from_str("file:///test.mzn").unwrap(),
+					uri: Uri::from_str("file:///test.mzn").unwrap(),
 				},
 				options: lsp_types::FormattingOptions {
 					tab_size: 4,

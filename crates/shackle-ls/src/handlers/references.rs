@@ -110,7 +110,7 @@ mod test {
 	use std::str::FromStr;
 
 	use expect_test::expect;
-	use lsp_types::Url;
+	use lsp_types::Uri;
 
 	use super::ReferencesHandler;
 	use crate::handlers::test::test_handler;
@@ -136,7 +136,7 @@ int: z = hello + let { int: hello = int; } in hello;
 				},
 				text_document_position: lsp_types::TextDocumentPositionParams {
 					text_document: lsp_types::TextDocumentIdentifier {
-						uri: Url::from_str("file:///test.mzn").unwrap(),
+						uri: Uri::from_str("file:///test.mzn").unwrap(),
 					},
 					position: lsp_types::Position {
 						line: 1,
@@ -148,7 +148,7 @@ int: z = hello + let { int: hello = int; } in hello;
     {
       "Ok": [
         {
-          "uri": "file:///test.mzn",
+          "uri": "test.mzn",
           "range": {
             "start": {
               "line": 1,
@@ -161,7 +161,7 @@ int: z = hello + let { int: hello = int; } in hello;
           }
         },
         {
-          "uri": "file:///test.mzn",
+          "uri": "test.mzn",
           "range": {
             "start": {
               "line": 2,
@@ -174,7 +174,7 @@ int: z = hello + let { int: hello = int; } in hello;
           }
         },
         {
-          "uri": "file:///test.mzn",
+          "uri": "test.mzn",
           "range": {
             "start": {
               "line": 3,

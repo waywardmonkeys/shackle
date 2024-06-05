@@ -31,7 +31,7 @@ mod test {
 	use std::str::FromStr;
 
 	use expect_test::expect;
-	use lsp_types::Url;
+	use lsp_types::Uri;
 
 	use super::ViewCstHandler;
 	use crate::handlers::test::test_handler_display;
@@ -47,7 +47,7 @@ var foo(1, 3): y;
 			false,
 			lsp_types::TextDocumentPositionParams {
 				text_document: lsp_types::TextDocumentIdentifier {
-					uri: Url::from_str("file:///test.mzn").unwrap(),
+					uri: Uri::from_str("file:///test.mzn").unwrap(),
 				},
 				position: lsp_types::Position {
 					line: 0,

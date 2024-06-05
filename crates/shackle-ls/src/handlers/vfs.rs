@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use lsp_types::{
 	DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
 };
@@ -5,22 +7,14 @@ use lsp_types::{
 use crate::LanguageServerDatabase;
 
 pub fn on_document_open(db: &mut LanguageServerDatabase, params: DidOpenTextDocumentParams) {
-	let file = params
-		.text_document
-		.uri
-		.to_file_path()
-		.expect("Failed to convert URI to file path");
-	db.manage_file(file.as_path(), &params.text_document.text);
+	let file = params.text_document.uri.as_str();
+	db.manage_file(Path::new(file), &params.text_document.text);
 }
 
 pub fn on_document_changed(db: &mut LanguageServerDatabase, params: DidChangeTextDocumentParams) {
-	let file = params
-		.text_document
-		.uri
-		.to_file_path()
-		.expect("Failed to convert URI to file path");
+	let file = params.text_document.uri.as_str();
 	db.manage_file(
-		file.as_path(),
+		Path::new(file),
 		&params
 			.content_changes
 			.iter()
@@ -30,10 +24,6 @@ pub fn on_document_changed(db: &mut LanguageServerDatabase, params: DidChangeTex
 }
 
 pub fn on_document_closed(db: &mut LanguageServerDatabase, params: DidCloseTextDocumentParams) {
-	let file = params
-		.text_document
-		.uri
-		.to_file_path()
-		.expect("Failed to convert URI to file path");
-	db.unmanage_file(file.as_path());
+	let file = params.text_document.uri.as_str();
+	db.unmanage_file(Path::new(file));
 }

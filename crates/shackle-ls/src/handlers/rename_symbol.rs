@@ -90,6 +90,7 @@ impl RequestHandler<Rename, SymbolHandlerData> for RenameHandler {
 		};
 
 		let models = db.resolve_includes().ok().unwrap();
+		#[allow(clippy::mutable_key_type)] // Mutable key key required to create WorkspaceEdit
 		let mut edits = HashMap::new();
 
 		// loop over all the files included from the main file
@@ -145,7 +146,7 @@ mod test {
 	use std::str::FromStr;
 
 	use expect_test::expect;
-	use lsp_types::{RenameParams, TextDocumentPositionParams, Url};
+	use lsp_types::{RenameParams, TextDocumentPositionParams, Uri};
 
 	use super::RenameHandler;
 	use crate::handlers::test::test_handler;
@@ -167,7 +168,7 @@ any: z = x;
 				new_name: "abc 123 !@# \"".into(),
 				text_document_position: TextDocumentPositionParams {
 					text_document: lsp_types::TextDocumentIdentifier {
-						uri: Url::from_str("file:///test.mzn").unwrap(),
+						uri: Uri::from_str("file:///test.mzn").unwrap(),
 					},
 					position: lsp_types::Position {
 						line: 6,
@@ -182,7 +183,7 @@ any: z = x;
     {
       "Ok": {
         "changes": {
-          "file:///test.mzn": [
+          "test.mzn": [
             {
               "range": {
                 "start": {

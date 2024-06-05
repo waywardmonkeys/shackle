@@ -706,13 +706,13 @@ mod tests {
 			.assert_eq(&fzn.to_string());
 
 		let ann: Annotation<&str> = Annotation::Call(AnnotationCall {
-			id: "bool_search".into(),
+			id: "bool_search",
 			args: vec![
 				AnnotationArgument::Literal(AnnotationLiteral::BaseLiteral(Literal::Identifier(
-					"input_order".into(),
+					"input_order",
 				))),
 				AnnotationArgument::Literal(AnnotationLiteral::BaseLiteral(Literal::Identifier(
-					"indomain_min".into(),
+					"indomain_min",
 				))),
 			],
 		});

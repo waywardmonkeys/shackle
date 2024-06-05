@@ -1,8 +1,8 @@
 use std::{ops::Deref, path::Path, sync::Arc};
 
 use crossbeam_channel::{SendError, Sender};
-use lsp_server::{Connection, ErrorCode, Message, ResponseError};
-use lsp_types::{TextDocumentIdentifier, Url};
+use lsp_server::{Connection, Message, ResponseError};
+use lsp_types::{TextDocumentIdentifier, Uri};
 use shackle_compiler::{
 	db::{CompilerDatabase, FileReader, HasFileHandler, Inputs},
 	file::{InputFile, InputLang, ModelRef},
@@ -20,7 +20,7 @@ pub trait LanguageServerContext: Deref<Target = CompilerDatabase> {
 
 	/// Get the workspace URI
 	#[allow(dead_code)] // TODO
-	fn get_workspace_uri(&self) -> Option<&Url>;
+	fn get_workspace_uri(&self) -> Option<&Uri>;
 }
 
 pub struct LanguageServerDatabase {
@@ -28,11 +28,11 @@ pub struct LanguageServerDatabase {
 	pool: threadpool::ThreadPool,
 	sender: Sender<Message>,
 	db: CompilerDatabase,
-	workspace: Option<Url>,
+	workspace: Option<Uri>,
 }
 
 impl LanguageServerDatabase {
-	pub fn new(connection: &Connection, workspace: Option<Url>) -> Self {
+	pub fn new(connection: &Connection, workspace: Option<Uri>) -> Self {
 		let fs = Vfs::new();
 		let db = CompilerDatabase::with_file_handler(Box::new(fs.clone()));
 		Self {
@@ -99,16 +99,12 @@ impl LanguageServerContext for LanguageServerDatabase {
 		&mut self,
 		doc: &TextDocumentIdentifier,
 	) -> Result<ModelRef, ResponseError> {
-		let requested_path = doc.uri.to_file_path().map_err(|_| ResponseError {
-			code: ErrorCode::InvalidParams as i32,
-			data: None,
-			message: "Failed to convert URI to file path".to_owned(),
-		})?;
-		self.set_active_file(&requested_path);
+		let requested_path = Path::new(doc.uri.as_str());
+		self.set_active_file(requested_path);
 		Ok(self.input_models()[0])
 	}
 
-	fn get_workspace_uri(&self) -> Option<&Url> {
+	fn get_workspace_uri(&self) -> Option<&Uri> {
 		self.workspace.as_ref()
 	}
 }

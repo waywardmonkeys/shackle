@@ -169,7 +169,7 @@ mod test {
 	use std::str::FromStr;
 
 	use expect_test::expect;
-	use lsp_types::Url;
+	use lsp_types::Uri;
 
 	use super::SemanticTokensHandler;
 	use crate::handlers::test::test_handler;
@@ -186,7 +186,7 @@ any: z = x + y;
 			false,
 			lsp_types::SemanticTokensParams {
 				text_document: lsp_types::TextDocumentIdentifier {
-					uri: Url::from_str("file:///test.mzn").unwrap(),
+					uri: Uri::from_str("file:///test.mzn").unwrap(),
 				},
 				partial_result_params: lsp_types::PartialResultParams {
 					partial_result_token: None,

@@ -66,7 +66,7 @@ pub mod test {
 
 	struct MockDatabase {
 		db: CompilerDatabase,
-		workspace: Option<lsp_types::Url>,
+		workspace: Option<lsp_types::Uri>,
 	}
 
 	impl Deref for MockDatabase {
@@ -83,7 +83,7 @@ pub mod test {
 		) -> Result<shackle_compiler::file::ModelRef, lsp_server::ResponseError> {
 			Ok(self.input_models()[0])
 		}
-		fn get_workspace_uri(&self) -> Option<&lsp_types::Url> {
+		fn get_workspace_uri(&self) -> Option<&lsp_types::Uri> {
 			self.workspace.as_ref()
 		}
 	}
@@ -99,7 +99,7 @@ pub mod test {
 	{
 		let mut db = MockDatabase {
 			db: CompilerDatabase::with_file_handler(Box::new(MockFileHandler(model.to_string()))),
-			workspace: lsp_types::Url::from_str("file:///").ok(),
+			workspace: lsp_types::Uri::from_str("file:///").ok(),
 		};
 		db.db.set_ignore_stdlib(no_stdlib);
 		db.db.set_input_files(Arc::new(vec![InputFile::Path(

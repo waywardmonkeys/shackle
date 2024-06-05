@@ -3,7 +3,7 @@ use std::{
 	str::FromStr,
 };
 
-use lsp_types::{notification::Notification, Url};
+use lsp_types::{notification::Notification, Uri};
 use miette::{Diagnostic, Severity};
 use shackle_compiler::hir::db::Hir;
 
@@ -20,7 +20,7 @@ pub fn diagnostics_notification(db: &dyn Hir, path: &Path) -> lsp_server::Notifi
 	lsp_server::Notification {
 		method: lsp_types::notification::PublishDiagnostics::METHOD.to_owned(),
 		params: serde_json::to_value(lsp_types::PublishDiagnosticsParams {
-			uri: Url::from_file_path(path).unwrap(),
+			uri: Uri::from_str(path.as_os_str().to_str().unwrap()).unwrap(),
 			diagnostics,
 			version: None,
 		})
@@ -43,7 +43,7 @@ fn collect_diagnostic(
 	if p != path {
 		return None;
 	}
-	let uri = Url::from_file_path(path).ok()?;
+	let uri = Uri::from_str(path.as_os_str().to_str().unwrap()).ok()?;
 	let related_info: Vec<_> = ls
 		.filter_map(|l| {
 			let label = l.label()?;
