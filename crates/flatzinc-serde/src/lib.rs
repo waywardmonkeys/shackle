@@ -126,7 +126,7 @@ impl<Identifier: Display> Display for Annotation<Identifier> {
 	}
 }
 
-/// The argument type associated with [`Constraint`]
+/// The argument type associated with [`AnnotationCall`]
 #[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum AnnotationArgument<Identifier = String> {
