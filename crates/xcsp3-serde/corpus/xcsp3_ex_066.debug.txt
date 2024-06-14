@@ -2,8 +2,8 @@ Instance {
     ty: Csp,
     variables: [],
     constraints: [
-        BinPacking(
-            BinPacking {
+        Element(
+            Element {
                 info: ConstraintMeta {
                     id: Some(
                         "c1",
@@ -31,39 +31,22 @@ Instance {
                             "x4",
                         ),
                     ),
+                ],
+                index: Some(
                     Var(
                         Ident(
-                            "x5",
+                            "i",
                         ),
                     ),
-                ],
-                sizes: [
-                    Const(
-                        25,
-                    ),
-                    Const(
-                        53,
-                    ),
-                    Const(
-                        38,
-                    ),
-                    Const(
-                        41,
-                    ),
-                    Const(
-                        32,
-                    ),
-                ],
-                condition: Some(
-                    Condition {
-                        operator: Le,
-                        operand: Const(
-                            100,
-                        ),
-                    },
                 ),
-                limits: [],
-                loads: [],
+                value: Some(
+                    Var(
+                        Ident(
+                            "v",
+                        ),
+                    ),
+                ),
+                condition: None,
             },
         ),
     ],

@@ -1,12 +1,16 @@
 pub(crate) mod all_different;
 pub(crate) mod all_equal;
 pub(crate) mod bin_packing;
+pub(crate) mod channel;
 pub(crate) mod circuit;
 pub(crate) mod cumulative;
+pub(crate) mod element;
 pub(crate) mod extension;
 pub(crate) mod instantiation;
 pub(crate) mod intension;
 pub(crate) mod knapsack;
+pub(crate) mod maximum;
+pub(crate) mod minimum;
 pub(crate) mod no_overlap;
 pub(crate) mod ordered;
 pub(crate) mod precedence;
@@ -24,12 +28,12 @@ use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 use crate::{
 	constraint::{
 		all_different::AllDifferent, all_equal::AllEqual, bin_packing::BinPacking,
-		circuit::Circuit, cumulative::Cumulative, extension::Extension,
-		instantiation::Instantiation, intension::Intension, knapsack::Knapsack,
-		no_overlap::NoOverlap, ordered::Ordered, precedence::Precedence,
+		channel::Channel, circuit::Circuit, cumulative::Cumulative, element::Element,
+		extension::Extension, instantiation::Instantiation, intension::Intension,
+		knapsack::Knapsack, maximum::Maximum, minimum::Minimum, no_overlap::NoOverlap,
+		ordered::Ordered, precedence::Precedence,
 	},
-	parser::integer::int,
-	IntVal,
+	parser::integer::{int_exp, IntExp},
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -41,10 +45,14 @@ pub enum Constraint<Identifier = String> {
 	AllEqual(AllEqual<Identifier>),
 	#[serde(rename = "binPacking")]
 	BinPacking(BinPacking<Identifier>),
+	#[serde(rename = "channel")]
+	Channel(Channel<Identifier>),
 	#[serde(rename = "circuit")]
 	Circuit(Circuit<Identifier>),
 	#[serde(rename = "cumulative")]
 	Cumulative(Cumulative<Identifier>),
+	#[serde(rename = "element")]
+	Element(Element<Identifier>),
 	#[serde(rename = "extension")]
 	Extension(Extension<Identifier>),
 	#[serde(rename = "instantiation")]
@@ -53,6 +61,10 @@ pub enum Constraint<Identifier = String> {
 	Intension(Intension<Identifier>),
 	#[serde(rename = "knapsack")]
 	Knapsack(Knapsack<Identifier>),
+	#[serde(rename = "maximum")]
+	Maximum(Maximum<Identifier>),
+	#[serde(rename = "minimum")]
+	Minimum(Minimum<Identifier>),
 	#[serde(rename = "noOverlap")]
 	NoOverlap(NoOverlap<Identifier>),
 	#[serde(rename = "ordered")]
@@ -104,23 +116,29 @@ fn serialize_ident<S: serde::Serializer, Identifier: Display>(
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Operator {
-	#[serde(rename = "le")]
-	Le,
 	#[serde(rename = "lt")]
 	Lt,
+	#[serde(rename = "le")]
+	Le,
+	#[serde(rename = "eq")]
+	Eq,
 	#[serde(rename = "ge")]
 	Ge,
 	#[serde(rename = "gt")]
 	Gt,
+	#[serde(rename = "ne")]
+	Ne,
 }
 
 impl Display for Operator {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 		match self {
-			Operator::Le => write!(f, "le"),
 			Operator::Lt => write!(f, "lt"),
+			Operator::Le => write!(f, "le"),
+			Operator::Eq => write!(f, "eq"),
 			Operator::Ge => write!(f, "ge"),
 			Operator::Gt => write!(f, "gt"),
+			Operator::Ne => write!(f, "ne"),
 		}
 	}
 }
@@ -151,7 +169,14 @@ impl<'de, Identifier: FromStr> Deserialize<'de> for Condition<Identifier> {
 				let mut parser = delimited(
 					char('('),
 					separated_pair(
-						alt((tag("le"), tag("lt"), tag("ge"), tag("gt"))),
+						alt((
+							tag("lt"),
+							tag("le"),
+							tag("eq"),
+							tag("ge"),
+							tag("gt"),
+							tag("ne"),
+						)),
 						char(','),
 						int_exp,
 					),
@@ -160,10 +185,12 @@ impl<'de, Identifier: FromStr> Deserialize<'de> for Condition<Identifier> {
 				let (_, (operator, operand)) =
 					parser(v).map_err(|e| E::custom(format!("invalid condition {e:?}")))?;
 				let operator = match operator {
-					"le" => Operator::Le,
 					"lt" => Operator::Lt,
+					"le" => Operator::Le,
+					"eq" => Operator::Eq,
 					"ge" => Operator::Ge,
 					"gt" => Operator::Gt,
+					"ne" => Operator::Ne,
 					_ => unreachable!(),
 				};
 				Ok(Condition { operator, operand })

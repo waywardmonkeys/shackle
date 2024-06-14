@@ -1,0 +1,49 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Element(
+            Element {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    Const(
+                        10,
+                    ),
+                    Const(
+                        4,
+                    ),
+                    Const(
+                        7,
+                    ),
+                    Const(
+                        2,
+                    ),
+                    Const(
+                        3,
+                    ),
+                ],
+                index: Some(
+                    Var(
+                        Ident(
+                            "i",
+                        ),
+                    ),
+                ),
+                value: None,
+                condition: Some(
+                    Condition {
+                        operator: Eq,
+                        operand: Var(
+                            Ident(
+                                "v",
+                            ),
+                        ),
+                    },
+                ),
+            },
+        ),
+    ],
+}

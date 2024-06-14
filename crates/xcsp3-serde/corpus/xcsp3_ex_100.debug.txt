@@ -1,0 +1,89 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Element(
+            Element {
+                info: ConstraintMeta {
+                    id: Some(
+                        "c1",
+                    ),
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "s1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "s2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "s3",
+                        ),
+                    ),
+                ],
+                index: Some(
+                    Var(
+                        Ident(
+                            "i",
+                        ),
+                    ),
+                ),
+                value: Some(
+                    Var(
+                        Ident(
+                            "t",
+                        ),
+                    ),
+                ),
+                condition: None,
+            },
+        ),
+        Element(
+            Element {
+                info: ConstraintMeta {
+                    id: Some(
+                        "c2",
+                    ),
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "t1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "t2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "t3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "t4",
+                        ),
+                    ),
+                ],
+                index: None,
+                value: Some(
+                    Var(
+                        Ident(
+                            "t5",
+                        ),
+                    ),
+                ),
+                condition: None,
+            },
+        ),
+    ],
+}

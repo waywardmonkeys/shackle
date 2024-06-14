@@ -71,7 +71,9 @@ Instance {
                 ],
                 condition: Condition {
                     operator: Le,
-                    operand: 4,
+                    operand: Const(
+                        4,
+                    ),
                 },
             },
         ),

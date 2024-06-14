@@ -1,0 +1,56 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Channel(
+            Channel {
+                info: ConstraintMeta {
+                    id: Some(
+                        "c2",
+                    ),
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "z0",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z4",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z5",
+                        ),
+                    ),
+                ],
+                inverse_list: [],
+                value: Some(
+                    Var(
+                        Ident(
+                            "v",
+                        ),
+                    ),
+                ),
+            },
+        ),
+    ],
+}

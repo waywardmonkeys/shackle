@@ -1,9 +1,12 @@
-<maximum id="c1">
-   <list> x1 x2 x3 x4 </list>
-   <condition> (eq,y) </condition>
-</maximum>
-<maximum id="c2">
-   <list> z1 z2 z3 z4 z5 </list>
-   <condition> (lt,w) </condition>
-</maximum>
- 
+<instance format="XCSP3" type="CSP">
+  <constraints>
+    <maximum id="c1">
+       <list> x1 x2 x3 x4 </list>
+       <condition> (eq,y) </condition>
+    </maximum>
+    <maximum id="c2">
+       <list> z1 z2 z3 z4 z5 </list>
+       <condition> (lt,w) </condition>
+    </maximum>
+  </constraints>
+</instance>
