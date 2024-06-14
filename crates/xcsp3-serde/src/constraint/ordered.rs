@@ -3,16 +3,11 @@ use std::{fmt::Display, str::FromStr};
 use serde::{Deserialize, Serialize};
 
 use super::ConstraintMeta;
-use crate::{
-	parser::integer::{
-		deserialize_int_exps, deserialize_int_vals, serialize_int_exps, serialize_int_vals, IntExp,
-	},
-	IntVal,
-};
+use crate::parser::integer::{deserialize_int_exps, serialize_int_exps, IntExp};
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
-pub struct AllDifferent<Identifier = String> {
+pub struct Ordered<Identifier = String> {
 	#[serde(flatten)]
 	info: ConstraintMeta<Identifier>,
 	#[serde(
@@ -24,8 +19,21 @@ pub struct AllDifferent<Identifier = String> {
 	#[serde(
 		default,
 		skip_serializing_if = "Vec::is_empty",
-		deserialize_with = "deserialize_int_vals",
-		serialize_with = "serialize_int_vals"
+		deserialize_with = "deserialize_int_exps",
+		serialize_with = "serialize_int_exps"
 	)]
-	except: Vec<IntVal>,
+	lengths: Vec<IntExp<Identifier>>,
+	operator: Operator,
+}
+
+#[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
+pub enum Operator {
+	#[serde(rename = "le")]
+	Le,
+	#[serde(rename = "lt")]
+	Lt,
+	#[serde(rename = "ge")]
+	Ge,
+	#[serde(rename = "gt")]
+	Gt,
 }

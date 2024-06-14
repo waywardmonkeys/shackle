@@ -1,0 +1,40 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Precedence(
+            Precedence {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "s1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "s2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "s3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "s4",
+                        ),
+                    ),
+                ],
+                values: [
+                    4,
+                    0,
+                ],
+            },
+        ),
+    ],
+}

@@ -12,7 +12,7 @@ use crate::{
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
-pub struct AllDifferent<Identifier = String> {
+pub struct Precedence<Identifier = String> {
 	#[serde(flatten)]
 	info: ConstraintMeta<Identifier>,
 	#[serde(
@@ -27,5 +27,5 @@ pub struct AllDifferent<Identifier = String> {
 		deserialize_with = "deserialize_int_vals",
 		serialize_with = "serialize_int_vals"
 	)]
-	except: Vec<IntVal>,
+	values: Vec<IntVal>,
 }

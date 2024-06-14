@@ -1,32 +1,38 @@
 pub(crate) mod all_different;
+pub(crate) mod all_equal;
 pub(crate) mod extension;
 pub(crate) mod intension;
+pub(crate) mod ordered;
+pub(crate) mod precedence;
 
 use std::{fmt::Display, marker::PhantomData, str::FromStr};
 
 use serde::{de::Visitor, Deserialize, Deserializer, Serialize};
 
-use crate::constraint::{all_different::AllDifferent, extension::Extension, intension::Intension};
+use crate::constraint::{
+	all_different::AllDifferent, all_equal::AllEqual, extension::Extension, intension::Intension,
+	ordered::Ordered, precedence::Precedence,
+};
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
-#[serde(bound(
-	deserialize = "Identifier: std::str::FromStr",
-	serialize = "Identifier: std::fmt::Display"
-))]
+#[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub enum Constraint<Identifier = String> {
+	#[serde(rename = "allDifferent")]
+	AllDifferent(AllDifferent<Identifier>),
+	#[serde(rename = "allEqual")]
+	AllEqual(AllEqual<Identifier>),
 	#[serde(rename = "extension")]
 	Extension(Extension<Identifier>),
 	#[serde(rename = "intension")]
 	Intension(Intension<Identifier>),
-	#[serde(rename = "allDifferent")]
-	AllDifferent(AllDifferent<Identifier>),
+	#[serde(rename = "ordered")]
+	Ordered(Ordered<Identifier>),
+	#[serde(rename = "precedence")]
+	Precedence(Precedence<Identifier>),
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
-#[serde(bound(
-	deserialize = "Identifier: std::str::FromStr",
-	serialize = "Identifier: std::fmt::Display"
-))]
+#[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub struct ConstraintMeta<Identifier> {
 	#[serde(
 		default,

@@ -1,5 +1,8 @@
-<precedence>
-   <list> x1 x2 x3 x4 </list>
-   <values> 4 0 1 </values>
-</precedence>
- 
+<instance format="XCSP3" type="CSP">
+  <constraints>
+    <precedence>
+       <list> x1 x2 x3 x4 </list>
+       <values> 4 0 1 </values>
+    </precedence>
+  </constraints>
+</instance>

@@ -194,12 +194,12 @@ mod tests {
 	// test_file!(xcsp3_ex_043);
 	test_file!(xcsp3_ex_044);
 	test_file!(xcsp3_ex_045);
-	// test_file!(xcsp3_ex_046);
-	// test_file!(xcsp3_ex_047);
+	test_file!(xcsp3_ex_046);
+	test_file!(xcsp3_ex_047);
 	// test_file!(xcsp3_ex_048);
-	// test_file!(xcsp3_ex_049);
+	test_file!(xcsp3_ex_049);
 	// test_file!(xcsp3_ex_050);
-	// test_file!(xcsp3_ex_051);
+	test_file!(xcsp3_ex_051);
 	// test_file!(xcsp3_ex_052);
 	// test_file!(xcsp3_ex_053);
 	// test_file!(xcsp3_ex_054);
@@ -239,7 +239,7 @@ mod tests {
 	// test_file!(xcsp3_ex_088);
 	test_file!(xcsp3_ex_089);
 	// test_file!(xcsp3_ex_090);
-	// test_file!(xcsp3_ex_091);
+	test_file!(xcsp3_ex_091);
 	// test_file!(xcsp3_ex_092);
 	// test_file!(xcsp3_ex_093);
 	// test_file!(xcsp3_ex_094);
@@ -249,7 +249,7 @@ mod tests {
 	// test_file!(xcsp3_ex_098);
 	// test_file!(xcsp3_ex_099);
 	// test_file!(xcsp3_ex_100);
-	// test_file!(xcsp3_ex_101);
+	test_file!(xcsp3_ex_101);
 	// test_file!(xcsp3_ex_102);
 	// test_file!(xcsp3_ex_103);
 	// test_file!(xcsp3_ex_104);

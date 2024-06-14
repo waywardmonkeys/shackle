@@ -255,3 +255,34 @@ pub fn serialize_int_exps<S: serde::Serializer, Identifier: Display>(
 			.join(" "),
 	)
 }
+
+pub fn deserialize_int_vals<'de, D: Deserializer<'de>>(
+	deserializer: D,
+) -> Result<Vec<IntVal>, D::Error> {
+	struct V;
+	impl<'de> Visitor<'de> for V {
+		type Value = Vec<IntVal>;
+		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+			formatter.write_str("an integer")
+		}
+		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+			let (_, v) = all_consuming(whitespace_seperated(int))(v)
+				.map_err(|e| E::custom(format!("invalid integer {e:?}")))?;
+			Ok(v)
+		}
+	}
+	deserializer.deserialize_str(V)
+}
+
+pub fn serialize_int_vals<S: serde::Serializer>(
+	vals: &[IntVal],
+	serializer: S,
+) -> Result<S::Ok, S::Error> {
+	serializer.serialize_str(
+		&vals
+			.iter()
+			.map(|e| format!("{}", e))
+			.collect::<Vec<_>>()
+			.join(" "),
+	)
+}
