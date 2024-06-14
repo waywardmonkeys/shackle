@@ -1,0 +1,58 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        NoOverlap(
+            NoOverlap {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                origins: [
+                    Var(
+                        Ident(
+                            "x0",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x3",
+                        ),
+                    ),
+                ],
+                lengths: [
+                    Var(
+                        Ident(
+                            "l0",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "l1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "l2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "l3",
+                        ),
+                    ),
+                ],
+            },
+        ),
+    ],
+}

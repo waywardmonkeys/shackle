@@ -149,6 +149,8 @@ mod tests {
 	}
 	pub(crate) use test_file;
 
+	test_file!(knapsack);
+
 	test_file!(xcsp3_ex_001);
 	test_file!(xcsp3_ex_002);
 	// test_file!(xcsp3_ex_003);
@@ -220,12 +222,12 @@ mod tests {
 	// test_file!(xcsp3_ex_069);
 	// test_file!(xcsp3_ex_070);
 	// test_file!(xcsp3_ex_071);
-	// test_file!(xcsp3_ex_072);
+	test_file!(xcsp3_ex_072);
 	// test_file!(xcsp3_ex_073);
-	// test_file!(xcsp3_ex_074);
-	// test_file!(xcsp3_ex_075);
-	// test_file!(xcsp3_ex_076);
-	// test_file!(xcsp3_ex_077);
+	test_file!(xcsp3_ex_074);
+	test_file!(xcsp3_ex_075);
+	test_file!(xcsp3_ex_076);
+	test_file!(xcsp3_ex_077);
 	test_file!(xcsp3_ex_078);
 	// test_file!(xcsp3_ex_079);
 	// test_file!(xcsp3_ex_080);

@@ -16,7 +16,6 @@ pub struct Instantiation<Identifier = String> {
 	#[serde(flatten)]
 	pub info: ConstraintMeta<Identifier>,
 	#[serde(
-		alias = "$text",
 		deserialize_with = "deserialize_var_refs",
 		serialize_with = "serialize_var_refs"
 	)]
