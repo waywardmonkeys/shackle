@@ -1071,10 +1071,8 @@ impl Ty {
 				}
 				(TyData::Record(o1, f1), TyData::Record(o2, f2)) => {
 					if o1 != OptType::NonOpt && o1 != o2
-						|| f1.len() != f2.len() || !f1
-						.iter()
-						.zip(f2.iter())
-						.all(|((i1, _), (i2, _))| i1 == i2)
+						|| f1.len() != f2.len()
+						|| !f1.iter().zip(f2.iter()).all(|((i1, _), (i2, _))| i1 == i2)
 					{
 						return false;
 					}

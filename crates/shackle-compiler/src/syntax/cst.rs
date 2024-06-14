@@ -3,6 +3,7 @@
 use std::{
 	fmt::Debug,
 	hash::{Hash, Hasher},
+	mem,
 	ops::Deref,
 	sync::Arc,
 };
@@ -216,11 +217,11 @@ impl Debug for CstNode {
 }
 
 impl CstNode {
-	unsafe fn new(tree: Cst, node: Node) -> Self {
+	unsafe fn new<'tree>(tree: Cst, node: Node<'tree>) -> Self {
 		// Unsafe because we can't guarantee that `tree` is actually the tree for `node`.
 		CstNode {
 			tree,
-			node: std::mem::transmute(node),
+			node: mem::transmute::<tree_sitter::Node<'tree>, tree_sitter::Node<'static>>(node),
 		}
 	}
 
