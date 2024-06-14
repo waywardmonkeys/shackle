@@ -14,18 +14,18 @@ use crate::{
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub struct AllDifferent<Identifier = String> {
 	#[serde(flatten)]
-	info: ConstraintMeta<Identifier>,
+	pub info: ConstraintMeta<Identifier>,
 	#[serde(
 		alias = "$text",
 		deserialize_with = "deserialize_int_exps",
 		serialize_with = "serialize_int_exps"
 	)]
-	list: Vec<IntExp<Identifier>>,
+	pub list: Vec<IntExp<Identifier>>,
 	#[serde(
 		default,
 		skip_serializing_if = "Vec::is_empty",
 		deserialize_with = "deserialize_int_vals",
 		serialize_with = "serialize_int_vals"
 	)]
-	except: Vec<IntVal>,
+	pub except: Vec<IntVal>,
 }

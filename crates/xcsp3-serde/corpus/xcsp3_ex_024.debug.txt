@@ -9,7 +9,10 @@ Instance {
     constraints: [
         Intension(
             Intension {
-                id: None,
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
                 function: Equal(
                     [
                         Int(

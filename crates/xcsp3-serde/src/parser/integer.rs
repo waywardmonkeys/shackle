@@ -17,7 +17,11 @@ use super::{
 	set::{set_exp, SetExp},
 	Exp,
 };
-use crate::{parser::whitespace_seperated, variable::VarRef, IntVal};
+use crate::{
+	parser::{sequence, tuple, whitespace_seperated},
+	variable::VarRef,
+	IntVal,
+};
 
 pub fn range(input: &str) -> IResult<&str, RangeInclusive<IntVal>> {
 	let (input, lb) = int(input)?;
@@ -231,11 +235,11 @@ pub fn deserialize_int_exps<'de, D: Deserializer<'de>, Identifier: FromStr>(
 	impl<'de, X: FromStr> Visitor<'de> for V<X> {
 		type Value = Vec<IntExp<X>>;
 		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-			formatter.write_str("an identfier")
+			formatter.write_str("a list of integers expressions")
 		}
 		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
 			let (_, v) = all_consuming(whitespace_seperated(int_exp))(v)
-				.map_err(|e| E::custom(format!("invalid integer expression {e:?}")))?;
+				.map_err(|e| E::custom(format!("invalid integer expressions {e:?}")))?;
 			Ok(v)
 		}
 	}
@@ -263,11 +267,11 @@ pub fn deserialize_int_vals<'de, D: Deserializer<'de>>(
 	impl<'de> Visitor<'de> for V {
 		type Value = Vec<IntVal>;
 		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-			formatter.write_str("an integer")
+			formatter.write_str("a list of integers")
 		}
 		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
 			let (_, v) = all_consuming(whitespace_seperated(int))(v)
-				.map_err(|e| E::custom(format!("invalid integer {e:?}")))?;
+				.map_err(|e| E::custom(format!("invalid list of integers {e:?}")))?;
 			Ok(v)
 		}
 	}
@@ -284,5 +288,44 @@ pub fn serialize_int_vals<S: serde::Serializer>(
 			.map(|e| format!("{}", e))
 			.collect::<Vec<_>>()
 			.join(" "),
+	)
+}
+
+pub fn deserialize_int_tuples<'de, D: serde::Deserializer<'de>>(
+	deserializer: D,
+) -> Result<Vec<Vec<IntVal>>, D::Error> {
+	struct V;
+	impl<'de> Visitor<'de> for V {
+		type Value = Vec<Vec<IntVal>>;
+		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+			formatter.write_str("an integer")
+		}
+		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+			let (_, v) = all_consuming(sequence(tuple(int)))(v)
+				.map_err(|e| E::custom(format!("invalid integer {e:?}")))?;
+			Ok(v)
+		}
+	}
+	deserializer.deserialize_str(V)
+}
+
+pub fn serialize_int_tuples<S: serde::Serializer>(
+	vals: &[Vec<IntVal>],
+	serializer: S,
+) -> Result<S::Ok, S::Error> {
+	serializer.serialize_str(
+		&vals
+			.iter()
+			.map(|e| {
+				format!(
+					"({})",
+					e.iter()
+						.map(|e| format!("{}", e))
+						.collect::<Vec<_>>()
+						.join(",")
+				)
+			})
+			.collect::<Vec<_>>()
+			.join(""),
 	)
 }

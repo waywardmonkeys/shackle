@@ -13,7 +13,10 @@ Instance {
     constraints: [
         Intension(
             Intension {
-                id: None,
+                info: ConstraintMeta {
+                    id: None,
+                    note: "this constraint links x and y",
+                },
                 function: Equal(
                     [
                         Var(

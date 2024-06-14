@@ -9,21 +9,21 @@ use crate::parser::integer::{deserialize_int_exps, serialize_int_exps, IntExp};
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub struct Ordered<Identifier = String> {
 	#[serde(flatten)]
-	info: ConstraintMeta<Identifier>,
+	pub info: ConstraintMeta<Identifier>,
 	#[serde(
 		alias = "$text",
 		deserialize_with = "deserialize_int_exps",
 		serialize_with = "serialize_int_exps"
 	)]
-	list: Vec<IntExp<Identifier>>,
+	pub list: Vec<IntExp<Identifier>>,
 	#[serde(
 		default,
 		skip_serializing_if = "Vec::is_empty",
 		deserialize_with = "deserialize_int_exps",
 		serialize_with = "serialize_int_exps"
 	)]
-	lengths: Vec<IntExp<Identifier>>,
-	operator: Operator,
+	pub lengths: Vec<IntExp<Identifier>>,
+	pub operator: Operator,
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]

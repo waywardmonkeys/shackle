@@ -4,9 +4,12 @@ Instance {
     constraints: [
         Intension(
             Intension {
-                id: Some(
-                    "c1",
-                ),
+                info: ConstraintMeta {
+                    id: Some(
+                        "c1",
+                    ),
+                    note: "",
+                },
                 function: Equal(
                     [
                         Int(
@@ -36,9 +39,12 @@ Instance {
         ),
         Intension(
             Intension {
-                id: Some(
-                    "c2",
-                ),
+                info: ConstraintMeta {
+                    id: Some(
+                        "c2",
+                    ),
+                    note: "",
+                },
                 function: GreaterThanEq(
                     Var(
                         Ident(

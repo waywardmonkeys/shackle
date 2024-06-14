@@ -1,4 +1,4 @@
-use std::{fmt::Display, str::FromStr};
+use std::{fmt::Display, marker::PhantomData, str::FromStr};
 
 use nom::{
 	branch::alt,
@@ -8,6 +8,7 @@ use nom::{
 	multi::{separated_list0, separated_list1},
 	IResult,
 };
+use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 
 use super::{
 	exp,
@@ -103,6 +104,30 @@ impl<Identifier: Display> Display for BoolExp<Identifier> {
 			BoolExp::SuperSetEq(e1, e2) => write!(f, "supseq({},{})", e1, e2),
 			BoolExp::Convex(e) => write!(f, "convex({})", e),
 		}
+	}
+}
+
+impl<'de, Identifier: FromStr> Deserialize<'de> for BoolExp<Identifier> {
+	fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<BoolExp<Identifier>, D::Error> {
+		struct V<Ident>(PhantomData<Ident>);
+		impl<'de, Ident: FromStr> Visitor<'de> for V<Ident> {
+			type Value = BoolExp<Ident>;
+			fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+				formatter.write_str("an integer")
+			}
+			fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+				let (_, v) = bool_exp::<Ident>(v)
+					.map_err(|e| E::custom(format!("invalid integer {e:?}")))?;
+				Ok(v)
+			}
+		}
+		deserializer.deserialize_str(V(PhantomData::<Identifier>))
+	}
+}
+
+impl<Identifier: Display> Serialize for BoolExp<Identifier> {
+	fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+		serializer.serialize_str(&self.to_string())
 	}
 }
 

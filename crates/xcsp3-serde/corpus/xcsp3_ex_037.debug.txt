@@ -1,44 +1,50 @@
 Instance {
     ty: Csp,
-    variables: [
-        Variable {
-            identifier: "x",
-            domain: RangeList::from_iter([0..=1]),
-        },
-        Variable {
-            identifier: "y",
-            domain: RangeList::from_iter([0..=1]),
-        },
-        Variable {
-            identifier: "z",
-            domain: RangeList::from_iter([0..=1]),
-        },
-    ],
+    variables: [],
     constraints: [
         Extension(
             Extension {
                 info: ConstraintMeta {
-                    id: None,
+                    id: Some(
+                        "c1",
+                    ),
                     note: "",
                 },
                 list: [
                     Var(
                         Ident(
-                            "x",
+                            "x1",
                         ),
                     ),
                     Var(
                         Ident(
-                            "y",
+                            "x2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x3",
                         ),
                     ),
                 ],
                 supports: [
                     [
                         0,
+                        1,
                         0,
                     ],
                     [
+                        1,
+                        0,
+                        0,
+                    ],
+                    [
+                        1,
+                        1,
+                        0,
+                    ],
+                    [
+                        1,
                         1,
                         1,
                     ],
@@ -49,63 +55,48 @@ Instance {
         Extension(
             Extension {
                 info: ConstraintMeta {
-                    id: None,
+                    id: Some(
+                        "c2",
+                    ),
                     note: "",
                 },
                 list: [
                     Var(
                         Ident(
-                            "x",
+                            "y1",
                         ),
                     ),
                     Var(
                         Ident(
-                            "z",
-                        ),
-                    ),
-                ],
-                supports: [
-                    [
-                        0,
-                        0,
-                    ],
-                    [
-                        1,
-                        1,
-                    ],
-                ],
-                conflicts: [],
-            },
-        ),
-        Extension(
-            Extension {
-                info: ConstraintMeta {
-                    id: None,
-                    note: "",
-                },
-                list: [
-                    Var(
-                        Ident(
-                            "y",
+                            "y2",
                         ),
                     ),
                     Var(
                         Ident(
-                            "z",
+                            "y3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "y4",
                         ),
                     ),
                 ],
-                supports: [
+                supports: [],
+                conflicts: [
                     [
-                        0,
                         1,
+                        2,
+                        3,
+                        4,
                     ],
                     [
+                        3,
                         1,
-                        0,
+                        3,
+                        4,
                     ],
                 ],
-                conflicts: [],
             },
         ),
     ],

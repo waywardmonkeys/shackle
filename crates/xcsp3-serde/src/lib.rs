@@ -185,7 +185,7 @@ mod tests {
 	// test_file!(xcsp3_ex_034);
 	test_file!(xcsp3_ex_035);
 	test_file!(xcsp3_ex_036);
-	// test_file!(xcsp3_ex_037);
+	test_file!(xcsp3_ex_037);
 	// test_file!(xcsp3_ex_038);
 	// test_file!(xcsp3_ex_039);
 	// test_file!(xcsp3_ex_040);
