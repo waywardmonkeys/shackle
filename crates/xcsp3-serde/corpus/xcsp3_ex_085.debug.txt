@@ -1,0 +1,43 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Instantiation(
+            Instantiation {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    Ident(
+                        "x",
+                    ),
+                    Ident(
+                        "y",
+                    ),
+                    Ident(
+                        "z",
+                    ),
+                ],
+                except: [],
+            },
+        ),
+        Instantiation(
+            Instantiation {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    ArrayAccess(
+                        "w",
+                        [
+                            None,
+                        ],
+                    ),
+                ],
+                except: [],
+            },
+        ),
+    ],
+}

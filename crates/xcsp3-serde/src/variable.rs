@@ -1,15 +1,20 @@
 use std::{
 	borrow::{Borrow, Cow},
 	fmt::{self, Display},
+	marker::PhantomData,
+	str::FromStr,
 };
 
 use flatzinc_serde::RangeList;
 use itertools::Itertools;
 use nom::combinator::all_consuming;
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{
+	de::{self, Visitor},
+	Deserialize, Deserializer, Serialize, Serializer,
+};
 
 use crate::{
-	parser::{integer::range, whitespace_seperated},
+	parser::{identifier::variable, integer::range, whitespace_seperated},
 	IntVal,
 };
 
@@ -108,4 +113,36 @@ impl<Identifier: Display> Display for VarRef<Identifier> {
 			}
 		}
 	}
+}
+
+pub(crate) fn deserialize_var_refs<'de, D: Deserializer<'de>, Identifier: FromStr>(
+	deserializer: D,
+) -> Result<Vec<VarRef<Identifier>>, D::Error> {
+	struct V<X>(PhantomData<X>);
+	impl<'de, X: FromStr> Visitor<'de> for V<X> {
+		type Value = Vec<VarRef<X>>;
+		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+			formatter.write_str("a list of variable references")
+		}
+		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+			let (_, v) = all_consuming(whitespace_seperated(variable))(v)
+				.map_err(|e| E::custom(format!("invalid variable references {e:?}")))?;
+			Ok(v)
+		}
+	}
+	let visitor = V::<Identifier>(PhantomData);
+	deserializer.deserialize_str(visitor)
+}
+
+pub(crate) fn serialize_var_refs<S: serde::Serializer, Identifier: Display>(
+	exps: &[VarRef<Identifier>],
+	serializer: S,
+) -> Result<S::Ok, S::Error> {
+	serializer.serialize_str(
+		&exps
+			.iter()
+			.map(|e| format!("{}", e))
+			.collect::<Vec<_>>()
+			.join(" "),
+	)
 }

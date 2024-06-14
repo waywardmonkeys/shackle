@@ -1,0 +1,39 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Circuit(
+            Circuit {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "x0",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x3",
+                        ),
+                    ),
+                ],
+                size: Const(
+                    0,
+                ),
+            },
+        ),
+    ],
+}

@@ -1,6 +1,8 @@
 pub(crate) mod all_different;
 pub(crate) mod all_equal;
+pub(crate) mod circuit;
 pub(crate) mod extension;
+pub(crate) mod instantiation;
 pub(crate) mod intension;
 pub(crate) mod ordered;
 pub(crate) mod precedence;
@@ -10,8 +12,8 @@ use std::{fmt::Display, marker::PhantomData, str::FromStr};
 use serde::{de::Visitor, Deserialize, Deserializer, Serialize};
 
 use crate::constraint::{
-	all_different::AllDifferent, all_equal::AllEqual, extension::Extension, intension::Intension,
-	ordered::Ordered, precedence::Precedence,
+	all_different::AllDifferent, all_equal::AllEqual, circuit::Circuit, extension::Extension,
+	instantiation::Instantiation, intension::Intension, ordered::Ordered, precedence::Precedence,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -21,8 +23,12 @@ pub enum Constraint<Identifier = String> {
 	AllDifferent(AllDifferent<Identifier>),
 	#[serde(rename = "allEqual")]
 	AllEqual(AllEqual<Identifier>),
+	#[serde(rename = "circuit")]
+	Circuit(Circuit<Identifier>),
 	#[serde(rename = "extension")]
 	Extension(Extension<Identifier>),
+	#[serde(rename = "instantiation")]
+	Instantiation(Instantiation<Identifier>),
 	#[serde(rename = "intension")]
 	Intension(Intension<Identifier>),
 	#[serde(rename = "ordered")]

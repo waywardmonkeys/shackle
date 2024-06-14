@@ -226,15 +226,15 @@ mod tests {
 	// test_file!(xcsp3_ex_075);
 	// test_file!(xcsp3_ex_076);
 	// test_file!(xcsp3_ex_077);
-	// test_file!(xcsp3_ex_078);
+	test_file!(xcsp3_ex_078);
 	// test_file!(xcsp3_ex_079);
 	// test_file!(xcsp3_ex_080);
 	// test_file!(xcsp3_ex_081);
 	// test_file!(xcsp3_ex_082);
 	// test_file!(xcsp3_ex_083);
 	// test_file!(xcsp3_ex_084);
-	// test_file!(xcsp3_ex_085);
-	// test_file!(xcsp3_ex_086);
+	test_file!(xcsp3_ex_085);
+	test_file!(xcsp3_ex_086);
 	// test_file!(xcsp3_ex_087);
 	// test_file!(xcsp3_ex_088);
 	test_file!(xcsp3_ex_089);

@@ -8,7 +8,7 @@ use nom::{
 	multi::separated_list1,
 	IResult,
 };
-use serde::{de::Visitor, Deserializer};
+use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 
 use super::{
 	boolean::{bool_exp, BoolExp},
@@ -113,6 +113,30 @@ impl<Identifier: Display> Display for IntExp<Identifier> {
 			IntExp::Bool(b) => write!(f, "{}", b),
 			IntExp::Card(s) => write!(f, "card({})", s),
 		}
+	}
+}
+
+impl<'de, Identifier: FromStr> Deserialize<'de> for IntExp<Identifier> {
+	fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<IntExp<Identifier>, D::Error> {
+		struct V<Ident>(PhantomData<Ident>);
+		impl<'de, Ident: FromStr> Visitor<'de> for V<Ident> {
+			type Value = IntExp<Ident>;
+			fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+				formatter.write_str("an integer")
+			}
+			fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+				let (_, v) =
+					int_exp::<Ident>(v).map_err(|e| E::custom(format!("invalid integer {e:?}")))?;
+				Ok(v)
+			}
+		}
+		deserializer.deserialize_str(V(PhantomData::<Identifier>))
+	}
+}
+
+impl<Identifier: Display> Serialize for IntExp<Identifier> {
+	fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+		serializer.serialize_str(&self.to_string())
 	}
 }
 
@@ -228,7 +252,7 @@ fn var_arg_exp<Identifier: FromStr>(input: &str) -> IResult<&str, IntExp<Identif
 	))
 }
 
-pub fn deserialize_int_exps<'de, D: Deserializer<'de>, Identifier: FromStr>(
+pub(crate) fn deserialize_int_exps<'de, D: Deserializer<'de>, Identifier: FromStr>(
 	deserializer: D,
 ) -> Result<Vec<IntExp<Identifier>>, D::Error> {
 	struct V<X>(PhantomData<X>);
@@ -247,7 +271,7 @@ pub fn deserialize_int_exps<'de, D: Deserializer<'de>, Identifier: FromStr>(
 	deserializer.deserialize_str(visitor)
 }
 
-pub fn serialize_int_exps<S: serde::Serializer, Identifier: Display>(
+pub(crate) fn serialize_int_exps<S: serde::Serializer, Identifier: Display>(
 	exps: &[IntExp<Identifier>],
 	serializer: S,
 ) -> Result<S::Ok, S::Error> {
@@ -260,7 +284,7 @@ pub fn serialize_int_exps<S: serde::Serializer, Identifier: Display>(
 	)
 }
 
-pub fn deserialize_int_vals<'de, D: Deserializer<'de>>(
+pub(crate) fn deserialize_int_vals<'de, D: Deserializer<'de>>(
 	deserializer: D,
 ) -> Result<Vec<IntVal>, D::Error> {
 	struct V;
@@ -278,7 +302,7 @@ pub fn deserialize_int_vals<'de, D: Deserializer<'de>>(
 	deserializer.deserialize_str(V)
 }
 
-pub fn serialize_int_vals<S: serde::Serializer>(
+pub(crate) fn serialize_int_vals<S: serde::Serializer>(
 	vals: &[IntVal],
 	serializer: S,
 ) -> Result<S::Ok, S::Error> {
@@ -291,7 +315,7 @@ pub fn serialize_int_vals<S: serde::Serializer>(
 	)
 }
 
-pub fn deserialize_int_tuples<'de, D: serde::Deserializer<'de>>(
+pub(crate) fn deserialize_int_tuples<'de, D: serde::Deserializer<'de>>(
 	deserializer: D,
 ) -> Result<Vec<Vec<IntVal>>, D::Error> {
 	struct V;
@@ -309,7 +333,7 @@ pub fn deserialize_int_tuples<'de, D: serde::Deserializer<'de>>(
 	deserializer.deserialize_str(V)
 }
 
-pub fn serialize_int_tuples<S: serde::Serializer>(
+pub(crate) fn serialize_int_tuples<S: serde::Serializer>(
 	vals: &[Vec<IntVal>],
 	serializer: S,
 ) -> Result<S::Ok, S::Error> {
