@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
 	constraint::ConstraintMeta,
-	parser::integer::{
-		deserialize_int_exps, deserialize_int_tuples, serialize_int_exps, serialize_int_tuples,
-		IntExp,
+	parser::{
+		integer::{deserialize_int_exps, deserialize_int_tuples, serialize_int_tuples, IntExp},
+		serialize_list,
 	},
 	IntVal,
 };
@@ -21,7 +21,7 @@ pub struct Extension<Identifier = String> {
 	#[serde(
 		alias = "$text",
 		deserialize_with = "deserialize_int_exps",
-		serialize_with = "serialize_int_exps"
+		serialize_with = "serialize_list"
 	)]
 	pub list: Vec<IntExp<Identifier>>,
 	#[serde(

@@ -71,8 +71,10 @@ Instance {
                 ],
                 condition: Condition {
                     operator: Le,
-                    operand: Const(
-                        4,
+                    operand: Int(
+                        Const(
+                            4,
+                        ),
                     ),
                 },
             },

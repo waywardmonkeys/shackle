@@ -2,7 +2,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
 	constraint::ConstraintMeta,
-	parser::integer::{deserialize_int_exps, serialize_int_exps, IntExp},
+	parser::{
+		integer::{deserialize_int_exps, IntExp},
+		serialize_list,
+	},
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -16,7 +19,7 @@ pub struct Circuit<Identifier = String> {
 	#[serde(
 		alias = "$text",
 		deserialize_with = "deserialize_int_exps",
-		serialize_with = "serialize_int_exps"
+		serialize_with = "serialize_list"
 	)]
 	pub list: Vec<IntExp<Identifier>>, // TODO: "startIndex" attribute
 	#[serde(default = "zero", skip_serializing_if = "is_zero")]

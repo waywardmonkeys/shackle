@@ -1,0 +1,69 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Sum(
+            Sum {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    Bool(
+                        Equal(
+                            [
+                                Var(
+                                    Ident(
+                                        "x1",
+                                    ),
+                                ),
+                                Bool(
+                                    Const(
+                                        true,
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ),
+                    Bool(
+                        GreaterThan(
+                            Var(
+                                Ident(
+                                    "x2",
+                                ),
+                            ),
+                            Const(
+                                2,
+                            ),
+                        ),
+                    ),
+                    Bool(
+                        Equal(
+                            [
+                                Var(
+                                    Ident(
+                                        "x3",
+                                    ),
+                                ),
+                                Bool(
+                                    Const(
+                                        true,
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ),
+                ],
+                coeffs: [],
+                condition: Condition {
+                    operator: Le,
+                    operand: Int(
+                        Const(
+                            2,
+                        ),
+                    ),
+                },
+            },
+        ),
+    ],
+}

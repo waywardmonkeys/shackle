@@ -1,13 +1,14 @@
-use std::{fmt::Display, str::FromStr};
+use std::{fmt::Display, marker::PhantomData, str::FromStr};
 
 use nom::{
 	branch::alt,
 	character::complete::{char, multispace0, multispace1},
-	combinator::map,
+	combinator::{all_consuming, map},
 	multi::{many0, separated_list1},
 	sequence::{delimited, preceded, terminated},
 	IResult,
 };
+use serde::{de::Visitor, Deserializer, Serializer};
 
 use self::{
 	boolean::{bool_exp, BoolExp},
@@ -44,9 +45,9 @@ impl<Identifier: Display> Display for Exp<Identifier> {
 pub fn exp<Identifier: FromStr>(input: &str) -> IResult<&str, Exp<Identifier>> {
 	alt((
 		map(variable, |x| Exp::Var(x)),
+		map(set_exp, |x| Exp::Set(Box::new(x))),
 		map(bool_exp, |x| Exp::Bool(Box::new(x))),
 		map(int_exp, |x| Exp::Int(Box::new(x))),
-		map(set_exp, |x| Exp::Set(Box::new(x))),
 	))(input)
 }
 
@@ -71,4 +72,36 @@ pub fn sequence<'a, O>(
 	p: impl FnMut(&'a str) -> IResult<&'a str, O>,
 ) -> impl FnMut(&'a str) -> IResult<&'a str, Vec<O>> {
 	terminated(many0(preceded(multispace0, p)), multispace0)
+}
+
+pub(crate) fn deserialize_exps<'de, D: Deserializer<'de>, Identifier: FromStr>(
+	deserializer: D,
+) -> Result<Vec<Exp<Identifier>>, D::Error> {
+	struct V<X>(PhantomData<X>);
+	impl<'de, X: FromStr> Visitor<'de> for V<X> {
+		type Value = Vec<Exp<X>>;
+		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+			formatter.write_str("a list of expressions")
+		}
+		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+			let (_, v) = all_consuming(whitespace_seperated(exp))(v)
+				.map_err(|e| E::custom(format!("invalid expressions {e:?}")))?;
+			Ok(v)
+		}
+	}
+	let visitor = V::<Identifier>(PhantomData);
+	deserializer.deserialize_str(visitor)
+}
+
+pub(crate) fn serialize_list<S: Serializer, T: Display>(
+	exps: &[T],
+	serializer: S,
+) -> Result<S::Ok, S::Error> {
+	serializer.serialize_str(
+		&exps
+			.iter()
+			.map(|e| format!("{}", e))
+			.collect::<Vec<_>>()
+			.join(" "),
+	)
 }

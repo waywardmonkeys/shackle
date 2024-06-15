@@ -1,5 +1,9 @@
-<sum>
-  <list> w[] </list>
-  <coeffs> 1 1 1 1 2 2 </coeffs>
-  <condition> (le,10) </condition>  
-</sum>
+<instance format="XCSP3" type="CSP">
+  <constraints>
+    <sum>
+      <list> w[] </list>
+      <coeffs> 1 1 1 1 2 2 </coeffs>
+      <condition> (le,10) </condition>
+    </sum>
+  </constraints>
+</instance>

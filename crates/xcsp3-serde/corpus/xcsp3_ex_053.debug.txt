@@ -1,0 +1,59 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Sum(
+            Sum {
+                info: ConstraintMeta {
+                    id: Some(
+                        "c2",
+                    ),
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "y1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "y2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "y3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "y4",
+                        ),
+                    ),
+                ],
+                coeffs: [
+                    4,
+                    2,
+                    3,
+                    1,
+                ],
+                condition: Condition {
+                    operator: In,
+                    operand: Set(
+                        Range(
+                            (
+                                Const(
+                                    2,
+                                ),
+                                Const(
+                                    5,
+                                ),
+                            ),
+                        ),
+                    ),
+                },
+            },
+        ),
+    ],
+}

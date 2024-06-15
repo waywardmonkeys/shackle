@@ -1,0 +1,51 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Count(
+            Count {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "s1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "s2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "s3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "s4",
+                        ),
+                    ),
+                ],
+                values: [
+                    Var(
+                        Ident(
+                            "t",
+                        ),
+                    ),
+                ],
+                condition: Condition {
+                    operator: Eq,
+                    operand: Int(
+                        Const(
+                            2,
+                        ),
+                    ),
+                },
+            },
+        ),
+    ],
+}

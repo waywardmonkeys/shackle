@@ -1,0 +1,160 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Cardinality(
+            Cardinality {
+                info: ConstraintMeta {
+                    id: Some(
+                        "c1",
+                    ),
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "x1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x4",
+                        ),
+                    ),
+                ],
+                values: [
+                    Const(
+                        2,
+                    ),
+                    Const(
+                        5,
+                    ),
+                    Const(
+                        10,
+                    ),
+                ],
+                occurs: [
+                    Set(
+                        Range(
+                            (
+                                Const(
+                                    0,
+                                ),
+                                Const(
+                                    1,
+                                ),
+                            ),
+                        ),
+                    ),
+                    Set(
+                        Range(
+                            (
+                                Const(
+                                    1,
+                                ),
+                                Const(
+                                    3,
+                                ),
+                            ),
+                        ),
+                    ),
+                    Set(
+                        Range(
+                            (
+                                Const(
+                                    2,
+                                ),
+                                Const(
+                                    3,
+                                ),
+                            ),
+                        ),
+                    ),
+                ],
+            },
+        ),
+        Cardinality(
+            Cardinality {
+                info: ConstraintMeta {
+                    id: Some(
+                        "c2",
+                    ),
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "y1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "y2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "y3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "y4",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "y5",
+                        ),
+                    ),
+                ],
+                values: [
+                    Const(
+                        0,
+                    ),
+                    Const(
+                        1,
+                    ),
+                    Const(
+                        2,
+                    ),
+                    Const(
+                        3,
+                    ),
+                ],
+                occurs: [
+                    Var(
+                        Ident(
+                            "z0",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "z3",
+                        ),
+                    ),
+                ],
+            },
+        ),
+    ],
+}

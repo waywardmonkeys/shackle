@@ -1,3 +1,5 @@
+use std::{fmt::Display, str::FromStr};
+
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -9,18 +11,19 @@ use crate::{
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
-#[serde(bound(
-	deserialize = "Identifier: std::str::FromStr",
-	serialize = "Identifier: std::fmt::Display"
-))]
-pub struct Maximum<Identifier = String> {
+#[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
+pub struct Count<Identifier = String> {
 	#[serde(flatten)]
 	pub info: ConstraintMeta<Identifier>,
 	#[serde(
-		alias = "$text",
 		deserialize_with = "deserialize_int_exps",
 		serialize_with = "serialize_list"
 	)]
 	pub list: Vec<IntExp<Identifier>>,
+	#[serde(
+		deserialize_with = "deserialize_int_exps",
+		serialize_with = "serialize_list"
+	)]
+	pub values: Vec<IntExp<Identifier>>,
 	pub condition: Condition<Identifier>,
 }

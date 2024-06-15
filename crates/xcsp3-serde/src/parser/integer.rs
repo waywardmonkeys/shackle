@@ -271,19 +271,6 @@ pub(crate) fn deserialize_int_exps<'de, D: Deserializer<'de>, Identifier: FromSt
 	deserializer.deserialize_str(visitor)
 }
 
-pub(crate) fn serialize_int_exps<S: serde::Serializer, Identifier: Display>(
-	exps: &[IntExp<Identifier>],
-	serializer: S,
-) -> Result<S::Ok, S::Error> {
-	serializer.serialize_str(
-		&exps
-			.iter()
-			.map(|e| format!("{}", e))
-			.collect::<Vec<_>>()
-			.join(" "),
-	)
-}
-
 pub(crate) fn deserialize_int_vals<'de, D: Deserializer<'de>>(
 	deserializer: D,
 ) -> Result<Vec<IntVal>, D::Error> {
@@ -300,19 +287,6 @@ pub(crate) fn deserialize_int_vals<'de, D: Deserializer<'de>>(
 		}
 	}
 	deserializer.deserialize_str(V)
-}
-
-pub(crate) fn serialize_int_vals<S: serde::Serializer>(
-	vals: &[IntVal],
-	serializer: S,
-) -> Result<S::Ok, S::Error> {
-	serializer.serialize_str(
-		&vals
-			.iter()
-			.map(|e| format!("{}", e))
-			.collect::<Vec<_>>()
-			.join(" "),
-	)
 }
 
 pub(crate) fn deserialize_int_tuples<'de, D: serde::Deserializer<'de>>(

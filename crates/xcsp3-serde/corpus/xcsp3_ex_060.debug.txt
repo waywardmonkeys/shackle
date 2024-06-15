@@ -1,0 +1,62 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Cardinality(
+            Cardinality {
+                info: ConstraintMeta {
+                    id: Some(
+                        "c3",
+                    ),
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "w1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "w2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "w3",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "w4",
+                        ),
+                    ),
+                ],
+                values: [
+                    Var(
+                        Ident(
+                            "v1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "v2",
+                        ),
+                    ),
+                ],
+                occurs: [
+                    Var(
+                        Ident(
+                            "n1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "n2",
+                        ),
+                    ),
+                ],
+            },
+        ),
+    ],
+}

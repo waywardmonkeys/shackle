@@ -57,8 +57,10 @@ Instance {
                 condition: Some(
                     Condition {
                         operator: Le,
-                        operand: Const(
-                            100,
+                        operand: Int(
+                            Const(
+                                100,
+                            ),
                         ),
                     },
                 ),

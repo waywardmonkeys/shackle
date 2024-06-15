@@ -6,7 +6,7 @@ use nom::{
 	character::complete::char,
 	combinator::map,
 	multi::{separated_list0, separated_list1},
-	sequence::{delimited, pair},
+	sequence::{delimited, pair, separated_pair},
 	IResult,
 };
 
@@ -20,6 +20,7 @@ use crate::variable::VarRef;
 pub enum SetExp<Identifier> {
 	Var(VarRef<Identifier>),
 	Set(Vec<IntExp<Identifier>>),
+	Range((IntExp<Identifier>, IntExp<Identifier>)),
 	Hull(Box<SetExp<Identifier>>),
 	Diff(Box<SetExp<Identifier>>, Box<SetExp<Identifier>>),
 	Union(Vec<SetExp<Identifier>>),
@@ -39,6 +40,7 @@ impl<Identifier: Display> Display for SetExp<Identifier> {
 					.collect::<Vec<_>>()
 					.join(",")
 			),
+			SetExp::Range((from, to)) => write!(f, "{}..{}", from, to),
 			SetExp::Hull(e) => write!(f, "hull({})", e),
 			SetExp::Diff(e1, e2) => write!(f, "diff({}, {})", e1, e2),
 			SetExp::Union(es) => write!(
@@ -71,10 +73,12 @@ impl<Identifier: Display> Display for SetExp<Identifier> {
 
 pub fn set_exp<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identifier>> {
 	alt((
+		map(separated_pair(int_exp, tag(".."), int_exp), |(from, to)| {
+			SetExp::Range((from, to))
+		}),
 		one_arg,
 		two_arg,
 		var_arg,
-		map(variable, SetExp::Var),
 		map(
 			delimited(
 				pair(tag("set"), char('(')),
@@ -83,6 +87,7 @@ pub fn set_exp<Identifier: FromStr>(input: &str) -> IResult<&str, SetExp<Identif
 			),
 			SetExp::Set,
 		),
+		map(variable, SetExp::Var),
 	))(input)
 }
 

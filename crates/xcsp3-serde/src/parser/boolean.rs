@@ -3,8 +3,8 @@ use std::{fmt::Display, marker::PhantomData, str::FromStr};
 use nom::{
 	branch::alt,
 	bytes::complete::tag,
-	character::complete::char,
-	combinator::map,
+	character::complete::{char, digit1},
+	combinator::{map, verify},
 	multi::{separated_list0, separated_list1},
 	IResult,
 };
@@ -133,8 +133,9 @@ impl<Identifier: Display> Serialize for BoolExp<Identifier> {
 
 pub fn bool_exp<Identifier: FromStr>(input: &str) -> IResult<&str, BoolExp<Identifier>> {
 	alt((
-		map(char('0'), |_| BoolExp::Const(false)),
-		map(char('1'), |_| BoolExp::Const(true)),
+		map(verify(digit1, |s| matches!(s, "0" | "1")), |s| {
+			BoolExp::Const(s == "1")
+		}),
 		one_arg,
 		one_arg_set,
 		two_arg,

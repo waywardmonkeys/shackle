@@ -1,0 +1,46 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Sum(
+            Sum {
+                info: ConstraintMeta {
+                    id: Some(
+                        "c1",
+                    ),
+                    note: "",
+                },
+                list: [
+                    Var(
+                        Ident(
+                            "x1",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x2",
+                        ),
+                    ),
+                    Var(
+                        Ident(
+                            "x3",
+                        ),
+                    ),
+                ],
+                coeffs: [
+                    1,
+                    2,
+                    3,
+                ],
+                condition: Condition {
+                    operator: Gt,
+                    operand: Var(
+                        Ident(
+                            "y",
+                        ),
+                    ),
+                },
+            },
+        ),
+    ],
+}

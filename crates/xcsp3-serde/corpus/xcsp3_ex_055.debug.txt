@@ -1,0 +1,40 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    constraints: [
+        Sum(
+            Sum {
+                info: ConstraintMeta {
+                    id: None,
+                    note: "",
+                },
+                list: [
+                    Var(
+                        ArrayAccess(
+                            "w",
+                            [
+                                None,
+                            ],
+                        ),
+                    ),
+                ],
+                coeffs: [
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    2,
+                ],
+                condition: Condition {
+                    operator: Le,
+                    operand: Int(
+                        Const(
+                            10,
+                        ),
+                    ),
+                },
+            },
+        ),
+    ],
+}

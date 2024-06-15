@@ -1,8 +1,10 @@
 pub(crate) mod all_different;
 pub(crate) mod all_equal;
 pub(crate) mod bin_packing;
+pub(crate) mod cardinality;
 pub(crate) mod channel;
 pub(crate) mod circuit;
+pub(crate) mod count;
 pub(crate) mod cumulative;
 pub(crate) mod element;
 pub(crate) mod extension;
@@ -11,9 +13,11 @@ pub(crate) mod intension;
 pub(crate) mod knapsack;
 pub(crate) mod maximum;
 pub(crate) mod minimum;
+pub(crate) mod n_values;
 pub(crate) mod no_overlap;
 pub(crate) mod ordered;
 pub(crate) mod precedence;
+pub(crate) mod sum;
 
 use std::{fmt::Display, marker::PhantomData, str::FromStr};
 
@@ -28,12 +32,13 @@ use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 use crate::{
 	constraint::{
 		all_different::AllDifferent, all_equal::AllEqual, bin_packing::BinPacking,
-		channel::Channel, circuit::Circuit, cumulative::Cumulative, element::Element,
-		extension::Extension, instantiation::Instantiation, intension::Intension,
-		knapsack::Knapsack, maximum::Maximum, minimum::Minimum, no_overlap::NoOverlap,
-		ordered::Ordered, precedence::Precedence,
+		cardinality::Cardinality, channel::Channel, circuit::Circuit, count::Count,
+		cumulative::Cumulative, element::Element, extension::Extension,
+		instantiation::Instantiation, intension::Intension, knapsack::Knapsack, maximum::Maximum,
+		minimum::Minimum, n_values::NValues, no_overlap::NoOverlap, ordered::Ordered,
+		precedence::Precedence, sum::Sum,
 	},
-	parser::integer::{int_exp, IntExp},
+	parser::{exp, Exp},
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -45,10 +50,14 @@ pub enum Constraint<Identifier = String> {
 	AllEqual(AllEqual<Identifier>),
 	#[serde(rename = "binPacking")]
 	BinPacking(BinPacking<Identifier>),
+	#[serde(rename = "cardinality")]
+	Cardinality(Cardinality<Identifier>),
 	#[serde(rename = "channel")]
 	Channel(Channel<Identifier>),
 	#[serde(rename = "circuit")]
 	Circuit(Circuit<Identifier>),
+	#[serde(rename = "count")]
+	Count(Count<Identifier>),
 	#[serde(rename = "cumulative")]
 	Cumulative(Cumulative<Identifier>),
 	#[serde(rename = "element")]
@@ -65,12 +74,16 @@ pub enum Constraint<Identifier = String> {
 	Maximum(Maximum<Identifier>),
 	#[serde(rename = "minimum")]
 	Minimum(Minimum<Identifier>),
+	#[serde(rename = "nValues")]
+	NValues(NValues<Identifier>),
 	#[serde(rename = "noOverlap")]
 	NoOverlap(NoOverlap<Identifier>),
 	#[serde(rename = "ordered")]
 	Ordered(Ordered<Identifier>),
 	#[serde(rename = "precedence")]
 	Precedence(Precedence<Identifier>),
+	#[serde(rename = "sum")]
+	Sum(Sum<Identifier>),
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -128,6 +141,8 @@ pub enum Operator {
 	Gt,
 	#[serde(rename = "ne")]
 	Ne,
+	#[serde(rename = "in")]
+	In,
 }
 
 impl Display for Operator {
@@ -139,6 +154,7 @@ impl Display for Operator {
 			Operator::Ge => write!(f, "ge"),
 			Operator::Gt => write!(f, "gt"),
 			Operator::Ne => write!(f, "ne"),
+			Operator::In => write!(f, "in"),
 		}
 	}
 }
@@ -146,7 +162,7 @@ impl Display for Operator {
 #[derive(Clone, Debug, PartialEq, Hash)]
 pub struct Condition<Identifier> {
 	pub operator: Operator,
-	pub operand: IntExp<Identifier>,
+	pub operand: Exp<Identifier>,
 }
 
 impl<Identifier: Display> Display for Condition<Identifier> {
@@ -176,9 +192,10 @@ impl<'de, Identifier: FromStr> Deserialize<'de> for Condition<Identifier> {
 							tag("ge"),
 							tag("gt"),
 							tag("ne"),
+							tag("in"),
 						)),
 						char(','),
-						int_exp,
+						exp,
 					),
 					char(')'),
 				);
@@ -191,6 +208,7 @@ impl<'de, Identifier: FromStr> Deserialize<'de> for Condition<Identifier> {
 					"ge" => Operator::Ge,
 					"gt" => Operator::Gt,
 					"ne" => Operator::Ne,
+					"in" => Operator::In,
 					_ => unreachable!(),
 				};
 				Ok(Condition { operator, operand })
