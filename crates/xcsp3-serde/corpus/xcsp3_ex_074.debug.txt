@@ -6,7 +6,7 @@ Instance {
             Cumulative {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 origins: [
                     Var(

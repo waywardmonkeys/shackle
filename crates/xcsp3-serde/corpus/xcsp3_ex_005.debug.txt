@@ -15,7 +15,9 @@ Instance {
             Intension {
                 info: ConstraintMeta {
                     id: None,
-                    note: "this constraint links x and y",
+                    note: Some(
+                        "this constraint links x and y",
+                    ),
                 },
                 function: Equal(
                     [

@@ -6,7 +6,7 @@ Instance {
             NoOverlap {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 origins: [
                     Var(

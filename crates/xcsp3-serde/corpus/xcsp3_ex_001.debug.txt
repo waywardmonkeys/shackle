@@ -19,7 +19,7 @@ Instance {
             Extension {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Var(
@@ -50,7 +50,7 @@ Instance {
             Extension {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Var(
@@ -81,7 +81,7 @@ Instance {
             Extension {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Var(

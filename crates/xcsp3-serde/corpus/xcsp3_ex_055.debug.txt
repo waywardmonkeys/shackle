@@ -6,7 +6,7 @@ Instance {
             Sum {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Var(

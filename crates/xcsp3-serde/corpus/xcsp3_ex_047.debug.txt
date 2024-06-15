@@ -6,7 +6,7 @@ Instance {
             AllEqual {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Add(

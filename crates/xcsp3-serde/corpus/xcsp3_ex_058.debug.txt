@@ -8,7 +8,7 @@ Instance {
                     id: Some(
                         "c1",
                     ),
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Var(
@@ -49,7 +49,7 @@ Instance {
                     id: Some(
                         "c2",
                     ),
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Var(
@@ -95,7 +95,7 @@ Instance {
                     id: Some(
                         "c3",
                     ),
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Var(

@@ -11,7 +11,7 @@ Instance {
             Intension {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 function: Equal(
                     [

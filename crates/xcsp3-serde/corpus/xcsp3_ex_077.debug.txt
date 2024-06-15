@@ -8,7 +8,7 @@ Instance {
                     id: Some(
                         "c3",
                     ),
-                    note: "",
+                    note: None,
                 },
                 list: [
                     Var(

@@ -8,7 +8,7 @@ homepage = "https://www.minizinc.org/"
 repository = "https://github.com/shackle-rs/shackle/"
 license = "MPL-2.0"
 keywords = ["XCSP3", "serde", "optimization", "serialization"]
-exclude = ["/corpus"]
+exclude = ["corpus/"]
 
 edition = "2021"
 
@@ -20,5 +20,5 @@ itertools = "0.12"
 
 [dev-dependencies]
 serde-xml-rs = "0.6"
-quick-xml = { version = "0.31.0", features = ["serialize", "overlapped-lists"] }
+quick-xml = { version = "0.32.0", features = ["serialize", "overlapped-lists"] }
 expect-test = "1.4"

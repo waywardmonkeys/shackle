@@ -12,11 +12,13 @@ pub(crate) mod instantiation;
 pub(crate) mod intension;
 pub(crate) mod knapsack;
 pub(crate) mod maximum;
+pub(crate) mod mdd;
 pub(crate) mod minimum;
 pub(crate) mod n_values;
 pub(crate) mod no_overlap;
 pub(crate) mod ordered;
 pub(crate) mod precedence;
+pub(crate) mod regular;
 pub(crate) mod sum;
 
 use std::{fmt::Display, marker::PhantomData, str::FromStr};
@@ -24,8 +26,9 @@ use std::{fmt::Display, marker::PhantomData, str::FromStr};
 use nom::{
 	branch::alt,
 	bytes::complete::tag,
-	character::streaming::char,
-	sequence::{delimited, separated_pair},
+	character::complete::char,
+	combinator::{all_consuming, map},
+	sequence::{delimited, separated_pair, tuple},
 };
 use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 
@@ -35,10 +38,16 @@ use crate::{
 		cardinality::Cardinality, channel::Channel, circuit::Circuit, count::Count,
 		cumulative::Cumulative, element::Element, extension::Extension,
 		instantiation::Instantiation, intension::Intension, knapsack::Knapsack, maximum::Maximum,
-		minimum::Minimum, n_values::NValues, no_overlap::NoOverlap, ordered::Ordered,
-		precedence::Precedence, sum::Sum,
+		mdd::Mdd, minimum::Minimum, n_values::NValues, no_overlap::NoOverlap, ordered::Ordered,
+		precedence::Precedence, regular::Regular, sum::Sum,
 	},
-	parser::{exp, Exp},
+	parser::{
+		exp,
+		identifier::{deserialize_ident, identifier, serialize_ident},
+		integer::int,
+		sequence, Exp,
+	},
+	IntVal,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -72,6 +81,8 @@ pub enum Constraint<Identifier = String> {
 	Knapsack(Knapsack<Identifier>),
 	#[serde(rename = "maximum")]
 	Maximum(Maximum<Identifier>),
+	#[serde(rename = "mdd")]
+	Mdd(Mdd<Identifier>),
 	#[serde(rename = "minimum")]
 	Minimum(Minimum<Identifier>),
 	#[serde(rename = "nValues")]
@@ -82,6 +93,8 @@ pub enum Constraint<Identifier = String> {
 	Ordered(Ordered<Identifier>),
 	#[serde(rename = "precedence")]
 	Precedence(Precedence<Identifier>),
+	#[serde(rename = "regular")]
+	Regular(Regular<Identifier>),
 	#[serde(rename = "sum")]
 	Sum(Sum<Identifier>),
 }
@@ -90,41 +103,15 @@ pub enum Constraint<Identifier = String> {
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub struct ConstraintMeta<Identifier> {
 	#[serde(
-		default,
 		rename = "@id",
-		deserialize_with = "deserialize_ident",
+		default,
 		skip_serializing_if = "Option::is_none",
+		deserialize_with = "deserialize_ident",
 		serialize_with = "serialize_ident"
 	)]
 	pub id: Option<Identifier>,
-	#[serde(rename = "@note", skip_serializing_if = "String::is_empty", default)]
-	pub note: String,
-}
-
-fn deserialize_ident<'de, D: Deserializer<'de>, Identifier: FromStr>(
-	deserializer: D,
-) -> Result<Option<Identifier>, D::Error> {
-	struct V<X>(PhantomData<X>);
-	impl<'de, X: FromStr> Visitor<'de> for V<X> {
-		type Value = Option<X>;
-		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-			formatter.write_str("an identfier")
-		}
-		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
-			Ok(Some(FromStr::from_str(v).map_err(|_| {
-				E::custom("unable to create identifier from string")
-			})?))
-		}
-	}
-	let visitor = V::<Identifier>(PhantomData);
-	deserializer.deserialize_str(visitor)
-}
-
-fn serialize_ident<S: serde::Serializer, Identifier: Display>(
-	identifier: &Option<Identifier>,
-	serializer: S,
-) -> Result<S::Ok, S::Error> {
-	serializer.serialize_str(&format!("{}", identifier.as_ref().unwrap()))
+	#[serde(rename = "@note", default, skip_serializing_if = "Option::is_none")]
+	pub note: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -222,4 +209,49 @@ impl<Identifier: Display> Serialize for Condition<Identifier> {
 	fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
 		serializer.serialize_str(&self.to_string())
 	}
+}
+
+#[derive(Clone, Debug, PartialEq, Hash)]
+pub struct Transition<Identifier> {
+	pub from: Identifier,
+	pub val: IntVal,
+	pub to: Identifier,
+}
+
+impl<Identifier: Display> Display for Transition<Identifier> {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "({},{},{})", self.from, self.val, self.to)
+	}
+}
+
+pub(crate) fn deserialize_transitions<'de, D: Deserializer<'de>, Identifier: FromStr>(
+	deserializer: D,
+) -> Result<Vec<Transition<Identifier>>, D::Error> {
+	struct V<X>(PhantomData<X>);
+	impl<'de, X: FromStr> Visitor<'de> for V<X> {
+		type Value = Vec<Transition<X>>;
+		fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+			formatter.write_str("a list of transitions")
+		}
+		fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+			eprintln!("{}", v);
+			let transition = map(
+				tuple((
+					char('('),
+					identifier,
+					char(','),
+					int,
+					char(','),
+					identifier,
+					char(')'),
+				)),
+				|(_, from, _, val, _, to, _)| Transition { from, val, to },
+			);
+			let (_, v) = all_consuming(sequence(transition))(v)
+				.map_err(|e| E::custom(format!("invalid transitions {e:?}")))?;
+			Ok(v)
+		}
+	}
+	let visitor = V::<Identifier>(PhantomData);
+	deserializer.deserialize_str(visitor)
 }

@@ -6,7 +6,7 @@ Instance {
             Instantiation {
                 info: ConstraintMeta {
                     id: None,
-                    note: "",
+                    note: None,
                 },
                 list: [
                     ArrayAccess(
