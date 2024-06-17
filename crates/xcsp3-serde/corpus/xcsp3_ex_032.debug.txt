@@ -1,6 +1,7 @@
 Instance {
     ty: Cop,
     variables: [],
+    arrays: [],
     constraints: [],
     objectives: Objectives {
         combination: Lexico,
@@ -8,7 +9,7 @@ Instance {
             Minimize(
                 ObjExp {
                     info: MetaInfo {
-                        id: None,
+                        identifier: None,
                         note: None,
                     },
                     ty: Maximum,
@@ -19,7 +20,7 @@ Instance {
                                     ArrayAccess(
                                         "s",
                                         [
-                                            Some(
+                                            Single(
                                                 0,
                                             ),
                                         ],
@@ -36,7 +37,7 @@ Instance {
                                     ArrayAccess(
                                         "s",
                                         [
-                                            Some(
+                                            Single(
                                                 1,
                                             ),
                                         ],
@@ -53,7 +54,7 @@ Instance {
                                     ArrayAccess(
                                         "s",
                                         [
-                                            Some(
+                                            Single(
                                                 2,
                                             ),
                                         ],

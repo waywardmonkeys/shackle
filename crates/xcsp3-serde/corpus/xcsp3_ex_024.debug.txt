@@ -1,16 +1,30 @@
 Instance {
     ty: Csp,
-    variables: [
-        Variable {
+    variables: [],
+    arrays: [
+        Array {
             identifier: "x",
-            domain: RangeList::from_iter([1..=3]),
+            note: None,
+            size: [
+                4,
+            ],
+            domains: [
+                (
+                    [
+                        Ident(
+                            "others",
+                        ),
+                    ],
+                    RangeList::from_iter([1..=3]),
+                ),
+            ],
         },
     ],
     constraints: [
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 function: Equal(
@@ -22,7 +36,7 @@ Instance {
                                         ArrayAccess(
                                             "x",
                                             [
-                                                Some(
+                                                Single(
                                                     0,
                                                 ),
                                             ],
@@ -32,7 +46,7 @@ Instance {
                                         ArrayAccess(
                                             "x",
                                             [
-                                                Some(
+                                                Single(
                                                     1,
                                                 ),
                                             ],
@@ -45,7 +59,7 @@ Instance {
                             ArrayAccess(
                                 "x",
                                 [
-                                    Some(
+                                    Single(
                                         2,
                                     ),
                                 ],

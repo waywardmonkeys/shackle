@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         AllDifferent(
             AllDifferent {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c1",
                     ),
                     note: None,
@@ -43,7 +44,7 @@ Instance {
         AllDifferent(
             AllDifferent {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c2",
                     ),
                     note: None,
@@ -53,7 +54,7 @@ Instance {
                         ArrayAccess(
                             "y",
                             [
-                                None,
+                                Full,
                             ],
                         ),
                     ),

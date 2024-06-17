@@ -1,18 +1,19 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         Instantiation(
             Instantiation {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 list: [
                     ArrayAccess(
                         "w",
                         [
-                            None,
+                            Full,
                         ],
                     ),
                 ],

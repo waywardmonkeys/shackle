@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         AllEqual(
             AllEqual {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c",
                     ),
                     note: None,

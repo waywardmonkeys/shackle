@@ -2,13 +2,12 @@ use std::{fmt::Display, str::FromStr};
 
 use serde::{Deserialize, Serialize};
 
-use crate::MetaInfo;
 use crate::{
 	parser::{
 		integer::{deserialize_int_exps, deserialize_int_vals, IntExp},
 		serialize_list,
 	},
-	IntVal,
+	IntVal, MetaInfo,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]

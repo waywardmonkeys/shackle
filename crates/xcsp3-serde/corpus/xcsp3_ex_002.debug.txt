@@ -3,18 +3,25 @@ Instance {
     variables: [
         Variable {
             identifier: "b",
+            note: Some(
+                "number of banana cakes",
+            ),
             domain: RangeList::from_iter([0..=100]),
         },
         Variable {
             identifier: "c",
+            note: Some(
+                "number of chocolate cakes",
+            ),
             domain: RangeList::from_iter([0..=100]),
         },
     ],
+    arrays: [],
     constraints: [
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 function: LessThanEq(
@@ -55,7 +62,7 @@ Instance {
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 function: LessThanEq(
@@ -80,7 +87,7 @@ Instance {
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 function: LessThanEq(
@@ -121,7 +128,7 @@ Instance {
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 function: LessThanEq(
@@ -162,7 +169,7 @@ Instance {
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 function: LessThanEq(
@@ -191,7 +198,7 @@ Instance {
             Maximize(
                 ObjExp {
                     info: MetaInfo {
-                        id: None,
+                        identifier: None,
                         note: None,
                     },
                     ty: Sum,

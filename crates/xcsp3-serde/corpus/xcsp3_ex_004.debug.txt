@@ -3,18 +3,25 @@ Instance {
     variables: [
         Variable {
             identifier: "b",
+            note: Some(
+                "number of banana cakes",
+            ),
             domain: RangeList::from_iter([0..=99]),
         },
         Variable {
             identifier: "c",
+            note: Some(
+                "number of chocolate cakes",
+            ),
             domain: RangeList::from_iter([0..=99]),
         },
     ],
+    arrays: [],
     constraints: [
         Sum(
             Sum {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: Some(
                         "using the 4000 grams of flour",
                     ),
@@ -48,7 +55,7 @@ Instance {
         Sum(
             Sum {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: Some(
                         "using the 6 bananas",
                     ),
@@ -76,7 +83,7 @@ Instance {
         Sum(
             Sum {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: Some(
                         "using the 2000 grams of sugar",
                     ),
@@ -110,7 +117,7 @@ Instance {
         Sum(
             Sum {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: Some(
                         "using the 500 grams of butter",
                     ),
@@ -144,7 +151,7 @@ Instance {
         Sum(
             Sum {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: Some(
                         "using the 500 grams of cocoa",
                     ),
@@ -176,7 +183,7 @@ Instance {
             Maximize(
                 ObjExp {
                     info: MetaInfo {
-                        id: None,
+                        identifier: None,
                         note: Some(
                             "maximizing the profit (400 and 450 cents for each banana and chocolate cake, respectively)",
                         ),

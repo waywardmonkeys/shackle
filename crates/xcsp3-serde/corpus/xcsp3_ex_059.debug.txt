@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         Cardinality(
             Cardinality {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c1",
                     ),
                     note: None,
@@ -86,7 +87,7 @@ Instance {
         Cardinality(
             Cardinality {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c2",
                     ),
                     note: None,

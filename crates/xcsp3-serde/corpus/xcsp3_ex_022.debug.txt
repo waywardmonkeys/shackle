@@ -1,0 +1,29 @@
+Instance {
+    ty: Csp,
+    variables: [],
+    arrays: [
+        Array {
+            identifier: "t",
+            note: None,
+            size: [
+                8,
+                8,
+            ],
+            domains: [
+                (
+                    [
+                        Ident(
+                            "others",
+                        ),
+                    ],
+                    RangeList::from_iter([1..=10]),
+                ),
+            ],
+        },
+    ],
+    constraints: [],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
+}

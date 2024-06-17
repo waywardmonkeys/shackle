@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c1",
                     ),
                     note: None,
@@ -40,7 +41,7 @@ Instance {
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c2",
                     ),
                     note: None,

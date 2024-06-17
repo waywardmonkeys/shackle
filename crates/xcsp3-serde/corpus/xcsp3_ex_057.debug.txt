@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         Count(
             Count {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c1",
                     ),
                     note: None,
@@ -52,7 +53,7 @@ Instance {
         Count(
             Count {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c2",
                     ),
                     note: None,
@@ -103,7 +104,7 @@ Instance {
         Count(
             Count {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c3",
                     ),
                     note: None,
@@ -153,7 +154,7 @@ Instance {
         Count(
             Count {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c4",
                     ),
                     note: None,
@@ -198,7 +199,7 @@ Instance {
         Count(
             Count {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c5",
                     ),
                     note: None,

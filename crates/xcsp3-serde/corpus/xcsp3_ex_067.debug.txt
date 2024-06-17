@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         Element(
             Element {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 list: [

@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         Minimum(
             Minimum {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c1",
                     ),
                     note: None,
@@ -45,7 +46,7 @@ Instance {
         Minimum(
             Minimum {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c2",
                     ),
                     note: None,

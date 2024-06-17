@@ -9,7 +9,10 @@ use nom::{
 };
 use serde::{de::Visitor, Deserialize, Deserializer, Serializer};
 
-use crate::{parser::integer::int, variable::VarRef};
+use crate::{
+	parser::integer::range,
+	variable::{Index, VarRef},
+};
 
 const RESERVED: &[&str] = &[
 	"abs", "add", "and", "card", "convex", "diff", "disjoint", "dist", "div", "eq", "ge", "gt",
@@ -33,12 +36,25 @@ pub fn identifier<Identifier: FromStr>(input: &str) -> IResult<&str, Identifier>
 
 pub fn variable<Identifier: FromStr>(input: &str) -> IResult<&str, VarRef<Identifier>> {
 	let (input, ident) = identifier(input)?;
-	let (input, v) = many0(delimited(char('['), opt(int), char(']')))(input)?;
+	let (input, v) = many0(delimited(char('['), opt(range), char(']')))(input)?;
 	Ok((
 		input,
 		if v.is_empty() {
 			VarRef::Ident(ident)
 		} else {
+			let v = v
+				.into_iter()
+				.map(|r| {
+					r.map(|r| {
+						if r.start() == r.end() {
+							Index::Single(*r.start())
+						} else {
+							Index::Range(*r.start(), *r.end())
+						}
+					})
+					.unwrap_or(Index::Full)
+				})
+				.collect();
 			VarRef::ArrayAccess(ident, v)
 		},
 	))

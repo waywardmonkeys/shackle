@@ -11,25 +11,38 @@ use crate::{
 	constraint::Constraint,
 	objective::Objectives,
 	parser::identifier::{deserialize_ident, serialize_ident},
-	variable::Variable,
+	variable::{Array, Variable},
 };
 
 type IntVal = i64;
 
 #[derive(Clone, PartialEq, Debug, Hash)]
 pub struct Instance<Identifier = String> {
+	/// The type of the framework used to express the instance.
 	ty: FrameworkType,
+	/// Definitions of the single decision variables
 	variables: Vec<Variable<Identifier>>,
+	/// Definitions of the arrays of decision variables
+	arrays: Vec<Array<Identifier>>,
+	/// Constraints that must be satisfied for a solution to be valid
 	constraints: Vec<Constraint<Identifier>>,
+	/// The objectives to be optimized
 	objectives: Objectives<Identifier>,
 }
 
 impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Instance<Identifier> {
 	fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
 		#[derive(Deserialize)]
-		struct Variables<Identifier = String> {
+		enum V<Identifier: FromStr> {
+			#[serde(rename = "var")]
+			Variable(Variable<Identifier>),
+			#[serde(rename = "array")]
+			Array(Array<Identifier>),
+		}
+		#[derive(Deserialize)]
+		struct Variables<Identifier: FromStr = String> {
 			#[serde(rename = "$value")]
-			content: Vec<Variable<Identifier>>,
+			vars: Vec<V<Identifier>>,
 		}
 		#[derive(Deserialize)]
 		struct Constraints<Identifier: FromStr = String> {
@@ -46,9 +59,18 @@ impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Instance<
 			objectives: Objectives<Identifier>,
 		}
 		let inst: Instance<Identifier> = Deserialize::deserialize(deserializer)?;
+		let mut variables = Vec::new();
+		let mut arrays = Vec::new();
+		for v in inst.variables.map(|v| v.vars).into_iter().flatten() {
+			match v {
+				V::Variable(var) => variables.push(var),
+				V::Array(arr) => arrays.push(arr),
+			}
+		}
 		Ok(Self {
 			ty: inst.ty,
-			variables: inst.variables.map_or_else(Vec::new, |v| v.content),
+			variables,
+			arrays,
 			constraints: inst.constraints.map_or_else(Vec::new, |c| c.content),
 			objectives: inst.objectives,
 		})
@@ -58,23 +80,17 @@ impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Instance<
 impl<Identifier: Serialize + Display> Serialize for Instance<Identifier> {
 	fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
 		#[derive(Serialize)]
-		struct Variables<'a, Identifier = String> {
-			#[serde(rename = "$value")]
-			content: Vec<V<'a, Identifier>>,
+		struct Variables<'a, Identifier: Display> {
+			var: &'a Vec<Variable<Identifier>>,
+			array: &'a Vec<Array<Identifier>>,
 		}
-		impl<'a, Identifier> Variables<'a, Identifier> {
+		impl<'a, Identifier: Display> Variables<'a, Identifier> {
 			fn is_empty(&self) -> bool {
-				self.content.is_empty()
+				self.var.is_empty() && self.array.is_empty()
 			}
 		}
-		// Unit struct wrapper
 		#[derive(Serialize)]
-		enum V<'a, Identifier> {
-			#[serde(rename = "var")]
-			Var(&'a Variable<Identifier>),
-		}
-		#[derive(Serialize)]
-		struct Constraints<'a, Identifier: Display = String> {
+		struct Constraints<'a, Identifier: Display> {
 			#[serde(rename = "$value")]
 			content: &'a Vec<Constraint<Identifier>>,
 		}
@@ -84,7 +100,7 @@ impl<Identifier: Serialize + Display> Serialize for Instance<Identifier> {
 			}
 		}
 		#[derive(Serialize)]
-		pub struct Instance<'a, Identifier: Display = String> {
+		pub struct Instance<'a, Identifier: Display> {
 			#[serde(rename = "@type")]
 			ty: FrameworkType,
 			#[serde(skip_serializing_if = "Variables::is_empty")]
@@ -97,7 +113,8 @@ impl<Identifier: Serialize + Display> Serialize for Instance<Identifier> {
 		let x = Instance {
 			ty: self.ty,
 			variables: Variables {
-				content: self.variables.iter().map(V::Var).collect(),
+				var: &self.variables,
+				array: &self.arrays,
 			},
 			constraints: Constraints {
 				content: &self.constraints,
@@ -139,7 +156,7 @@ pub struct MetaInfo<Identifier> {
 		deserialize_with = "deserialize_ident",
 		serialize_with = "serialize_ident"
 	)]
-	pub id: Option<Identifier>,
+	pub identifier: Option<Identifier>,
 	#[serde(rename = "@note", default, skip_serializing_if = "Option::is_none")]
 	pub note: Option<String>,
 }
@@ -184,8 +201,8 @@ mod tests {
 	// test_file!(xcsp3_ex_003);
 	test_file!(xcsp3_ex_004);
 	test_file!(xcsp3_ex_005);
-	// test_file!(xcsp3_ex_006);
-	// test_file!(xcsp3_ex_007);
+	test_file!(xcsp3_ex_006);
+	test_file!(xcsp3_ex_007);
 	// test_file!(xcsp3_ex_008);
 	// test_file!(xcsp3_ex_009);
 	// test_file!(xcsp3_ex_010);
@@ -196,11 +213,11 @@ mod tests {
 	// test_file!(xcsp3_ex_015);
 	// test_file!(xcsp3_ex_016);
 	// test_file!(xcsp3_ex_017);
-	// test_file!(xcsp3_ex_018);
-	// test_file!(xcsp3_ex_019);
+	test_file!(xcsp3_ex_018);
+	test_file!(xcsp3_ex_019);
 	// test_file!(xcsp3_ex_020);
-	// test_file!(xcsp3_ex_021);
-	// test_file!(xcsp3_ex_022);
+	test_file!(xcsp3_ex_021);
+	test_file!(xcsp3_ex_022);
 	// test_file!(xcsp3_ex_023);
 	test_file!(xcsp3_ex_024);
 	// test_file!(xcsp3_ex_025);

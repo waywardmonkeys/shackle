@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         Sum(
             Sum {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: None,
                 },
                 list: [
@@ -13,7 +14,7 @@ Instance {
                         ArrayAccess(
                             "w",
                             [
-                                None,
+                                Full,
                             ],
                         ),
                     ),

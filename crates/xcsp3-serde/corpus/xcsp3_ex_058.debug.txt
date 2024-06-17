@@ -1,11 +1,12 @@
 Instance {
     ty: Csp,
     variables: [],
+    arrays: [],
     constraints: [
         NValues(
             NValues {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c1",
                     ),
                     note: None,
@@ -46,7 +47,7 @@ Instance {
         NValues(
             NValues {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c2",
                     ),
                     note: None,
@@ -92,7 +93,7 @@ Instance {
         NValues(
             NValues {
                 info: MetaInfo {
-                    id: Some(
+                    identifier: Some(
                         "c3",
                     ),
                     note: None,

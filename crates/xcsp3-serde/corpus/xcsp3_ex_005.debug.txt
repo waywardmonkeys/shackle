@@ -3,18 +3,25 @@ Instance {
     variables: [
         Variable {
             identifier: "x",
+            note: Some(
+                "x is a number between 1 and 10",
+            ),
             domain: RangeList::from_iter([1..=10]),
         },
         Variable {
             identifier: "y",
+            note: Some(
+                "y denotes the square of x",
+            ),
             domain: RangeList::from_iter([1..=100]),
         },
     ],
+    arrays: [],
     constraints: [
         Intension(
             Intension {
                 info: MetaInfo {
-                    id: None,
+                    identifier: None,
                     note: Some(
                         "this constraint links x and y",
                     ),

@@ -1,6 +1,7 @@
 Instance {
     ty: Cop,
     variables: [],
+    arrays: [],
     constraints: [],
     objectives: Objectives {
         combination: Lexico,
@@ -8,7 +9,7 @@ Instance {
             Minimize(
                 ObjExp {
                     info: MetaInfo {
-                        id: Some(
+                        identifier: Some(
                             "obj1",
                         ),
                         note: None,
@@ -27,7 +28,7 @@ Instance {
             Maximize(
                 ObjExp {
                     info: MetaInfo {
-                        id: Some(
+                        identifier: Some(
                             "obj2",
                         ),
                         note: None,
