@@ -8,7 +8,6 @@ pub(crate) mod count;
 pub(crate) mod cumulative;
 pub(crate) mod element;
 pub(crate) mod extension;
-pub(crate) mod instantiation;
 pub(crate) mod intension;
 pub(crate) mod knapsack;
 pub(crate) mod maximum;
@@ -36,79 +35,54 @@ use crate::{
 	constraint::{
 		all_different::AllDifferent, all_equal::AllEqual, bin_packing::BinPacking,
 		cardinality::Cardinality, channel::Channel, circuit::Circuit, count::Count,
-		cumulative::Cumulative, element::Element, extension::Extension,
-		instantiation::Instantiation, intension::Intension, knapsack::Knapsack, maximum::Maximum,
-		mdd::Mdd, minimum::Minimum, n_values::NValues, no_overlap::NoOverlap, ordered::Ordered,
-		precedence::Precedence, regular::Regular, sum::Sum,
+		cumulative::Cumulative, element::Element, extension::Extension, intension::Intension,
+		knapsack::Knapsack, maximum::Maximum, mdd::Mdd, minimum::Minimum, n_values::NValues,
+		no_overlap::NoOverlap, ordered::Ordered, precedence::Precedence, regular::Regular,
+		sum::Sum,
 	},
 	parser::{exp, identifier::identifier, integer::int, sequence, Exp},
-	IntVal,
+	Instantiation, IntVal,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
-#[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
+#[serde(
+	rename_all = "camelCase",
+	bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display")
+)]
 pub enum Constraint<Identifier = String> {
-	#[serde(rename = "allDifferent")]
 	AllDifferent(AllDifferent<Identifier>),
-	#[serde(rename = "allEqual")]
 	AllEqual(AllEqual<Identifier>),
-	#[serde(rename = "binPacking")]
 	BinPacking(BinPacking<Identifier>),
-	#[serde(rename = "cardinality")]
 	Cardinality(Cardinality<Identifier>),
-	#[serde(rename = "channel")]
 	Channel(Channel<Identifier>),
-	#[serde(rename = "circuit")]
 	Circuit(Circuit<Identifier>),
-	#[serde(rename = "count")]
 	Count(Count<Identifier>),
-	#[serde(rename = "cumulative")]
 	Cumulative(Cumulative<Identifier>),
-	#[serde(rename = "element")]
 	Element(Element<Identifier>),
-	#[serde(rename = "extension")]
 	Extension(Extension<Identifier>),
-	#[serde(rename = "instantiation")]
 	Instantiation(Instantiation<Identifier>),
-	#[serde(rename = "intension")]
 	Intension(Intension<Identifier>),
-	#[serde(rename = "knapsack")]
 	Knapsack(Knapsack<Identifier>),
-	#[serde(rename = "maximum")]
 	Maximum(Maximum<Identifier>),
-	#[serde(rename = "mdd")]
 	Mdd(Mdd<Identifier>),
-	#[serde(rename = "minimum")]
 	Minimum(Minimum<Identifier>),
-	#[serde(rename = "nValues")]
 	NValues(NValues<Identifier>),
-	#[serde(rename = "noOverlap")]
 	NoOverlap(NoOverlap<Identifier>),
-	#[serde(rename = "ordered")]
 	Ordered(Ordered<Identifier>),
-	#[serde(rename = "precedence")]
 	Precedence(Precedence<Identifier>),
-	#[serde(rename = "regular")]
 	Regular(Regular<Identifier>),
-	#[serde(rename = "sum")]
 	Sum(Sum<Identifier>),
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub enum Operator {
-	#[serde(rename = "lt")]
 	Lt,
-	#[serde(rename = "le")]
 	Le,
-	#[serde(rename = "eq")]
 	Eq,
-	#[serde(rename = "ge")]
 	Ge,
-	#[serde(rename = "gt")]
 	Gt,
-	#[serde(rename = "ne")]
 	Ne,
-	#[serde(rename = "in")]
 	In,
 }
 

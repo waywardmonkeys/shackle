@@ -5,10 +5,10 @@ Instance {
     constraints: [
         Instantiation(
             Instantiation {
-                info: MetaInfo {
-                    identifier: None,
-                    note: None,
-                },
+                identifier: None,
+                note: None,
+                ty: None,
+                cost: None,
                 list: [
                     ArrayAccess(
                         "w",
@@ -17,7 +17,14 @@ Instance {
                         ],
                     ),
                 ],
-                except: [],
+                values: [
+                    0,
+                    0,
+                    0,
+                    1,
+                    1,
+                    1,
+                ],
             },
         ),
     ],

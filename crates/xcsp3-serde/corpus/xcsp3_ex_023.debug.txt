@@ -1,0 +1,22 @@
+Instantiation {
+    identifier: None,
+    note: None,
+    ty: Some(
+        Optimum,
+    ),
+    cost: Some(
+        1700,
+    ),
+    list: [
+        Ident(
+            "b",
+        ),
+        Ident(
+            "c",
+        ),
+    ],
+    values: [
+        2,
+        2,
+    ],
+}

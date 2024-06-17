@@ -5,10 +5,10 @@ Instance {
     constraints: [
         Instantiation(
             Instantiation {
-                info: MetaInfo {
-                    identifier: None,
-                    note: None,
-                },
+                identifier: None,
+                note: None,
+                ty: None,
+                cost: None,
                 list: [
                     Ident(
                         "x",
@@ -20,15 +20,19 @@ Instance {
                         "z",
                     ),
                 ],
-                except: [],
+                values: [
+                    12,
+                    4,
+                    30,
+                ],
             },
         ),
         Instantiation(
             Instantiation {
-                info: MetaInfo {
-                    identifier: None,
-                    note: None,
-                },
+                identifier: None,
+                note: None,
+                ty: None,
+                cost: None,
                 list: [
                     ArrayAccess(
                         "w",
@@ -37,7 +41,14 @@ Instance {
                         ],
                     ),
                 ],
-                except: [],
+                values: [
+                    1,
+                    0,
+                    2,
+                    1,
+                    3,
+                    1,
+                ],
             },
         ),
     ],

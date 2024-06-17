@@ -18,7 +18,7 @@ use crate::{
 	parser::{
 		identifier::{deserialize_from_str, serialize_as_str, variable},
 		integer::range,
-		sequence, whitespace_seperated,
+		sequence, serialize_list, whitespace_seperated,
 	},
 	IntVal,
 };
@@ -87,7 +87,7 @@ impl<Identifier: Serialize + Display> Serialize for Array<Identifier> {
 	fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
 		#[derive(Serialize)]
 		struct DomainStruct<'a, Identifier: Display> {
-			#[serde(rename = "@for", serialize_with = "serialize_var_refs")]
+			#[serde(rename = "@for", serialize_with = "serialize_list")]
 			vars: &'a Vec<VarRef<Identifier>>,
 			#[serde(rename = "$text", serialize_with = "serialize_range_list")]
 			domain: &'a RangeList<IntVal>,
@@ -201,19 +201,6 @@ pub(crate) fn deserialize_var_refs<'de, D: Deserializer<'de>, Identifier: FromSt
 	}
 	let visitor = V::<Identifier>(PhantomData);
 	deserializer.deserialize_str(visitor)
-}
-
-pub(crate) fn serialize_var_refs<S: serde::Serializer, Identifier: Display>(
-	exps: &[VarRef<Identifier>],
-	serializer: S,
-) -> Result<S::Ok, S::Error> {
-	serializer.serialize_str(
-		&exps
-			.iter()
-			.map(|e| format!("{}", e))
-			.collect::<Vec<_>>()
-			.join(" "),
-	)
 }
 
 fn deserialize_range_list<'de, D: Deserializer<'de>>(

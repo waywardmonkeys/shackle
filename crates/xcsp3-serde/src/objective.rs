@@ -35,16 +35,18 @@ impl<Identifier> Default for Objectives<Identifier> {
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Hash, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub enum CombinationType {
-	#[serde(rename = "lexico")]
 	#[default]
 	Lexico,
-	#[serde(rename = "pareto")]
 	Pareto,
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
-#[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
+#[serde(
+	rename_all = "camelCase",
+	bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display")
+)]
 pub enum Objective<Identifier = String> {
 	#[serde(rename = "minimize")]
 	Minimize(ObjExp<Identifier>),
@@ -75,16 +77,12 @@ pub struct ObjExp<Identifier = String> {
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Hash, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub enum ObjType {
 	#[default]
-	#[serde(rename = "sum")]
 	Sum,
-	#[serde(rename = "minimum")]
 	Minimum,
-	#[serde(rename = "maximum")]
 	Maximum,
-	#[serde(rename = "nValues")]
 	NValues,
-	#[serde(rename = "lex")]
 	Lex,
 }

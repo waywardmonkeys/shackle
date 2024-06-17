@@ -10,8 +10,12 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use crate::{
 	constraint::Constraint,
 	objective::Objectives,
-	parser::identifier::{deserialize_ident, serialize_ident},
-	variable::{Array, Variable},
+	parser::{
+		identifier::{deserialize_ident, serialize_ident},
+		integer::deserialize_int_vals,
+		serialize_list,
+	},
+	variable::{deserialize_var_refs, Array, VarRef, Variable},
 };
 
 type IntVal = i64;
@@ -147,6 +151,46 @@ pub enum FrameworkType {
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
+#[serde(
+	rename = "instantiation",
+	bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display")
+)]
+pub struct Instantiation<Identifier = String> {
+	// TODO: flatten does not seem to work here (flatten MetaInfo)
+	#[serde(
+		rename = "@id",
+		default,
+		skip_serializing_if = "Option::is_none",
+		deserialize_with = "deserialize_ident",
+		serialize_with = "serialize_ident"
+	)]
+	pub identifier: Option<Identifier>,
+	#[serde(rename = "@note", default, skip_serializing_if = "Option::is_none")]
+	pub note: Option<String>,
+	#[serde(rename = "@type", default, skip_serializing_if = "Option::is_none")]
+	pub ty: Option<InstantiationType>,
+	#[serde(rename = "@cost", default, skip_serializing_if = "Option::is_none")]
+	pub cost: Option<IntVal>,
+	#[serde(
+		deserialize_with = "deserialize_var_refs",
+		serialize_with = "serialize_list"
+	)]
+	pub list: Vec<VarRef<Identifier>>,
+	#[serde(
+		deserialize_with = "deserialize_int_vals",
+		serialize_with = "serialize_list"
+	)]
+	pub values: Vec<IntVal>,
+}
+
+#[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum InstantiationType {
+	Solution,
+	Optimum,
+}
+
+#[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub struct MetaInfo<Identifier> {
 	#[serde(
@@ -163,26 +207,33 @@ pub struct MetaInfo<Identifier> {
 
 #[cfg(test)]
 mod tests {
-	use std::{fs::File, io::BufReader, path::Path};
+	use std::{fmt::Debug, fs::File, io::BufReader, path::Path};
 
 	use expect_test::ExpectFile;
+	use serde::{de::DeserializeOwned, Serialize};
 
-	use crate::Instance;
+	use crate::{Instance, Instantiation};
 
-	fn test_successful_serialization(file: &Path, exp: ExpectFile) {
+	fn test_successful_serialization<T: Debug + DeserializeOwned + Serialize + PartialEq>(
+		file: &Path,
+		exp: ExpectFile,
+	) {
 		let rdr = BufReader::new(File::open(file).unwrap());
-		let inst: Instance = quick_xml::de::from_reader(rdr).unwrap();
+		let inst: T = quick_xml::de::from_reader(rdr).unwrap();
 		exp.assert_debug_eq(&inst);
 		let output = quick_xml::se::to_string(&inst).unwrap();
-		let inst2: Instance = quick_xml::de::from_str(&output).unwrap();
+		let inst2: T = quick_xml::de::from_str(&output).unwrap();
 		assert_eq!(inst, inst2)
 	}
 
 	macro_rules! test_file {
-		($file: ident) => {
+		($file:ident) => {
+			test_file!($file, Instance);
+		};
+		($file:ident, $t:ident) => {
 			#[test]
 			fn $file() {
-				test_successful_serialization(
+				test_successful_serialization::<$t>(
 					std::path::Path::new(&format!("./corpus/{}.xml", stringify!($file))),
 					expect_test::expect_file![&format!(
 						"../corpus/{}.debug.txt",
@@ -218,12 +269,12 @@ mod tests {
 	// test_file!(xcsp3_ex_020);
 	test_file!(xcsp3_ex_021);
 	test_file!(xcsp3_ex_022);
-	// test_file!(xcsp3_ex_023);
+	test_file!(xcsp3_ex_023, Instantiation);
 	test_file!(xcsp3_ex_024);
-	// test_file!(xcsp3_ex_025);
-	// test_file!(xcsp3_ex_026);
-	// test_file!(xcsp3_ex_027);
-	// test_file!(xcsp3_ex_028);
+	test_file!(xcsp3_ex_025, Instantiation);
+	// test_file!(xcsp3_ex_026, Instantiation);
+	test_file!(xcsp3_ex_027, Instantiation);
+	// test_file!(xcsp3_ex_028, Instantiation);
 	test_file!(xcsp3_ex_029);
 	test_file!(xcsp3_ex_030);
 	test_file!(xcsp3_ex_031);
