@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Count(
             Count {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c1",
                     ),
@@ -51,7 +51,7 @@ Instance {
         ),
         Count(
             Count {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c2",
                     ),
@@ -102,7 +102,7 @@ Instance {
         ),
         Count(
             Count {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c3",
                     ),
@@ -152,7 +152,7 @@ Instance {
         ),
         Count(
             Count {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c4",
                     ),
@@ -197,7 +197,7 @@ Instance {
         ),
         Count(
             Count {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c5",
                     ),
@@ -238,4 +238,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

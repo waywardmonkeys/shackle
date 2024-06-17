@@ -1,10 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-	constraint::ConstraintMeta,
 	parser::{integer::deserialize_int_vals, serialize_list},
 	variable::{deserialize_var_refs, serialize_var_refs, VarRef},
-	IntVal,
+	IntVal, MetaInfo,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -14,7 +13,7 @@ use crate::{
 ))]
 pub struct Instantiation<Identifier = String> {
 	#[serde(flatten)]
-	pub info: ConstraintMeta<Identifier>,
+	pub info: MetaInfo<Identifier>,
 	#[serde(
 		deserialize_with = "deserialize_var_refs",
 		serialize_with = "serialize_var_refs"

@@ -4,7 +4,7 @@ Instance {
     constraints: [
         AllEqual(
             AllEqual {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c",
                     ),
@@ -36,4 +36,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

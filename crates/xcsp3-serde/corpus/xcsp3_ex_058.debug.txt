@@ -4,7 +4,7 @@ Instance {
     constraints: [
         NValues(
             NValues {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c1",
                     ),
@@ -45,7 +45,7 @@ Instance {
         ),
         NValues(
             NValues {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c2",
                     ),
@@ -91,7 +91,7 @@ Instance {
         ),
         NValues(
             NValues {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c3",
                     ),
@@ -133,4 +133,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

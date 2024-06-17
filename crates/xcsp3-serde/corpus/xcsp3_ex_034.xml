@@ -1,4 +1,6 @@
-<objectives combination="lexico">
-  <minimize id="obj1"> z </minimize>
-  <maximize id="obj2"> add(x,sub(y,10)) </maximize>
-</objectives>
+<instance format="XCSP3" type="COP">
+  <objectives combination="lexico">
+    <minimize id="obj1"> z </minimize>
+    <maximize id="obj2"> add(x,sub(y,10)) </maximize>
+  </objectives>
+</instance>

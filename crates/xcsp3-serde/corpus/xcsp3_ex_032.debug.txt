@@ -1,0 +1,73 @@
+Instance {
+    ty: Cop,
+    variables: [],
+    constraints: [],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [
+            Minimize(
+                ObjExp {
+                    info: MetaInfo {
+                        id: None,
+                        note: None,
+                    },
+                    ty: Maximum,
+                    list: [
+                        Add(
+                            [
+                                Var(
+                                    ArrayAccess(
+                                        "s",
+                                        [
+                                            Some(
+                                                0,
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                                Const(
+                                    61,
+                                ),
+                            ],
+                        ),
+                        Add(
+                            [
+                                Var(
+                                    ArrayAccess(
+                                        "s",
+                                        [
+                                            Some(
+                                                1,
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                                Const(
+                                    9,
+                                ),
+                            ],
+                        ),
+                        Add(
+                            [
+                                Var(
+                                    ArrayAccess(
+                                        "s",
+                                        [
+                                            Some(
+                                                2,
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                                Const(
+                                    87,
+                                ),
+                            ],
+                        ),
+                    ],
+                    coeffs: [],
+                },
+            ),
+        ],
+    },
+}

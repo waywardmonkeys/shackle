@@ -1,0 +1,62 @@
+Instance {
+    ty: Cop,
+    variables: [],
+    constraints: [],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [
+            Minimize(
+                ObjExp {
+                    info: MetaInfo {
+                        id: Some(
+                            "obj1",
+                        ),
+                        note: None,
+                    },
+                    ty: Sum,
+                    list: [
+                        Var(
+                            Ident(
+                                "z",
+                            ),
+                        ),
+                    ],
+                    coeffs: [],
+                },
+            ),
+            Maximize(
+                ObjExp {
+                    info: MetaInfo {
+                        id: Some(
+                            "obj2",
+                        ),
+                        note: None,
+                    },
+                    ty: Sum,
+                    list: [
+                        Add(
+                            [
+                                Var(
+                                    Ident(
+                                        "x",
+                                    ),
+                                ),
+                                Sub(
+                                    Var(
+                                        Ident(
+                                            "y",
+                                        ),
+                                    ),
+                                    Const(
+                                        10,
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ],
+                    coeffs: [],
+                },
+            ),
+        ],
+    },
+}

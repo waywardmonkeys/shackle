@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Element(
             Element {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c1",
                     ),
@@ -50,4 +50,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

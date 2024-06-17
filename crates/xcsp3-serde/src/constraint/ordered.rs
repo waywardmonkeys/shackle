@@ -2,7 +2,7 @@ use std::{fmt::Display, str::FromStr};
 
 use serde::{Deserialize, Serialize};
 
-use super::ConstraintMeta;
+use crate::MetaInfo;
 use crate::{
 	constraint::Operator,
 	parser::{
@@ -15,7 +15,7 @@ use crate::{
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub struct Ordered<Identifier = String> {
 	#[serde(flatten)]
-	pub info: ConstraintMeta<Identifier>,
+	pub info: MetaInfo<Identifier>,
 	#[serde(
 		alias = "$text",
 		deserialize_with = "deserialize_int_exps",

@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-	constraint::{Condition, ConstraintMeta},
+	constraint::Condition,
 	parser::{
 		integer::{deserialize_int_exps, IntExp},
 		serialize_list,
 	},
+	MetaInfo,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -15,7 +16,7 @@ use crate::{
 ))]
 pub struct BinPacking<Identifier = String> {
 	#[serde(flatten)]
-	pub info: ConstraintMeta<Identifier>,
+	pub info: MetaInfo<Identifier>,
 	#[serde(
 		deserialize_with = "deserialize_int_exps",
 		serialize_with = "serialize_list"

@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Instantiation(
             Instantiation {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -20,4 +20,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

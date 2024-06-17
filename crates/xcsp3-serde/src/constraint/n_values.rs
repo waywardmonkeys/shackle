@@ -3,19 +3,19 @@ use std::{fmt::Display, str::FromStr};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-	constraint::{Condition, ConstraintMeta},
+	constraint::Condition,
 	parser::{
 		integer::{deserialize_int_exps, deserialize_int_vals, IntExp},
 		serialize_list,
 	},
-	IntVal,
+	IntVal, MetaInfo,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub struct NValues<Identifier = String> {
 	#[serde(flatten)]
-	pub info: ConstraintMeta<Identifier>,
+	pub info: MetaInfo<Identifier>,
 	#[serde(
 		deserialize_with = "deserialize_int_exps",
 		serialize_with = "serialize_list"

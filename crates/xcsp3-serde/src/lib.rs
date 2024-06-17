@@ -1,4 +1,5 @@
 pub(crate) mod constraint;
+pub(crate) mod objective;
 pub(crate) mod parser;
 pub(crate) mod variable;
 
@@ -6,15 +7,21 @@ use std::{fmt::Display, str::FromStr};
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{constraint::Constraint, variable::Variable};
+use crate::{
+	constraint::Constraint,
+	objective::Objectives,
+	parser::identifier::{deserialize_ident, serialize_ident},
+	variable::Variable,
+};
 
 type IntVal = i64;
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug, Hash)]
 pub struct Instance<Identifier = String> {
 	ty: FrameworkType,
 	variables: Vec<Variable<Identifier>>,
 	constraints: Vec<Constraint<Identifier>>,
+	objectives: Objectives<Identifier>,
 }
 
 impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Instance<Identifier> {
@@ -30,17 +37,20 @@ impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Instance<
 			content: Vec<Constraint<Identifier>>,
 		}
 		#[derive(Deserialize)]
-		pub struct X<Identifier: FromStr = String> {
+		pub struct Instance<Identifier: FromStr = String> {
 			#[serde(rename = "@type")]
 			ty: FrameworkType,
 			variables: Option<Variables<Identifier>>,
 			constraints: Option<Constraints<Identifier>>,
+			#[serde(default = "Objectives::default")]
+			objectives: Objectives<Identifier>,
 		}
-		let inst: X<Identifier> = Deserialize::deserialize(deserializer)?;
+		let inst: Instance<Identifier> = Deserialize::deserialize(deserializer)?;
 		Ok(Self {
 			ty: inst.ty,
 			variables: inst.variables.map_or_else(Vec::new, |v| v.content),
 			constraints: inst.constraints.map_or_else(Vec::new, |c| c.content),
+			objectives: inst.objectives,
 		})
 	}
 }
@@ -81,6 +91,8 @@ impl<Identifier: Serialize + Display> Serialize for Instance<Identifier> {
 			variables: Variables<'a, Identifier>,
 			#[serde(skip_serializing_if = "Constraints::is_empty")]
 			constraints: Constraints<'a, Identifier>,
+			#[serde(skip_serializing_if = "Objectives::is_empty")]
+			objectives: &'a Objectives<Identifier>,
 		}
 		let x = Instance {
 			ty: self.ty,
@@ -90,6 +102,7 @@ impl<Identifier: Serialize + Display> Serialize for Instance<Identifier> {
 			constraints: Constraints {
 				content: &self.constraints,
 			},
+			objectives: &self.objectives,
 		};
 		Serialize::serialize(&x, serializer)
 	}
@@ -114,6 +127,21 @@ pub enum FrameworkType {
 	Ncop,
 	DisCsp,
 	DisWcsp,
+}
+
+#[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
+#[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
+pub struct MetaInfo<Identifier> {
+	#[serde(
+		rename = "@id",
+		default,
+		skip_serializing_if = "Option::is_none",
+		deserialize_with = "deserialize_ident",
+		serialize_with = "serialize_ident"
+	)]
+	pub id: Option<Identifier>,
+	#[serde(rename = "@note", default, skip_serializing_if = "Option::is_none")]
+	pub note: Option<String>,
 }
 
 #[cfg(test)]
@@ -154,7 +182,7 @@ mod tests {
 	test_file!(xcsp3_ex_001);
 	test_file!(xcsp3_ex_002);
 	// test_file!(xcsp3_ex_003);
-	// test_file!(xcsp3_ex_004);
+	test_file!(xcsp3_ex_004);
 	test_file!(xcsp3_ex_005);
 	// test_file!(xcsp3_ex_006);
 	// test_file!(xcsp3_ex_007);
@@ -179,12 +207,12 @@ mod tests {
 	// test_file!(xcsp3_ex_026);
 	// test_file!(xcsp3_ex_027);
 	// test_file!(xcsp3_ex_028);
-	// test_file!(xcsp3_ex_029);
-	// test_file!(xcsp3_ex_030);
-	// test_file!(xcsp3_ex_031);
-	// test_file!(xcsp3_ex_032);
-	// test_file!(xcsp3_ex_033);
-	// test_file!(xcsp3_ex_034);
+	test_file!(xcsp3_ex_029);
+	test_file!(xcsp3_ex_030);
+	test_file!(xcsp3_ex_031);
+	test_file!(xcsp3_ex_032);
+	test_file!(xcsp3_ex_033);
+	test_file!(xcsp3_ex_034);
 	test_file!(xcsp3_ex_035);
 	test_file!(xcsp3_ex_036);
 	test_file!(xcsp3_ex_037);
@@ -317,7 +345,7 @@ mod tests {
 	// test_file!(xcsp3_ex_164);
 	// test_file!(xcsp3_ex_165);
 	// test_file!(xcsp3_ex_166);
-	// test_file!(xcsp3_ex_167);
+	test_file!(xcsp3_ex_167);
 	// test_file!(xcsp3_ex_168);
 	// test_file!(xcsp3_ex_169);
 	// test_file!(xcsp3_ex_170);

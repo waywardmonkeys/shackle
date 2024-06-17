@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Extension(
             Extension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c1",
                     ),
@@ -54,7 +54,7 @@ Instance {
         ),
         Extension(
             Extension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c2",
                     ),
@@ -100,4 +100,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

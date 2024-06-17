@@ -4,16 +4,16 @@ use nom::combinator::all_consuming;
 use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::{
-	constraint::ConstraintMeta,
 	parser::{
 		integer::{int_exp, IntExp},
 		whitespace_seperated,
 	},
+	MetaInfo,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash)]
 pub struct Channel<Identifier = String> {
-	pub info: ConstraintMeta<Identifier>,
+	pub info: MetaInfo<Identifier>,
 	pub list: Vec<IntExp<Identifier>>,
 	pub inverse_list: Vec<IntExp<Identifier>>,
 	pub value: Option<IntExp<Identifier>>,
@@ -25,7 +25,7 @@ impl<'de, Identifier: FromStr> Deserialize<'de> for Channel<Identifier> {
 		#[serde(bound(deserialize = "I: FromStr"))]
 		struct Channel<'a, I: FromStr> {
 			#[serde(flatten)]
-			info: ConstraintMeta<I>,
+			info: MetaInfo<I>,
 			list: Vec<Cow<'a, str>>,
 			#[serde(default)]
 			value: Option<IntExp<I>>,
@@ -59,7 +59,7 @@ impl<Identifier: Display> Serialize for Channel<Identifier> {
 		#[serde(bound(serialize = "I: Display"))]
 		struct Channel<'a, I: Display> {
 			#[serde(flatten)]
-			info: &'a ConstraintMeta<I>,
+			info: &'a MetaInfo<I>,
 			list: Vec<String>,
 			#[serde(skip_serializing_if = "Option::is_none")]
 			value: &'a Option<IntExp<I>>,

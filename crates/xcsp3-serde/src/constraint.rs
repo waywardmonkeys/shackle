@@ -41,12 +41,7 @@ use crate::{
 		mdd::Mdd, minimum::Minimum, n_values::NValues, no_overlap::NoOverlap, ordered::Ordered,
 		precedence::Precedence, regular::Regular, sum::Sum,
 	},
-	parser::{
-		exp,
-		identifier::{deserialize_ident, identifier, serialize_ident},
-		integer::int,
-		sequence, Exp,
-	},
+	parser::{exp, identifier::identifier, integer::int, sequence, Exp},
 	IntVal,
 };
 
@@ -97,21 +92,6 @@ pub enum Constraint<Identifier = String> {
 	Regular(Regular<Identifier>),
 	#[serde(rename = "sum")]
 	Sum(Sum<Identifier>),
-}
-
-#[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
-#[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
-pub struct ConstraintMeta<Identifier> {
-	#[serde(
-		rename = "@id",
-		default,
-		skip_serializing_if = "Option::is_none",
-		deserialize_with = "deserialize_ident",
-		serialize_with = "serialize_ident"
-	)]
-	pub id: Option<Identifier>,
-	#[serde(rename = "@note", default, skip_serializing_if = "Option::is_none")]
-	pub note: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]

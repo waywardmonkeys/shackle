@@ -4,7 +4,7 @@ Instance {
     constraints: [
         BinPacking(
             BinPacking {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c2",
                     ),
@@ -92,4 +92,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

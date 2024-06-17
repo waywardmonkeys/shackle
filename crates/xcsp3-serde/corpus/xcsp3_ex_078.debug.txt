@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Circuit(
             Circuit {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -36,4 +36,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

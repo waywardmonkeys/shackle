@@ -4,7 +4,7 @@ Instance {
     constraints: [
         AllDifferent(
             AllDifferent {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c1",
                     ),
@@ -42,7 +42,7 @@ Instance {
         ),
         AllDifferent(
             AllDifferent {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c2",
                     ),
@@ -64,4 +64,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

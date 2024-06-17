@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Mdd(
             Mdd {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -70,4 +70,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

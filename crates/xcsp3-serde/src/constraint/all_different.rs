@@ -2,20 +2,19 @@ use std::{fmt::Display, str::FromStr};
 
 use serde::{Deserialize, Serialize};
 
-use super::ConstraintMeta;
 use crate::{
 	parser::{
 		integer::{deserialize_int_exps, deserialize_int_vals, IntExp},
 		serialize_list,
 	},
-	IntVal,
+	IntVal, MetaInfo,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
 #[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
 pub struct AllDifferent<Identifier = String> {
 	#[serde(flatten)]
-	pub info: ConstraintMeta<Identifier>,
+	pub info: MetaInfo<Identifier>,
 	#[serde(
 		alias = "$text",
 		deserialize_with = "deserialize_int_exps",

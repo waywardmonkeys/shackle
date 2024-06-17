@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Intension(
             Intension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c1",
                     ),
@@ -39,7 +39,7 @@ Instance {
         ),
         Intension(
             Intension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c2",
                     ),
@@ -60,4 +60,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

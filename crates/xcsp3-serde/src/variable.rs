@@ -18,7 +18,7 @@ use crate::{
 	IntVal,
 };
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Hash)]
 pub struct Variable<Identifier = String> {
 	identifier: Identifier,
 	domain: RangeList<IntVal>,

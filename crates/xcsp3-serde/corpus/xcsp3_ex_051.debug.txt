@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Precedence(
             Precedence {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -38,4 +38,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

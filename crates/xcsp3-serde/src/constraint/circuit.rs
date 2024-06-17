@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-	constraint::ConstraintMeta,
 	parser::{
 		integer::{deserialize_int_exps, IntExp},
 		serialize_list,
 	},
+	MetaInfo,
 };
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
@@ -15,7 +15,7 @@ use crate::{
 ))]
 pub struct Circuit<Identifier = String> {
 	#[serde(flatten)]
-	pub info: ConstraintMeta<Identifier>,
+	pub info: MetaInfo<Identifier>,
 	#[serde(
 		alias = "$text",
 		deserialize_with = "deserialize_int_exps",

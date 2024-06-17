@@ -13,7 +13,7 @@ Instance {
     constraints: [
         Intension(
             Intension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -54,7 +54,7 @@ Instance {
         ),
         Intension(
             Intension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -79,7 +79,7 @@ Instance {
         ),
         Intension(
             Intension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -120,7 +120,7 @@ Instance {
         ),
         Intension(
             Intension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -161,7 +161,7 @@ Instance {
         ),
         Intension(
             Intension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -185,4 +185,49 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [
+            Maximize(
+                ObjExp {
+                    info: MetaInfo {
+                        id: None,
+                        note: None,
+                    },
+                    ty: Sum,
+                    list: [
+                        Add(
+                            [
+                                Mul(
+                                    [
+                                        Var(
+                                            Ident(
+                                                "b",
+                                            ),
+                                        ),
+                                        Const(
+                                            400,
+                                        ),
+                                    ],
+                                ),
+                                Mul(
+                                    [
+                                        Var(
+                                            Ident(
+                                                "c",
+                                            ),
+                                        ),
+                                        Const(
+                                            450,
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                    ],
+                    coeffs: [],
+                },
+            ),
+        ],
+    },
 }

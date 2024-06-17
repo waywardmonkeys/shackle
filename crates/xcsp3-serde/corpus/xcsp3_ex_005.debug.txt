@@ -13,7 +13,7 @@ Instance {
     constraints: [
         Intension(
             Intension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: Some(
                         "this constraint links x and y",
@@ -47,4 +47,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

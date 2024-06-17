@@ -17,7 +17,7 @@ Instance {
     constraints: [
         Extension(
             Extension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -48,7 +48,7 @@ Instance {
         ),
         Extension(
             Extension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -79,7 +79,7 @@ Instance {
         ),
         Extension(
             Extension {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: None,
                     note: None,
                 },
@@ -109,4 +109,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }

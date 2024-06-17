@@ -4,7 +4,7 @@ Instance {
     constraints: [
         Cardinality(
             Cardinality {
-                info: ConstraintMeta {
+                info: MetaInfo {
                     id: Some(
                         "c3",
                     ),
@@ -59,4 +59,8 @@ Instance {
             },
         ),
     ],
+    objectives: Objectives {
+        combination: Lexico,
+        objectives: [],
+    },
 }
