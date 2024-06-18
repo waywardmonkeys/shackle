@@ -35,6 +35,7 @@ Instance {
                     4,
                     0,
                 ],
+                covered: false,
             },
         ),
     ],

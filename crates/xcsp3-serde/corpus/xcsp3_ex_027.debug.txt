@@ -1,6 +1,8 @@
 Instantiation {
-    identifier: None,
-    note: None,
+    info: MetaInfo {
+        identifier: None,
+        note: None,
+    },
     ty: Some(
         Solution,
     ),

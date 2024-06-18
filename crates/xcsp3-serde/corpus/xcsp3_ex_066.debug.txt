@@ -11,28 +11,31 @@ Instance {
                     ),
                     note: None,
                 },
-                list: [
-                    Var(
-                        Ident(
-                            "x1",
+                list: OffsetList {
+                    list: [
+                        Var(
+                            Ident(
+                                "x1",
+                            ),
                         ),
-                    ),
-                    Var(
-                        Ident(
-                            "x2",
+                        Var(
+                            Ident(
+                                "x2",
+                            ),
                         ),
-                    ),
-                    Var(
-                        Ident(
-                            "x3",
+                        Var(
+                            Ident(
+                                "x3",
+                            ),
                         ),
-                    ),
-                    Var(
-                        Ident(
-                            "x4",
+                        Var(
+                            Ident(
+                                "x4",
+                            ),
                         ),
-                    ),
-                ],
+                    ],
+                    start_index: 1,
+                },
                 index: Some(
                     Var(
                         Ident(

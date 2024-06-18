@@ -36,6 +36,7 @@ Instance {
                     0,
                     1,
                 ],
+                covered: false,
             },
         ),
     ],

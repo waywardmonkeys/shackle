@@ -5,8 +5,10 @@ Instance {
     constraints: [
         Instantiation(
             Instantiation {
-                identifier: None,
-                note: None,
+                info: MetaInfo {
+                    identifier: None,
+                    note: None,
+                },
                 ty: None,
                 cost: None,
                 list: [

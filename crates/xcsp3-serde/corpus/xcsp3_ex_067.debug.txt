@@ -9,23 +9,26 @@ Instance {
                     identifier: None,
                     note: None,
                 },
-                list: [
-                    Const(
-                        10,
-                    ),
-                    Const(
-                        4,
-                    ),
-                    Const(
-                        7,
-                    ),
-                    Const(
-                        2,
-                    ),
-                    Const(
-                        3,
-                    ),
-                ],
+                list: OffsetList {
+                    list: [
+                        Const(
+                            10,
+                        ),
+                        Const(
+                            4,
+                        ),
+                        Const(
+                            7,
+                        ),
+                        Const(
+                            2,
+                        ),
+                        Const(
+                            3,
+                        ),
+                    ],
+                    start_index: 0,
+                },
                 index: Some(
                     Var(
                         Ident(

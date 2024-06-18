@@ -104,6 +104,7 @@ impl<Identifier: Serialize + Display> Serialize for Instance<Identifier> {
 			}
 		}
 		#[derive(Serialize)]
+		#[serde(rename = "instance")]
 		pub struct Instance<'a, Identifier: Display> {
 			#[serde(rename = "@type")]
 			ty: FrameworkType,
@@ -150,23 +151,11 @@ pub enum FrameworkType {
 	DisWcsp,
 }
 
-#[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
-#[serde(
-	rename = "instantiation",
-	bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display")
-)]
+#[derive(Clone, Debug, PartialEq, Hash, Deserialize)]
+#[serde(bound(deserialize = "Identifier: FromStr"))]
 pub struct Instantiation<Identifier = String> {
-	// TODO: flatten does not seem to work here (flatten MetaInfo)
-	#[serde(
-		rename = "@id",
-		default,
-		skip_serializing_if = "Option::is_none",
-		deserialize_with = "deserialize_ident",
-		serialize_with = "serialize_ident"
-	)]
-	pub identifier: Option<Identifier>,
-	#[serde(rename = "@note", default, skip_serializing_if = "Option::is_none")]
-	pub note: Option<String>,
+	#[serde(flatten)]
+	pub info: MetaInfo<Identifier>,
 	#[serde(rename = "@type", default, skip_serializing_if = "Option::is_none")]
 	pub ty: Option<InstantiationType>,
 	#[serde(rename = "@cost", default, skip_serializing_if = "Option::is_none")]
@@ -181,6 +170,41 @@ pub struct Instantiation<Identifier = String> {
 		serialize_with = "serialize_list"
 	)]
 	pub values: Vec<IntVal>,
+}
+
+// Note: flatten of MetaInfo does not seem to work here (https://github.com/tafia/quick-xml/issues/761)
+impl<Identifier: Display> Serialize for Instantiation<Identifier> {
+	fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+		#[derive(Serialize)]
+		#[serde(rename = "instantiation", bound(serialize = "Identifier: Display"))]
+		pub struct Instantiation<'a, Identifier = String> {
+			#[serde(
+				rename = "@id",
+				skip_serializing_if = "Option::is_none",
+				serialize_with = "serialize_ident"
+			)]
+			pub identifier: &'a Option<Identifier>,
+			#[serde(rename = "@note", skip_serializing_if = "Option::is_none")]
+			pub note: &'a Option<String>,
+			#[serde(rename = "@type", skip_serializing_if = "Option::is_none")]
+			pub ty: &'a Option<InstantiationType>,
+			#[serde(rename = "@cost", skip_serializing_if = "Option::is_none")]
+			pub cost: &'a Option<IntVal>,
+			#[serde(serialize_with = "serialize_list")]
+			pub list: &'a Vec<VarRef<Identifier>>,
+			#[serde(serialize_with = "serialize_list")]
+			pub values: &'a Vec<IntVal>,
+		}
+		Instantiation {
+			identifier: &self.info.identifier,
+			note: &self.info.note,
+			ty: &self.ty,
+			cost: &self.cost,
+			list: &self.list,
+			values: &self.values,
+		}
+		.serialize(serializer)
+	}
 }
 
 #[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]

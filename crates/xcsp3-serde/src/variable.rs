@@ -31,9 +31,10 @@ pub struct Array<Identifier = String> {
 	pub domains: Vec<(Vec<VarRef<Identifier>>, RangeList<IntVal>)>,
 }
 
-impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Array<Identifier> {
+impl<'de, Identifier: FromStr> Deserialize<'de> for Array<Identifier> {
 	fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
 		#[derive(Deserialize)]
+		#[serde(bound = "Identifier: FromStr")]
 		struct DomainStruct<Identifier: FromStr> {
 			#[serde(rename = "@for", deserialize_with = "deserialize_var_refs")]
 			vars: Vec<VarRef<Identifier>>,
@@ -41,6 +42,7 @@ impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Array<Ide
 			domain: RangeList<IntVal>,
 		}
 		#[derive(Deserialize)]
+		#[serde(bound = "Identifier: FromStr")]
 		enum Domain<'a, Identifier: FromStr> {
 			#[serde(rename = "domain")]
 			Domain(Vec<DomainStruct<Identifier>>),
@@ -48,6 +50,7 @@ impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Array<Ide
 			Direct(Cow<'a, str>),
 		}
 		#[derive(Deserialize)]
+		#[serde(bound = "Identifier: FromStr")]
 		struct Array<'a, Identifier: FromStr> {
 			#[serde(rename = "@id", deserialize_with = "deserialize_from_str")]
 			identifier: Identifier,
@@ -83,9 +86,10 @@ impl<'de, Identifier: Deserialize<'de> + FromStr> Deserialize<'de> for Array<Ide
 	}
 }
 
-impl<Identifier: Serialize + Display> Serialize for Array<Identifier> {
+impl<Identifier: Display> Serialize for Array<Identifier> {
 	fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
 		#[derive(Serialize)]
+		#[serde(bound = "Identifier: Display")]
 		struct DomainStruct<'a, Identifier: Display> {
 			#[serde(rename = "@for", serialize_with = "serialize_list")]
 			vars: &'a Vec<VarRef<Identifier>>,
@@ -93,11 +97,13 @@ impl<Identifier: Serialize + Display> Serialize for Array<Identifier> {
 			domain: &'a RangeList<IntVal>,
 		}
 		#[derive(Serialize)]
+		#[serde(bound = "Identifier: Display")]
 		enum Domain<'a, Identifier: Display> {
 			#[serde(rename = "domain")]
 			Domain(DomainStruct<'a, Identifier>),
 		}
 		#[derive(Serialize)]
+		#[serde(bound = "Identifier: Display")]
 		struct Array<'a, Identifier: Display> {
 			#[serde(rename = "@id", serialize_with = "serialize_as_str")]
 			identifier: &'a Identifier,

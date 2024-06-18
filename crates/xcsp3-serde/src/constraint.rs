@@ -40,7 +40,12 @@ use crate::{
 		no_overlap::NoOverlap, ordered::Ordered, precedence::Precedence, regular::Regular,
 		sum::Sum,
 	},
-	parser::{exp, identifier::identifier, integer::int, sequence, Exp},
+	parser::{
+		exp,
+		identifier::identifier,
+		integer::{deserialize_int_exps, int, IntExp},
+		sequence, serialize_list, Exp,
+	},
 	Instantiation, IntVal,
 };
 
@@ -208,4 +213,30 @@ pub(crate) fn deserialize_transitions<'de, D: Deserializer<'de>, Identifier: Fro
 	}
 	let visitor = V::<Identifier>(PhantomData);
 	deserializer.deserialize_str(visitor)
+}
+
+#[derive(Clone, Debug, PartialEq, Hash, Deserialize, Serialize)]
+#[serde(bound(deserialize = "Identifier: FromStr", serialize = "Identifier: Display"))]
+pub struct OffsetList<Identifier> {
+	#[serde(
+		alias = "$text",
+		deserialize_with = "deserialize_int_exps",
+		serialize_with = "serialize_list"
+	)]
+	list: Vec<IntExp<Identifier>>,
+	#[serde(rename = "@startIndex", default, skip_serializing_if = "is_default")]
+	start_index: IntVal,
+}
+
+impl<Identifier> Default for OffsetList<Identifier> {
+	fn default() -> Self {
+		Self {
+			list: Vec::new(),
+			start_index: IntVal::default(),
+		}
+	}
+}
+
+pub(crate) fn is_default<T: Default + PartialEq>(val: &T) -> bool {
+	val == &T::default()
 }
