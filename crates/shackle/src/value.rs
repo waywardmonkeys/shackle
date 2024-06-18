@@ -187,6 +187,7 @@ impl Array {
 
 impl std::ops::Index<&[Value]> for Array {
 	type Output = Value;
+
 	fn index(&self, index: &[Value]) -> &Self::Output {
 		let mut idx = 0;
 		let mut mult = 1;
@@ -636,6 +637,7 @@ impl EnumRangeInclusive {
 			pos: self.start,
 		}
 	}
+
 	/// Returns the upper bound of the [`EnumRangeInclusive`]
 	///
 	/// When using an inclusive range for iteration, the values of [`start()`]

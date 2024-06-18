@@ -456,6 +456,7 @@ impl_index!(Model<T: Marker>[self, index: OutputId<T>] -> OutputItem<T> { self.o
 
 impl<T: Marker> Index<EnumMemberId<T>> for Model<T> {
 	type Output = Constructor<T>;
+
 	fn index(&self, index: EnumMemberId<T>) -> &Self::Output {
 		&self.enumerations[index.enumeration_id()]
 			.definition()
@@ -519,6 +520,7 @@ impl<'a, T: Marker> OverloadMap<'a, T> {
 
 impl<'a, T: Marker> Deref for OverloadMap<'a, T> {
 	type Target = FxHashMap<FunctionName, Vec<FunctionId<T>>>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.overloads
 	}

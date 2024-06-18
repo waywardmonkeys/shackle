@@ -23,6 +23,7 @@ impl<T: Marker> Default for Annotations<T> {
 
 impl<T: Marker> Deref for Annotations<T> {
 	type Target = Vec<Expression<T>>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.annotations
 	}

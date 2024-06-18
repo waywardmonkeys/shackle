@@ -14,6 +14,7 @@ impl RequestHandler<ViewAst, ModelRef> for ViewAstHandler {
 	) -> Result<ModelRef, ResponseError> {
 		db.set_active_file_from_document(&params.text_document)
 	}
+
 	fn execute(db: &CompilerDatabase, model_ref: ModelRef) -> Result<String, ResponseError> {
 		match db.ast(*model_ref) {
 			Ok(ast) => Ok(format!("{:#?}", ast)),

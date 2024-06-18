@@ -211,6 +211,7 @@ impl SetComprehension {
 	pub fn template(&self) -> Expression {
 		child_with_field_name(self, "template")
 	}
+
 	/// The generators for this comprehension
 	pub fn generators(&self) -> Children<'_, Generator> {
 		children_with_field_name(self, "generator")

@@ -28,6 +28,7 @@ impl RequestHandler<GotoDefinition, (ModelRef, Point)> for GotoDefinitionHandler
 		};
 		Ok((model, start))
 	}
+
 	fn execute(
 		db: &CompilerDatabase,
 		(model_ref, start): (ModelRef, Point),

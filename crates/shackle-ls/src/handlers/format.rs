@@ -29,6 +29,7 @@ impl RequestHandler<Formatting, (ModelRef, MiniZincFormatOptions)> for FormatHan
 			},
 		))
 	}
+
 	fn execute(
 		db: &CompilerDatabase,
 		(model_ref, options): (ModelRef, MiniZincFormatOptions),

@@ -6,6 +6,7 @@ pub enum ViewCst {}
 impl Request for ViewCst {
 	type Params = TextDocumentPositionParams;
 	type Result = String;
+
 	const METHOD: &'static str = "shackle-ls/viewCst";
 }
 
@@ -15,6 +16,7 @@ pub enum ViewAst {}
 impl Request for ViewAst {
 	type Params = TextDocumentPositionParams;
 	type Result = String;
+
 	const METHOD: &'static str = "shackle-ls/viewAst";
 }
 
@@ -24,6 +26,7 @@ pub enum ViewFormatIr {}
 impl Request for ViewFormatIr {
 	type Params = TextDocumentPositionParams;
 	type Result = String;
+
 	const METHOD: &'static str = "shackle-ls/viewFormatIr";
 }
 
@@ -33,6 +36,7 @@ pub enum ViewHir {}
 impl Request for ViewHir {
 	type Params = TextDocumentPositionParams;
 	type Result = String;
+
 	const METHOD: &'static str = "shackle-ls/viewHir";
 }
 
@@ -42,6 +46,7 @@ pub enum ViewScope {}
 impl Request for ViewScope {
 	type Params = TextDocumentPositionParams;
 	type Result = String;
+
 	const METHOD: &'static str = "shackle-ls/viewScope";
 }
 
@@ -51,5 +56,6 @@ pub enum ViewPrettyPrint {}
 impl Request for ViewPrettyPrint {
 	type Params = TextDocumentPositionParams;
 	type Result = String;
+
 	const METHOD: &'static str = "shackle-ls/viewPrettyPrint";
 }

@@ -96,6 +96,7 @@ impl ItemRef {
 
 impl<'a> DebugPrint<'a> for ItemRef {
 	type Database = dyn Hir + 'a;
+
 	fn debug_print(&self, db: &Self::Database) -> String {
 		let ItemRefData(model, item) = db.lookup_intern_item_ref(*self);
 		let model = db.lookup_model(model);

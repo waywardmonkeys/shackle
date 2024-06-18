@@ -404,11 +404,13 @@ impl Program {
 		self.enable_stats = stats;
 		self
 	}
+
 	/// Add the maximum duration that the run method is allowed to take before it will be canceled
 	pub fn with_time_limit(mut self, dur: Duration) -> Self {
 		self.time_limit = Some(dur);
 		self
 	}
+
 	/// Output the [`Program`] using the given output interface, using the [`Write`] trait
 	pub fn write<W: Write>(&self, out: &mut W) -> Result<(), std::io::Error> {
 		let printer = PrettyPrinter::new_compat(&self.db, &self.code);

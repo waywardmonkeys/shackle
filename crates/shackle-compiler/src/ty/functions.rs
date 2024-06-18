@@ -18,6 +18,7 @@ pub enum FunctionResolutionError<T> {
 
 impl<'a, T> DebugPrint<'a> for FunctionResolutionError<T> {
 	type Database = dyn Interner;
+
 	fn debug_print(&self, db: &Self::Database) -> String {
 		match self {
 			Self::NoMatchingFunction(fs) => ["No matching function:".to_owned()]

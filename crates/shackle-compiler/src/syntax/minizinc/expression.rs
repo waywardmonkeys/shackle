@@ -74,6 +74,7 @@ impl AnnotatedExpression {
 	pub fn annotations(&self) -> Children<'_, Expression> {
 		children_with_field_name(self, "annotation")
 	}
+
 	/// The expression which was annotated
 	pub fn expression(&self) -> Expression {
 		child_with_field_name(self, "expression")
@@ -138,6 +139,7 @@ impl InversedIdentifier {
 	pub fn identifier(&self) -> Identifier {
 		child_with_field_name(self, "identifier")
 	}
+
 	/// Get the name of this identifier ending with ⁻¹ without any enclosing quotes
 	pub fn name(&self) -> String {
 		format!("{}⁻¹", self.identifier().name())
@@ -181,6 +183,7 @@ pub struct Branches<'a> {
 
 impl Iterator for Branches<'_> {
 	type Item = Branch;
+
 	fn next(&mut self) -> Option<Branch> {
 		match (self.conditions.next(), self.results.next()) {
 			(Some(condition), Some(result)) => Some(Branch { condition, result }),
@@ -347,6 +350,7 @@ impl InterpolationItem {
 	pub fn is_string(&self) -> bool {
 		matches!(*self, InterpolationItem::String(_))
 	}
+
 	/// Return whether this interpolation item is an expression
 	pub fn is_expression(&self) -> bool {
 		matches!(*self, InterpolationItem::Expression(_))

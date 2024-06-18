@@ -210,6 +210,7 @@ impl Solve {
 			_ => unreachable!(),
 		}
 	}
+
 	/// The annotations
 	pub fn annotations(&self) -> Children<'_, Expression> {
 		children_with_field_name(self, "annotation")
@@ -265,6 +266,7 @@ impl Output {
 	pub fn expression(&self) -> Expression {
 		child_with_field_name(self, "expression")
 	}
+
 	/// The output section (from the annotation)
 	pub fn section(&self) -> Option<StringLiteral> {
 		optional_child_with_field_name(self, "section")

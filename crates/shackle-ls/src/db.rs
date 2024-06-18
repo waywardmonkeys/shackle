@@ -89,6 +89,7 @@ impl LanguageServerDatabase {
 
 impl Deref for LanguageServerDatabase {
 	type Target = CompilerDatabase;
+
 	fn deref(&self) -> &Self::Target {
 		&self.db
 	}

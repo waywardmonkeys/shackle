@@ -28,6 +28,7 @@ pub struct SourceMap {
 
 impl<'a> DebugPrint<'a> for SourceMap {
 	type Database = dyn Hir + 'a;
+
 	fn debug_print(&self, db: &Self::Database) -> String {
 		let mut w = String::new();
 		writeln!(&mut w, "Source map:").unwrap();

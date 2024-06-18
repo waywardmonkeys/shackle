@@ -677,7 +677,7 @@ mod tests {
 			File::open(Path::new("./corpus/documentation_example.fzn.json")).unwrap(),
 		);
 		let mut content = String::new();
-		rdr.read_to_string(&mut content).unwrap();
+		let _ = rdr.read_to_string(&mut content).unwrap();
 
 		let fzn: FlatZinc<&str> = serde_json::from_str(&content).unwrap();
 		expect_test::expect_file!["../corpus/documentation_example.debug.txt"].assert_debug_eq(&fzn)
@@ -699,7 +699,7 @@ mod tests {
 			File::open(Path::new("./corpus/documentation_example.fzn.json")).unwrap(),
 		);
 		let mut content = String::new();
-		rdr.read_to_string(&mut content).unwrap();
+		let _ = rdr.read_to_string(&mut content).unwrap();
 
 		let fzn: FlatZinc<&str> = serde_json::from_str(&content).unwrap();
 		expect_test::expect_file!["../corpus/documentation_example.fzn"]

@@ -300,6 +300,7 @@ impl From<FileRef> for ModelRef {
 
 impl Deref for ModelRef {
 	type Target = FileRef;
+
 	fn deref(&self) -> &Self::Target {
 		&self.0
 	}

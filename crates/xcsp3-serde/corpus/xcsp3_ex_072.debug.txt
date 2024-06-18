@@ -9,6 +9,7 @@ Instance {
                     identifier: None,
                     note: None,
                 },
+                zero_ignored: true,
                 origins: [
                     Var(
                         Ident(

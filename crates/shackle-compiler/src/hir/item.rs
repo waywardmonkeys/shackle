@@ -48,6 +48,7 @@ where
 	T: std::fmt::Debug,
 {
 	type Database = dyn Hir + 'a;
+
 	fn debug_print(&self, db: &Self::Database) -> String {
 		let mut w = String::new();
 		writeln!(&mut w, "Item: {:?}", self.inner).unwrap();
@@ -73,6 +74,7 @@ where
 
 impl<T> Deref for Item<T> {
 	type Target = T;
+
 	fn deref(&self) -> &Self::Target {
 		&self.inner
 	}
@@ -237,6 +239,7 @@ pub struct Annotation {
 
 impl Deref for Annotation {
 	type Target = Constructor;
+
 	fn deref(&self) -> &Self::Target {
 		&self.constructor
 	}

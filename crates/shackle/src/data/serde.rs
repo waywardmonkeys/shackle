@@ -42,6 +42,7 @@ impl<'de, 'a> Visitor<'de> for SerdeValueVisitor<'a> {
 			_ => Err(Error::invalid_type(Unexpected::Signed(v), &self)),
 		}
 	}
+
 	fn visit_u64<E: Error>(self, v: u64) -> Result<Self::Value, E> {
 		match v.try_into() {
 			Ok(x) => self.visit_i64(x),
@@ -61,6 +62,7 @@ impl<'de, 'a> Visitor<'de> for SerdeValueVisitor<'a> {
 	fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E> {
 		self.visit_string(v.to_string())
 	}
+
 	fn visit_borrowed_str<E: Error>(self, v: &'de str) -> Result<Self::Value, E> {
 		self.visit_str(v) // TODO: avoid copying when possible
 	}
@@ -83,6 +85,7 @@ impl<'de, 'a> Visitor<'de> for SerdeValueVisitor<'a> {
 			Err(Error::invalid_type(Unexpected::Unit, &self))
 		}
 	}
+
 	fn visit_none<E: Error>(self) -> Result<Self::Value, E> {
 		let ty = self.0;
 		if ty.is_opt() {
@@ -91,6 +94,7 @@ impl<'de, 'a> Visitor<'de> for SerdeValueVisitor<'a> {
 			Err(Error::invalid_type(Unexpected::Option, &self))
 		}
 	}
+
 	fn visit_some<D: serde::Deserializer<'de>>(
 		self,
 		deserializer: D,
@@ -257,6 +261,7 @@ impl<'de> Visitor<'de> for SerdeEnumVisitor {
 	fn visit_i64<E: Error>(self, v: i64) -> Result<Self::Value, E> {
 		Ok(ParserVal::Integer(v))
 	}
+
 	fn visit_u64<E: Error>(self, v: u64) -> Result<Self::Value, E> {
 		match v.try_into() {
 			Ok(x) => self.visit_i64(x),
@@ -267,6 +272,7 @@ impl<'de> Visitor<'de> for SerdeEnumVisitor {
 	fn visit_string<E: Error>(self, v: String) -> Result<Self::Value, E> {
 		Ok(ParserVal::Enum(v, Vec::new()))
 	}
+
 	fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E> {
 		Ok(ParserVal::Enum(v.into(), Vec::new()))
 	}
@@ -380,6 +386,7 @@ impl<'de> Deserialize<'de> for EnumInner {
 			fn visit_string<E: Error>(self, v: String) -> Result<Self::Value, E> {
 				Ok((v.into(), Vec::new().into_boxed_slice(), 1))
 			}
+
 			fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E> {
 				Ok((v.into(), Vec::new().into_boxed_slice(), 1))
 			}
@@ -590,84 +597,109 @@ impl<
 	fn visit_bool<E: Error>(self, v: bool) -> Result<Self::Value, E> {
 		Ok((self.0.visit_bool(v)?, None))
 	}
+
 	fn visit_i8<E: Error>(self, v: i8) -> Result<Self::Value, E> {
 		Ok((self.0.visit_i8(v)?, None))
 	}
+
 	fn visit_i16<E: Error>(self, v: i16) -> Result<Self::Value, E> {
 		Ok((self.0.visit_i16(v)?, None))
 	}
+
 	fn visit_i32<E: Error>(self, v: i32) -> Result<Self::Value, E> {
 		Ok((self.0.visit_i32(v)?, None))
 	}
+
 	fn visit_i64<E: Error>(self, v: i64) -> Result<Self::Value, E> {
 		Ok((self.0.visit_i64(v)?, None))
 	}
+
 	fn visit_i128<E: Error>(self, v: i128) -> Result<Self::Value, E> {
 		Ok((self.0.visit_i128(v)?, None))
 	}
+
 	fn visit_u8<E: Error>(self, v: u8) -> Result<Self::Value, E> {
 		Ok((self.0.visit_u8(v)?, None))
 	}
+
 	fn visit_u16<E: Error>(self, v: u16) -> Result<Self::Value, E> {
 		Ok((self.0.visit_u16(v)?, None))
 	}
+
 	fn visit_u32<E: Error>(self, v: u32) -> Result<Self::Value, E> {
 		Ok((self.0.visit_u32(v)?, None))
 	}
+
 	fn visit_u64<E: Error>(self, v: u64) -> Result<Self::Value, E> {
 		Ok((self.0.visit_u64(v)?, None))
 	}
+
 	fn visit_u128<E: Error>(self, v: u128) -> Result<Self::Value, E> {
 		Ok((self.0.visit_u128(v)?, None))
 	}
+
 	fn visit_f32<E: Error>(self, v: f32) -> Result<Self::Value, E> {
 		Ok((self.0.visit_f32(v)?, None))
 	}
+
 	fn visit_f64<E: Error>(self, v: f64) -> Result<Self::Value, E> {
 		Ok((self.0.visit_f64(v)?, None))
 	}
+
 	fn visit_char<E: Error>(self, v: char) -> Result<Self::Value, E> {
 		Ok((self.0.visit_char(v)?, None))
 	}
+
 	fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E> {
 		Ok((self.0.visit_str(v)?, None))
 	}
+
 	fn visit_borrowed_str<E: Error>(self, v: &'de str) -> Result<Self::Value, E> {
 		Ok((self.0.visit_borrowed_str(v)?, None))
 	}
+
 	fn visit_string<E: Error>(self, v: String) -> Result<Self::Value, E> {
 		Ok((self.0.visit_string(v)?, None))
 	}
+
 	fn visit_bytes<E: Error>(self, v: &[u8]) -> Result<Self::Value, E> {
 		Ok((self.0.visit_bytes(v)?, None))
 	}
+
 	fn visit_borrowed_bytes<E: Error>(self, v: &'de [u8]) -> Result<Self::Value, E> {
 		Ok((self.0.visit_borrowed_bytes(v)?, None))
 	}
+
 	fn visit_byte_buf<E: Error>(self, v: Vec<u8>) -> Result<Self::Value, E> {
 		Ok((self.0.visit_byte_buf(v)?, None))
 	}
+
 	fn visit_none<E: Error>(self) -> Result<Self::Value, E> {
 		Ok((self.0.visit_none()?, None))
 	}
+
 	fn visit_some<D: serde::Deserializer<'de>>(
 		self,
 		deserializer: D,
 	) -> Result<Self::Value, D::Error> {
 		Ok((self.0.visit_some(deserializer)?, None))
 	}
+
 	fn visit_unit<E: Error>(self) -> Result<Self::Value, E> {
 		Ok((self.0.visit_unit()?, None))
 	}
+
 	fn visit_newtype_struct<D: serde::Deserializer<'de>>(
 		self,
 		deserializer: D,
 	) -> Result<Self::Value, D::Error> {
 		Ok((self.0.visit_newtype_struct(deserializer)?, None))
 	}
+
 	fn visit_map<A: serde::de::MapAccess<'de>>(self, map: A) -> Result<Self::Value, A::Error> {
 		Ok((self.0.visit_map(map)?, None))
 	}
+
 	fn visit_enum<A: serde::de::EnumAccess<'de>>(self, data: A) -> Result<Self::Value, A::Error> {
 		Ok((self.0.visit_enum(data)?, None))
 	}

@@ -71,6 +71,7 @@ pub mod test {
 
 	impl Deref for MockDatabase {
 		type Target = CompilerDatabase;
+
 		fn deref(&self) -> &Self::Target {
 			&self.db
 		}
@@ -83,6 +84,7 @@ pub mod test {
 		) -> Result<shackle_compiler::file::ModelRef, lsp_server::ResponseError> {
 			Ok(self.input_models()[0])
 		}
+
 		fn get_workspace_uri(&self) -> Option<&lsp_types::Uri> {
 			self.workspace.as_ref()
 		}

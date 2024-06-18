@@ -90,6 +90,7 @@ impl<T: Marker> Expression<T> {
 
 impl<T: Marker> Deref for Expression<T> {
 	type Target = ExpressionData<T>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.data
 	}
@@ -300,6 +301,7 @@ impl<T: Marker> ExpressionBuilder<T> for ArrayLiteral<T> {
 
 impl<T: Marker> Deref for ArrayLiteral<T> {
 	type Target = Vec<Expression<T>>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.0
 	}
@@ -337,6 +339,7 @@ impl<T: Marker> ExpressionBuilder<T> for SetLiteral<T> {
 
 impl<T: Marker> Deref for SetLiteral<T> {
 	type Target = Vec<Expression<T>>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.0
 	}
@@ -365,6 +368,7 @@ impl<T: Marker> ExpressionBuilder<T> for TupleLiteral<T> {
 
 impl<T: Marker> Deref for TupleLiteral<T> {
 	type Target = Vec<Expression<T>>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.0
 	}
@@ -390,6 +394,7 @@ impl<T: Marker> ExpressionBuilder<T> for RecordLiteral<T> {
 
 impl<T: Marker> Deref for RecordLiteral<T> {
 	type Target = Vec<(Identifier, Expression<T>)>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.0
 	}
@@ -946,6 +951,7 @@ impl<T: Marker> ExpressionBuilder<T> for Lambda<T> {
 
 impl<T: Marker> Deref for Lambda<T> {
 	type Target = FunctionId<T>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.0
 	}
@@ -1483,6 +1489,7 @@ impl<T: Marker> Pattern<T> {
 
 impl<T: Marker> Deref for Pattern<T> {
 	type Target = PatternData<T>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.data
 	}
@@ -1564,6 +1571,7 @@ impl FromIterator<Ty> for TyVarInstantiations {
 
 impl Deref for TyVarInstantiations {
 	type Target = Vec<Ty>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.0
 	}

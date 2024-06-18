@@ -20,6 +20,7 @@ pub struct Domain<T: Marker = ()> {
 
 impl<T: Marker> Deref for Domain<T> {
 	type Target = DomainData<T>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.data
 	}

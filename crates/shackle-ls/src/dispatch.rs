@@ -30,6 +30,7 @@ impl<'a> DispatchRequest<'a> {
 		log::info!("got {} request #{}", request.method, request.id);
 		Self(RequestState::Unhandled { request, db })
 	}
+
 	pub fn on<H, R, T>(self) -> Self
 	where
 		R: lsp_types::request::Request,

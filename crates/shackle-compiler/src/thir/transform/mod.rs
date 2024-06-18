@@ -144,6 +144,7 @@ pub mod test {
 			}
 			visit_annotation(self, model, annotation)
 		}
+
 		fn visit_declaration(&mut self, model: &Model, declaration: DeclarationId) {
 			if model[declaration].name().is_none() {
 				let count = self.declaration.len();
@@ -151,6 +152,7 @@ pub mod test {
 			}
 			visit_declaration(self, model, declaration);
 		}
+
 		fn visit_identifier(&mut self, model: &Model, identifier: &ResolvedIdentifier) {
 			match identifier {
 				ResolvedIdentifier::Annotation(ann) => self.visit_annotation(model, *ann),

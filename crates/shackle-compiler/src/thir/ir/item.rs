@@ -24,6 +24,7 @@ pub struct Item<T> {
 
 impl<T> Deref for Item<T> {
 	type Target = T;
+
 	fn deref(&self) -> &Self::Target {
 		&self.item
 	}
@@ -69,6 +70,7 @@ pub type AnnotationId<T = ()> = ArenaIndex<AnnotationItem<T>>;
 
 impl<T: Marker> Deref for Annotation<T> {
 	type Target = Constructor<T>;
+
 	fn deref(&self) -> &Self::Target {
 		&self.constructor
 	}

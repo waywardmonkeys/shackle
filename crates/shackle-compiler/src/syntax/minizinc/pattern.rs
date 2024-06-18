@@ -67,6 +67,7 @@ impl PatternCall {
 	pub fn identifier(&self) -> Identifier {
 		child_with_field_name(self, "identifier")
 	}
+
 	/// Get the arguments to this call pattern
 	pub fn arguments(&self) -> Children<'_, Pattern> {
 		children_with_field_name(self, "argument")

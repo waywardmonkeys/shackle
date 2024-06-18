@@ -87,6 +87,7 @@ impl<'a, K, V> Extend<(&'a K, V)> for RefMap<'a, K, V> {
 
 impl<'a, K, V> Index<&'a K> for RefMap<'a, K, V> {
 	type Output = V;
+
 	fn index(&self, index: &'a K) -> &Self::Output {
 		&self.map[&KeyRef(index)]
 	}

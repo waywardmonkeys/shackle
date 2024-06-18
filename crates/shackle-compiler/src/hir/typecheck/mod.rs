@@ -232,6 +232,7 @@ impl TypeResult {
 
 impl Index<ArenaIndex<Pattern>> for TypeResult {
 	type Output = PatternTy;
+
 	fn index(&self, index: ArenaIndex<Pattern>) -> &Self::Output {
 		self.get_pattern(index).expect("No declaration for pattern")
 	}
@@ -239,6 +240,7 @@ impl Index<ArenaIndex<Pattern>> for TypeResult {
 
 impl Index<ArenaIndex<Expression>> for TypeResult {
 	type Output = Ty;
+
 	fn index(&self, index: ArenaIndex<Expression>) -> &Self::Output {
 		if let Some(t) = self.body.expressions.get(index) {
 			return t;
@@ -254,6 +256,7 @@ impl Index<ArenaIndex<Expression>> for TypeResult {
 
 impl<'a> DebugPrint<'a> for TypeResult {
 	type Database = dyn Hir + 'a;
+
 	fn debug_print(&self, db: &Self::Database) -> String {
 		let mut w = String::new();
 		writeln!(&mut w, "Computed types:").unwrap();
@@ -553,6 +556,7 @@ pub struct EnumConstructorEntry {
 
 impl Deref for EnumConstructorEntry {
 	type Target = FunctionEntry;
+
 	fn deref(&self) -> &Self::Target {
 		&self.constructor
 	}

@@ -218,6 +218,7 @@ impl<'a, T: Marker> PrettyPrinter<'a, T> {
 		}
 		buf
 	}
+
 	fn pretty_print_function(&self, idx: FunctionId<T>, signature_only: bool) -> String {
 		let function = &self.model[idx];
 		let name = (|| {

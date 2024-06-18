@@ -19,6 +19,7 @@ impl RequestHandler<ViewPrettyPrint, ModelRef> for ViewPrettyPrintHandler {
 	) -> Result<ModelRef, ResponseError> {
 		db.set_active_file_from_document(&params.text_document)
 	}
+
 	fn execute(db: &CompilerDatabase, _: ModelRef) -> Result<String, ResponseError> {
 		let errors = db.all_errors();
 		if errors.is_empty() {

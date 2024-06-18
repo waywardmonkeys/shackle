@@ -77,6 +77,7 @@ impl<'a, T: From<CstNode>> Children<'a, T> {
 
 impl<'a, T: From<CstNode>> Iterator for Children<'a, T> {
 	type Item = T;
+
 	fn next(&mut self) -> Option<T> {
 		if self.done {
 			return None;

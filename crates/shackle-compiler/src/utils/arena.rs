@@ -201,6 +201,7 @@ impl<T> Arena<T> {
 
 impl<T> Index<ArenaIndex<T>> for Arena<T> {
 	type Output = T;
+
 	fn index(&self, idx: ArenaIndex<T>) -> &T {
 		&self.items[(idx.index.get() - 1) as usize]
 	}
@@ -214,6 +215,7 @@ impl<T> IndexMut<ArenaIndex<T>> for Arena<T> {
 
 impl<T> Index<Range<ArenaIndex<T>>> for Arena<T> {
 	type Output = [T];
+
 	fn index(&self, idx: Range<ArenaIndex<T>>) -> &[T] {
 		let start = (idx.start.index.get() - 1) as usize;
 		let end = (idx.end.index.get() - 1) as usize;
@@ -231,6 +233,7 @@ impl<T> IndexMut<Range<ArenaIndex<T>>> for Arena<T> {
 
 impl<T> Index<RangeFrom<ArenaIndex<T>>> for Arena<T> {
 	type Output = [T];
+
 	fn index(&self, idx: RangeFrom<ArenaIndex<T>>) -> &[T] {
 		let start = (idx.start.index.get() - 1) as usize;
 		&self.items[start..]
@@ -246,6 +249,7 @@ impl<T> IndexMut<RangeFrom<ArenaIndex<T>>> for Arena<T> {
 
 impl<T> Index<RangeFull> for Arena<T> {
 	type Output = [T];
+
 	fn index(&self, idx: RangeFull) -> &[T] {
 		&self.items[idx]
 	}
@@ -259,6 +263,7 @@ impl<T> IndexMut<RangeFull> for Arena<T> {
 
 impl<T> Index<RangeInclusive<ArenaIndex<T>>> for Arena<T> {
 	type Output = [T];
+
 	fn index(&self, idx: RangeInclusive<ArenaIndex<T>>) -> &[T] {
 		let start = (idx.start().index.get() - 1) as usize;
 		let end = (idx.end().index.get() - 1) as usize;
@@ -276,6 +281,7 @@ impl<T> IndexMut<RangeInclusive<ArenaIndex<T>>> for Arena<T> {
 
 impl<T> Index<RangeTo<ArenaIndex<T>>> for Arena<T> {
 	type Output = [T];
+
 	fn index(&self, idx: RangeTo<ArenaIndex<T>>) -> &[T] {
 		let end = (idx.end.index.get() - 1) as usize;
 		&self.items[..end]
@@ -435,6 +441,7 @@ impl<K, V> ArenaMap<K, V> {
 
 impl<K, V> Index<ArenaIndex<K>> for ArenaMap<K, V> {
 	type Output = V;
+
 	fn index(&self, idx: ArenaIndex<K>) -> &V {
 		self.get(idx)
 			.unwrap_or_else(|| panic!("No entry for {:?} in ArenaMap", idx))

@@ -178,6 +178,7 @@ impl BodyTypeContext {
 			}
 		}
 	}
+
 	/// Get results of typing
 	pub fn finish(mut self) -> (BodyTypes, Vec<Error>) {
 		self.data.patterns.shrink_to_fit();
@@ -201,6 +202,7 @@ impl TypeContext for BodyTypeContext {
 		);
 		self.data.patterns.insert(pattern.pattern(), declaration);
 	}
+
 	fn add_expression(&mut self, expression: ExpressionRef, ty: Ty) {
 		assert_eq!(expression.item(), self.item);
 		assert!(
@@ -210,6 +212,7 @@ impl TypeContext for BodyTypeContext {
 		);
 		self.data.expressions.insert(expression.expression(), ty);
 	}
+
 	fn add_identifier_resolution(&mut self, expression: ExpressionRef, resolution: PatternRef) {
 		assert_eq!(expression.item(), self.item);
 		let old = self
@@ -222,6 +225,7 @@ impl TypeContext for BodyTypeContext {
 			expression
 		);
 	}
+
 	fn add_pattern_resolution(&mut self, pattern: PatternRef, resolution: PatternRef) {
 		assert_eq!(pattern.item(), self.item);
 		let old = self
@@ -234,6 +238,7 @@ impl TypeContext for BodyTypeContext {
 			pattern
 		);
 	}
+
 	fn add_diagnostic(&mut self, item: ItemRef, e: impl Into<Error>) {
 		let error = e.into();
 		assert_eq!(item, self.item, "Got error '{}' for wrong item", error);

@@ -638,6 +638,7 @@ impl TypeContext for SignatureTypeContext {
 			pattern
 		);
 	}
+
 	fn add_expression(&mut self, expression: ExpressionRef, ty: Ty) {
 		let old = self.data.expressions.insert(expression, ty);
 		assert!(
@@ -646,6 +647,7 @@ impl TypeContext for SignatureTypeContext {
 			expression
 		);
 	}
+
 	fn add_identifier_resolution(&mut self, expression: ExpressionRef, resolution: PatternRef) {
 		let old = self
 			.data
@@ -657,6 +659,7 @@ impl TypeContext for SignatureTypeContext {
 			expression
 		);
 	}
+
 	fn add_pattern_resolution(&mut self, pattern: PatternRef, resolution: PatternRef) {
 		let old = self.data.pattern_resolution.insert(pattern, resolution);
 		assert!(
@@ -665,6 +668,7 @@ impl TypeContext for SignatureTypeContext {
 			pattern
 		);
 	}
+
 	fn add_diagnostic(&mut self, item: ItemRef, e: impl Into<Error>) {
 		// Suppress errors from other items
 		if item == self.starting_item {

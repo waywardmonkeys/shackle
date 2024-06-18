@@ -69,8 +69,8 @@ impl<E: PartialOrd + Debug> Debug for RangeList<E> {
 }
 
 impl<E: PartialOrd + Clone> IntoIterator for RangeList<E> {
-	type Item = RangeInclusive<E>;
 	type IntoIter = Map<std::vec::IntoIter<(E, E)>, fn((E, E)) -> RangeInclusive<E>>;
+	type Item = RangeInclusive<E>;
 
 	fn into_iter(self) -> Self::IntoIter {
 		self.ranges
@@ -79,8 +79,8 @@ impl<E: PartialOrd + Clone> IntoIterator for RangeList<E> {
 	}
 }
 impl<'a, E: PartialOrd> IntoIterator for &'a RangeList<E> {
-	type Item = RangeInclusive<&'a E>;
 	type IntoIter = Map<std::slice::Iter<'a, (E, E)>, fn(&'a (E, E)) -> RangeInclusive<&'a E>>;
+	type Item = RangeInclusive<&'a E>;
 
 	fn into_iter(self) -> Self::IntoIter {
 		self.ranges
