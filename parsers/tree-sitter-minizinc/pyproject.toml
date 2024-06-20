@@ -6,6 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "tree-sitter-minizinc"
 description = "Minizinc grammar for tree-sitter"
 version = "0.0.1"
+authors = [
+  { name = "Jip J. Dekker", email = "jip@dekker.one" },
+  { name = "Jason Nguyen", email = "admin@cyderize.org" },
+]
 keywords = ["incremental", "parsing", "tree-sitter", "minizinc"]
 classifiers = [
   "Intended Audience :: Developers",
@@ -19,10 +23,13 @@ license.text = "MIT"
 readme = "README.md"
 
 [project.urls]
-Homepage = "github.com/shackle-rs/shackle"
+Homepage = "https://github.com/shackle-rs/shackle"
 
 [project.optional-dependencies]
 core = ["tree-sitter~=0.21"]
+
+[project.entry-points."pygments.lexers"]
+minizinclexer = "tree_sitter_minizinc:MiniZincLexer"
 
 [tool.cibuildwheel]
 build = "cp38-*"

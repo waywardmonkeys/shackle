@@ -5,7 +5,9 @@ from pathlib import Path
 
 import pkg_resources
 
-LANGUAGE = Language(next(Path(__file__).parent.glob("binding.*.so")), "minizinc")
+from ._binding import language
+
+LANGUAGE = Language(language())
 HIGHLIGHT_QUERY = LANGUAGE.query(
     pkg_resources.resource_string(__name__, "queries/highlights.scm")
 )
@@ -95,3 +97,6 @@ try:
 
 except ImportError:
     pass
+
+
+__all__ = ["language", "TreeSitterLexer", "MiniZincLexer"]
