@@ -34,9 +34,7 @@ Instance {
                     ],
                     start_index: 0,
                 },
-                size: Const(
-                    0,
-                ),
+                size: None,
             },
         ),
     ],
