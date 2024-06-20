@@ -1,3 +1,5 @@
+//! Definition of the RangeList type and its serialization
+
 use std::{
 	fmt::{Debug, Display},
 	iter::Map,
@@ -20,6 +22,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Default, Clone, PartialEq, Eq, Hash, PartialOrd, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct RangeList<E: PartialOrd> {
+	/// Memory representation of the ranges
 	ranges: Vec<(E, E)>,
 }
 

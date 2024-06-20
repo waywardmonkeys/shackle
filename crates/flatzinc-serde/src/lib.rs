@@ -15,10 +15,10 @@
 //!
 //! # Getting Started
 //!
-//! Install `flatzinc_serde` and `serde_json` for your package:
+//! Install `flatzinc-serde` and `serde_json` for your package:
 //!
 //! ```bash
-//! cargo add flatzinc_serde serde_json
+//! cargo add flatzinc-serde serde_json
 //! ```
 //!
 //! Once these dependencies have been installed to your crate, you could
@@ -40,7 +40,7 @@
 //! ```
 //! # use flatzinc_serde::FlatZinc;
 //! let fzn = FlatZinc::<String>::default();
-//! // ... creat solver constraint model ...
+//! // ... create  solver constraint model ...
 //! let json_str = serde_json::to_string(&fzn).unwrap();
 //! ```
 //! Note that `serde_json::to_writer`, using a buffered file writer, would be
@@ -110,7 +110,7 @@ fn is_false(b: &bool) -> bool {
 #[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Annotation<Identifier = String> {
-	/// Atom annotation (i.e., a single [`Identifier`])
+	/// Atom annotation (i.e., a single `Identifier`)
 	Atom(Identifier),
 	/// Call annotation
 	Call(AnnotationCall<Identifier>),
@@ -258,6 +258,7 @@ pub struct Array<Identifier = String> {
 }
 
 impl<Identifier: Ord> Array<Identifier> {
+	/// Heuristic to determine the type of the array
 	fn determine_type(&self, fzn: &FlatZinc<Identifier>) -> (&str, bool) {
 		let ty = match self.contents.first().unwrap() {
 			Literal::Int(_) => "int",
@@ -347,10 +348,10 @@ impl Display for Domain {
 /// generating a solver-specific equisatisfiable model.
 #[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
 pub struct FlatZinc<Identifier: Ord = String> {
-	/// A mapping from decision variable [`Identifier`] to their definitions
+	/// A mapping from decision variable `Identifier` to their definitions
 	#[serde(default)]
 	pub variables: BTreeMap<Identifier, Variable<Identifier>>,
-	/// A mapping from array [`Identifier`] to their definitions
+	/// A mapping from array `Identifier` to their definitions
 	#[serde(default)]
 	pub arrays: BTreeMap<Identifier, Array<Identifier>>,
 	/// A list of (solver-specific) constraints, that must be satisfied in a solution.

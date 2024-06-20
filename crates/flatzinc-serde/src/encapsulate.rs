@@ -1,3 +1,6 @@
+//! Helper structures to encapsulate certain types in the FlatZinc JSON
+//! serialization
+
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::RangeList;
@@ -6,6 +9,7 @@ use crate::RangeList;
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "string")]
 struct StringLiteral {
+	/// content of the string literal
 	string: String,
 }
 /// Deserialization function to resolve the encapsulation of string literals in
@@ -31,10 +35,11 @@ pub(crate) fn serialize_encapsulate_string<S: Serializer>(
 	)
 }
 
-// Encapsulated set helper struct
+/// Encapsulated set helper struct
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "set")]
 struct SetLiteral<E: PartialOrd> {
+	/// RangeList used to represent the content of the set
 	set: RangeList<E>,
 }
 /// Deserialization function to resolve the encapsulation of set literals in the
