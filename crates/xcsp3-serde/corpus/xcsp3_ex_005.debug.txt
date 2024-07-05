@@ -6,14 +6,14 @@ Instance {
             note: Some(
                 "x is a number between 1 and 10",
             ),
-            domain: RangeList::from_iter([1..=10]),
+            domain: RangeList::from(1..=10),
         },
         Variable {
             identifier: "y",
             note: Some(
                 "y denotes the square of x",
             ),
-            domain: RangeList::from_iter([1..=100]),
+            domain: RangeList::from(1..=100),
         },
     ],
     arrays: [],

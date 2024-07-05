@@ -4,12 +4,12 @@ Instance {
         Variable {
             identifier: "foo",
             note: None,
-            domain: RangeList::from_iter([0..=6]),
+            domain: RangeList::from(0..=6),
         },
         Variable {
             identifier: "bar",
             note: None,
-            domain: RangeList::from_iter([0..=6]),
+            domain: RangeList::from(0..=6),
         },
         Variable {
             identifier: "qux",

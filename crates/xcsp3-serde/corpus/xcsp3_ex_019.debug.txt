@@ -22,7 +22,7 @@ Instance {
                             ],
                         ),
                     ],
-                    RangeList::from_iter([1..=10]),
+                    RangeList::from(1..=10),
                 ),
                 (
                     [
@@ -36,7 +36,7 @@ Instance {
                             ],
                         ),
                     ],
-                    RangeList::from_iter([1..=20]),
+                    RangeList::from(1..=20),
                 ),
                 (
                     [
@@ -50,7 +50,7 @@ Instance {
                             ],
                         ),
                     ],
-                    RangeList::from_iter([1..=15]),
+                    RangeList::from(1..=15),
                 ),
             ],
         },
@@ -72,7 +72,7 @@ Instance {
                             ],
                         ),
                     ],
-                    RangeList::from_iter([0..=1]),
+                    RangeList::from(0..=1),
                 ),
                 (
                     [
@@ -120,7 +120,7 @@ Instance {
                             ],
                         ),
                     ],
-                    RangeList::from_iter([0..=10]),
+                    RangeList::from(0..=10),
                 ),
                 (
                     [
@@ -128,7 +128,7 @@ Instance {
                             "others",
                         ),
                     ],
-                    RangeList::from_iter([0..=1]),
+                    RangeList::from(0..=1),
                 ),
             ],
         },

@@ -82,15 +82,13 @@
 
 use std::{collections::BTreeMap, fmt::Display};
 
+pub use rangelist::RangeList;
 use serde::{Deserialize, Serialize};
 
 use crate::encapsulate::{
-	deserialize_encapsulated_set, deserialize_encapsulated_string, serialize_encapsulate_set,
-	serialize_encapsulate_string,
+	deserialize_encapsulated_set, deserialize_encapsulated_string, deserialize_set,
+	serialize_encapsulate_set, serialize_encapsulate_string, serialize_set,
 };
-
-mod range_list;
-pub use range_list::RangeList;
 mod encapsulate;
 
 /// Helper function to help skip in serialization
@@ -327,8 +325,10 @@ impl<Identifier: Display> Display for Constraint<Identifier> {
 #[serde(untagged)]
 pub enum Domain {
 	/// Integer (or set of integer) decision variable domain
+	#[serde(deserialize_with = "deserialize_set", serialize_with = "serialize_set")]
 	Int(RangeList<i64>),
 	/// Floating point decision variable domain
+	#[serde(deserialize_with = "deserialize_set", serialize_with = "serialize_set")]
 	Float(RangeList<f64>),
 }
 

@@ -16,7 +16,7 @@ Instance {
                             "others",
                         ),
                     ],
-                    RangeList::from_iter([1..=10]),
+                    RangeList::from(1..=10),
                 ),
             ],
         },

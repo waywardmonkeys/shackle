@@ -4,7 +4,7 @@ FlatZinc {
             ty: Int,
             domain: Some(
                 Int(
-                    RangeList::from_iter([0..=85000]),
+                    RangeList::from(0..=85000),
                 ),
             ),
             value: None,
@@ -16,7 +16,7 @@ FlatZinc {
             ty: Int,
             domain: Some(
                 Int(
-                    RangeList::from_iter([0..=3]),
+                    RangeList::from(0..=3),
                 ),
             ),
             value: None,
@@ -28,7 +28,7 @@ FlatZinc {
             ty: Int,
             domain: Some(
                 Int(
-                    RangeList::from_iter([0..=6]),
+                    RangeList::from(0..=6),
                 ),
             ),
             value: None,

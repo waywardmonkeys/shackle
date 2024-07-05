@@ -63,7 +63,6 @@ use std::{
 	str::FromStr,
 };
 
-use flatzinc_serde::RangeList;
 use nom::{
 	character::complete::{char, digit1},
 	combinator::{all_consuming, map_res, opt, recognize},
@@ -71,6 +70,7 @@ use nom::{
 	sequence::delimited,
 	IResult,
 };
+pub use rangelist::RangeList;
 use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::{

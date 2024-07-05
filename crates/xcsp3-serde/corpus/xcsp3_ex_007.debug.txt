@@ -4,12 +4,12 @@ Instance {
         Variable {
             identifier: "b1",
             note: None,
-            domain: RangeList::from_iter([0..=1]),
+            domain: RangeList::from(0..=1),
         },
         Variable {
             identifier: "b2",
             note: None,
-            domain: RangeList::from_iter([0..=1]),
+            domain: RangeList::from(0..=1),
         },
     ],
     arrays: [],

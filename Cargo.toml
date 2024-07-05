@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "crates/flatzinc-serde",
+  "crates/rangelist",
   "crates/shackle",
   "crates/shackle-cli",
   "crates/shackle-compiler",

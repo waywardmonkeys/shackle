@@ -84,6 +84,6 @@ jobs:
       - name: Check semver
         uses: obi1kenobi/cargo-semver-checks-action@v2
         with:
-          package: flatzinc-serde
+          package: flatzinc-serde, xcsp3-serde
         env:
           RUSTC_WRAPPER: ""

@@ -21,7 +21,7 @@ Instance {
                             ],
                         ),
                     ],
-                    RangeList::from_iter([1..=10]),
+                    RangeList::from(1..=10),
                 ),
                 (
                     [
@@ -35,7 +35,7 @@ Instance {
                             ],
                         ),
                     ],
-                    RangeList::from_iter([1..=20]),
+                    RangeList::from(1..=20),
                 ),
             ],
         },
