@@ -188,7 +188,7 @@ pub enum AnnotationLiteral<Identifier = String> {
 	/// Basic FlatZinc literal
 	BaseLiteral(Literal<Identifier>),
 	/// An annotation object
-	Annotation(Annotation),
+	Annotation(Annotation<Identifier>),
 }
 
 impl<Idenfier: Display> Display for AnnotationLiteral<Idenfier> {
