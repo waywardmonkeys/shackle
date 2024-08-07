@@ -10,6 +10,7 @@ use crate::{
 	utils::arena::{Arena, ArenaIndex},
 };
 
+#[allow(dead_code)]
 /// A mid-level IR program (MicroZinc)
 pub struct Model {
 	_entrypoint: Expression,
@@ -56,6 +57,7 @@ pub enum Domain {
 	Set(Set),
 }
 
+#[allow(dead_code)]
 /// A function item
 pub struct Function {
 	_name: Identifier,

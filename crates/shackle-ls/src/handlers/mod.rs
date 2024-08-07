@@ -66,6 +66,7 @@ pub mod test {
 
 	struct MockDatabase {
 		db: CompilerDatabase,
+		#[allow(dead_code)]
 		workspace: Option<lsp_types::Uri>,
 	}
 

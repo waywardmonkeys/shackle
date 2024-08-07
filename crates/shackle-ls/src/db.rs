@@ -28,6 +28,7 @@ pub struct LanguageServerDatabase {
 	pool: threadpool::ThreadPool,
 	sender: Sender<Message>,
 	db: CompilerDatabase,
+	#[allow(dead_code)]
 	workspace: Option<Uri>,
 }
 
