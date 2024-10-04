@@ -17,7 +17,7 @@ predicate write(
 ) =
 	assert(
 		index_set(O) = index_set(I),
-		"writet: index set of I must be same as O",
+		"write: index set of I must be same as O",
 	) /\
 		fzn_write(erase_enum(I), erase_enum(i), erase_enum(v), erase_enum(O));
 
