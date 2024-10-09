@@ -1,13 +1,7 @@
 {
-  "0": "m",
-  "1": "i",
-  "2": "n",
-  "3": "i",
-  "4": "z",
-  "5": "i",
-  "6": "n",
-  "7": "c",
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
   "name": "datazinc",
+  "inherits": "minizinc",
   "word": "identifier",
   "rules": {
     "source_file": {

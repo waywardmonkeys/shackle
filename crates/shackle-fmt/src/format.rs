@@ -3,6 +3,7 @@ use shackle_compiler::syntax::{
 	ast::AstNode,
 	minizinc::{Expression, MznModel},
 };
+use streaming_iterator::StreamingIterator;
 use tree_sitter::{Node, Query, QueryCursor};
 use tree_sitter_minizinc::Precedence;
 
@@ -219,9 +220,9 @@ impl CommentMap {
 		.expect("Failed to create query");
 		let text = model.cst().text().as_bytes();
 		let mut cursor = QueryCursor::new();
-		let captures = cursor.captures(&query, model.cst().root_node(), text);
+		let mut captures = cursor.captures(&query, model.cst().root_node(), text);
 
-		for (c, _) in captures {
+		while let Some((c, _)) = captures.next() {
 			let node = c.captures[0].node;
 			let contents = node.utf8_text(text).unwrap();
 			let is_line = node.kind() == "line_comment";

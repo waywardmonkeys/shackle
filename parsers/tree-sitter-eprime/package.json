@@ -47,13 +47,5 @@
 	"devDependencies": {
 		"tree-sitter-cli": "^0.24.2",
 		"prebuildify": "^6.0.1"
-	},
-	"tree-sitter": [
-		{
-			"scope": "source.eprime",
-			"file-types": [
-				"eprime"
-			]
-		}
-	]
+	}
 }

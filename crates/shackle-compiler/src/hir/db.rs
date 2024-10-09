@@ -5,6 +5,7 @@
 use std::{collections::HashSet, path::Path, sync::Arc};
 
 use rustc_hash::{FxHashMap, FxHashSet};
+use streaming_iterator::StreamingIterator;
 
 use super::{
 	ids::{EntityRef, EntityRefData, ItemRef, ItemRefData, PatternRef},

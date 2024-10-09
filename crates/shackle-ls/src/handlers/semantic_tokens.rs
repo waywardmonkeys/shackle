@@ -14,6 +14,7 @@ use shackle_compiler::{
 	},
 	syntax::db::SourceParser,
 };
+use streaming_iterator::StreamingIterator;
 
 use crate::{db::LanguageServerContext, dispatch::RequestHandler, utils::span_contents_to_range};
 
@@ -39,14 +40,15 @@ impl RequestHandler<SemanticTokensFullRequest, ModelRef> for SemanticTokensHandl
 			)
 			.expect("Failed to create query");
 			let mut cursor = tree_sitter::QueryCursor::new();
-			let captures = cursor.captures(&query, cst.root_node(), cst.text().as_bytes());
-			let nodes = captures.map(|(c, _)| c.captures[0].node);
+			let mut nodes = cursor
+				.captures(&query, cst.root_node(), cst.text().as_bytes())
+				.map(|(c, _)| c.captures[0].node);
 			let source_map = db.lookup_source_map(model_ref);
 			let mut tokens = Vec::new();
 			let mut prev_line = 0;
 			let mut prev_char = 0;
-			for node in nodes {
-				if let Some(node_ref @ NodeRef::Entity(entity)) = source_map.find_node(node) {
+			while let Some(node) = nodes.next() {
+				if let Some(node_ref @ NodeRef::Entity(entity)) = source_map.find_node(*node) {
 					let item = entity.item(db);
 					let types = db.lookup_item_types(item);
 					let mut token_type = TokenType::Variable;

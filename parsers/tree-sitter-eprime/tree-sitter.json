@@ -1,0 +1,33 @@
+{
+	"grammars": [
+		{
+			"name": "eprime",
+			"camelcase": "Eprime",
+			"scope": "source.eprime",
+			"path": ".",
+			"file-types": ["eprime"]
+		}
+	],
+	"metadata": {
+		"version": "0.1.0",
+		"license": "MPL-2.0",
+		"description": "Essence Prime grammar for tree-sitter",
+		"authors": [
+			{
+				"name": "Jip J. Dekker",
+				"email": "jip.dekker@monash.edu"
+			}
+		],
+		"links": {
+			"repository": "git+https://github.com/shackle-rs/shackle.git"
+		}
+	},
+	"bindings": {
+		"c": true,
+		"go": true,
+		"node": true,
+		"python": true,
+		"rust": true,
+		"swift": true
+	}
+}

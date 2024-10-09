@@ -10,6 +10,7 @@ use shackle_compiler::{
 	},
 	syntax::db::SourceParser,
 };
+use streaming_iterator::StreamingIterator;
 
 use crate::{db::LanguageServerContext, dispatch::RequestHandler, utils::node_ref_to_location};
 
@@ -78,11 +79,12 @@ impl RequestHandler<References, ReferencesHandlerData> for ReferencesHandler {
 				)
 				.expect("Failed to create query");
 				let mut cursor = tree_sitter::QueryCursor::new();
-				let captures = cursor.captures(&query, cst.root_node(), cst.text().as_bytes());
-				let nodes = captures.map(|(c, _)| c.captures[0].node);
+				let mut nodes = cursor
+					.captures(&query, cst.root_node(), cst.text().as_bytes())
+					.map(|(c, _)| c.captures[0].node);
 				let source_map = db.lookup_source_map(m);
-				for node in nodes {
-					if let Some(node_ref @ NodeRef::Entity(entity)) = source_map.find_node(node) {
+				while let Some(node) = nodes.next() {
+					if let Some(node_ref @ NodeRef::Entity(entity)) = source_map.find_node(*node) {
 						let item = entity.item(db);
 						let types = db.lookup_item_types(item);
 						let def = match entity.entity(db) {
