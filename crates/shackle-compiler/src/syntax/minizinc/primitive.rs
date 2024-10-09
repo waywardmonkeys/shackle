@@ -142,7 +142,7 @@ impl From<ParseFloatError> for FloatParsingError {
 /// Hexadecimal float literals must be exactly representable as a double - no rounding is allowed.
 pub fn parse_float_literal(text: &str) -> Result<f64, FloatParsingError> {
 	if let Some(hex_float) = text.strip_prefix("0x").or_else(|| text.strip_prefix("0X")) {
-		let mut split_p = hex_float.splitn(2, |c| matches!(c, 'p' | 'P'));
+		let mut split_p = hex_float.splitn(2, ['p', 'P']);
 		let mut split_dot = split_p.next().unwrap().splitn(2, '.');
 		let before_dot = split_dot.next().unwrap();
 		let after_dot = split_dot.next().unwrap_or_default();
