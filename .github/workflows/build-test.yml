@@ -9,8 +9,6 @@ on:
 env:
   RUST_CHANNEL: "stable"
   RUST_TEST_CHANNEL: "nightly"
-  SCCACHE_GHA_ENABLED: "true"
-  RUSTC_WRAPPER: "sccache"
 
 jobs:
   build:
@@ -21,11 +19,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust toolchain
-        run: |
-          rustup toolchain install --profile minimal --no-self-update ${{ env.RUST_CHANNEL }}
-          rustup default ${{ env.RUST_CHANNEL }}
-      - name: Run sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.5
+        uses: moonrepo/setup-rust@v1
+        with:
+          cache-target: release
+          channel: ${{ env.RUST_TEST_CHANNEL }}
       - name: Build shackle-cli
         run: cargo install --root dist/ --path crates/shackle-cli
       - name: Build shackle-ls
@@ -35,44 +32,44 @@ jobs:
         with:
           name: shackle-exe-${{ matrix.os }}
           path: dist/
+  test-coverage:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: moonrepo/setup-rust@v1
+        with:
+          cache: false
+          channel: ${{ env.RUST_TEST_CHANNEL }}
+      - name: cargo install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+      - name: Generate code coverage
+        run: cargo llvm-cov --all-features --workspace --codecov --output-path codecov.json
+      - uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: codecov.json
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [macos-latest] # TODO: Add windows-latest
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust toolchain
-        run: |
-          rustup toolchain install --profile minimal --no-self-update ${{ env.RUST_TEST_CHANNEL }}
-          rustup default ${{ env.RUST_TEST_CHANNEL }}
-      - name: Install grcov
-        uses: SierraSoftworks/setup-grcov@v1
+        uses: moonrepo/setup-rust@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.5
+          channel: ${{ env.RUST_TEST_CHANNEL }}
       - name: Run cargo test
         run: cargo test
-        env:
-          CARGO_INCREMENTAL: "0"
-          RUSTFLAGS: "-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort"
-          RUSTDOCFLAGS: "-Cpanic=abort"
-      - name: Collect covereage data
-        run: grcov . --binary-path target/debug/deps/ -s . -t lcov --ignore-not-existing --ignore '../**' --ignore '/*' -o ./lcov.info
-      - uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./lcov.info
   clippy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Rust toolchain
-        run: |
-          rustup toolchain install --profile minimal --component clippy --no-self-update ${{ env.RUST_CHANNEL }}
-          rustup default ${{ env.RUST_CHANNEL }}
-      - name: Run sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.5
+      - name: Install Rust toolchain and clippy
+        uses: moonrepo/setup-rust@v0
+        with:
+          channel: ${{ env.RUST_CHANNEL }}
+          components: clippy
       - name: Run clippy
         run: cargo clippy --tests -- -D warnings
